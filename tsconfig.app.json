@@ -1,14 +1,37 @@
+// {
+//   "compilerOptions": {
+//     "allowJs": true,
+//     "checkJs": false,
+//     "jsx": "react-jsx",
+//     "isolatedModules": true,
+//     "strict": false,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true,
+//     "moduleResolution": "bundler",
+//     "resolveJsonModule": true
+//   },
+//   "include": ["src"]
+// }
+
 {
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": false,
-    "jsx": "react-jsx",
-    "isolatedModules": true,
-    "strict": false,
+    "allowJs": true,                    // ✅ Allow .js and .jsx files
+    "checkJs": false,                   // ✅ Don’t type-check JS files strictly
+    "jsx": "react-jsx",                 // ✅ Enable React 17+ JSX transform
+    "isolatedModules": true,            
+    "strict": false,                    // You can set true later if you prefer
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "moduleResolution": "bundler",
-    "resolveJsonModule": true
+
+    // ✅ Key part: prevent writing JS output (fixes TS5055)
+    "noEmit": true,
+
+    // ✅ Fix TS5095 ('bundler' module error)
+    "module": "ESNext",
+    "target": "ESNext"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }
