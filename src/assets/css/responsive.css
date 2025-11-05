@@ -1,0 +1,18 @@
+/* @media screen and (max-width: 1350px){    
+
+    .LoginArea{ padding:15px }
+    .LoginArea .LoginBox{ padding:15px; min-height: calc(100vh - 30px); }
+    .LoginArea .LoginBox .LoginForm{ height: calc(100vh - 60px); max-width: 500px; }
+
+
+    .LoginBox .LoginForm figure{margin: 0 0 20px 0;}
+    .LoginBox .LoginForm figure img{max-width: 150px;}
+    .LoginBox .LoginForm h4{font-size: 24px;}
+    .LoginBox .LoginForm h5{font-size: 12px;line-height: 20px;margin: 0 0 15px 0;}
+    .LoginBox .LoginForm form .form-group label{font-size: 13px;}
+    .LoginBox .LoginForm form .form-group .Icon{ top:40px }
+    .LoginBox .LoginForm form .form-group .form-control{padding: 10px 12px;font-size: 13px;}
+    .LoginBox .LoginForm form .form-group .Checkboxs a{ font-size:13px }
+
+
+} */

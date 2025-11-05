@@ -1,0 +1,4909 @@
+@charset "utf-8";
+
+@import url('bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+/* body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans';
+  font-size: 13px;
+  color: #3a3a3a;
+  font-weight: 400;
+} */
+
+/* * {
+  margin: 0px;
+  padding: 0px;
+} */
+
+.clearfix {
+  zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.clr,
+.clear {
+  clear: both;
+}
+
+header,
+footer,
+aside,
+article,
+section,
+detail,
+nav,
+figure {
+  position: relative;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+li,
+ol {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  outline: none;
+  cursor: pointer;
+}
+
+a:hover,
+a:focus {
+  text-decoration: none !important;
+  outline: none;
+}
+
+img {
+  border: 0;
+  outline: none;
+  max-width: 100%;
+}
+
+input[type="text"],
+input[type="password"],
+select,
+textarea,
+input[type="button"] {
+  max-width: 100%;
+}
+
+table {
+  width: 100%;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+.fltL {
+  float: left;
+}
+
+.fltR {
+  float: right;
+}
+
+.padding_none {
+  padding: 0 !important;
+}
+
+.border_none {
+  border: none !important
+}
+
+.navbar-toggle {
+  background-color: #fff !important;
+}
+
+.icon-bar {
+  background-color: #000 !important;
+}
+
+.p_right0 {
+  padding-right: 0px !important
+}
+
+.p_left0 {
+  padding-left: 0px !important
+}
+
+.m_bottom0 {
+  margin-bottom: 0 !important;
+}
+
+input[type="date"] {
+  text-transform: uppercase !important;
+}
+
+.Green {
+  color: #37a713;
+}
+
+.Red {
+  color: #e21818;
+}
+
+.Blue {
+  color: #139bbf;
+}
+
+.Yellow {
+  color: #feca05;
+}
+
+.Pink {
+  color: #fd546d;
+}
+
+.Button {
+  border: none;
+  padding: 12px 30px;
+  text-align: center;
+  transition: 0.5s all ease-in-out;
+  font-weight: 500;
+  display: inline-block;
+  position: relative;
+  background-color: #028DEC;
+  font-size: 15px;
+  color: #fff;
+  text-transform: capitalize;
+  border-radius: 7px;
+  outline: 0 !important;
+  box-shadow: none;
+  display: inline-block;
+  font-family: 'Poppins';
+  WHITE-SPACE: nowrap;
+}
+
+.Button:hover {
+  background-position: 0px 80px;
+  color: #fff;
+}
+
+.Button.Cancel {
+  background: #d9d9d9;
+  color: #000;
+  margin: 0 0 0 0;
+  padding: 10px 20px;
+}
+
+/* .LoginArea .LoginBox .Button {
+  border-radius: 10px;
+  margin: 30px 0 0 0;
+} */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  margin: 0;
+  padding: 2px 0 3px 50px;
+  font-weight: 400;
+  font-size: 12px;
+  color: #646467;
+  float: right;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0
+}
+
+.switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  height: 21px;
+  border-radius: 50px;
+  width: 40px;
+  border: 1px solid #028DEC;
+  min-width: auto;
+}
+
+.switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 3px;
+  bottom: 0;
+  top: 0;
+  background-color: #028DEC;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.switch input:checked+.slider {
+  background-color: #028DEC;
+}
+
+.switch input:checked+.slider:before {
+  -webkit-transform: translateX(19px);
+  transform: translateX(19px);
+  background: #fff
+}
+
+.CheckBox {
+  display: inline-block;
+  position: relative;
+  padding-left: 33px;
+  cursor: pointer;
+  font-size: 14px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-weight: 400 !important;
+  color: #2d2d2d;
+  margin: 0 !important;
+  min-height: 20px;
+}
+
+.CheckBox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0
+}
+
+.CheckBox .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 22px;
+  background-color: #fff;
+  border: 1px solid rgba(2, 141, 236, 1);
+  border-radius: 2px;
+  min-width: auto;
+}
+
+.CheckBox:hover input~.checkmark {
+  background-color: rgba(2, 141, 236, 1);
+  border-color: rgba(2, 141, 236, 1);
+}
+
+.CheckBox input:checked~.checkmark {
+  background: rgba(2, 141, 236, 1);
+}
+
+.CheckBox .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 8px;
+  top: 2px;
+  width: 5px;
+  height: 11px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg)
+}
+
+.CheckBox input:checked~.checkmark:after {
+  display: block
+}
+
+.Radio {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin: 0 !important;
+  line-height: 18px;
+}
+
+.Radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer
+}
+
+.Radio .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 1px solid #fd7b33;
+}
+
+.Radio:hover input~.checkmark {
+  border-color: #fd7b33;
+  background-color: #fd7b33;
+}
+
+.Radio input:checked~.checkmark {
+  border-color: #fd7f3b;
+  background-color: #fff;
+}
+
+.Radio .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none
+}
+
+.Radio input:checked~.checkmark:after {
+  display: block
+}
+
+.Radio .checkmark:after {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fd7f3b;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto
+}
+
+/* .ShowInput {display: none;} */
+.CheckBox input:checked~.checkmark .ShowInput {
+  display: block;
+}
+
+.Checkboxs .CheckBox {
+  font-size: 17px;
+  line-height: 18px;
+}
+
+
+.SuccessArea {
+  background-image: linear-gradient(45deg, #f98d1c, #fbbd13);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0
+}
+
+.SuccessArea .SuccessBox {
+  background-color: #fff;
+  min-width: 525px;
+  text-align: center;
+  padding: 60px 50px;
+  border-radius: 20px
+}
+
+.SuccessArea .SuccessBox span {
+  width: 100px;
+  display: block;
+  margin: 0 auto 10px
+}
+
+.SuccessArea .SuccessBox h3 {
+  font-size: 36px;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  color: #000
+}
+
+.SuccessArea .SuccessBox p {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 20px 0
+}
+
+.SuccessArea .SuccessBox a {
+  display: inline-block;
+  padding: 12px 30px;
+  background: linear-gradient(45deg, #f98d1c, #fbbd13);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600
+}
+
+.Header {
+  /* -webkit-box-shadow:0 2px 4px rgba(0,0,0,.08); */
+  position: fixed;
+  left: 250px;
+  top: 0;
+  background-color: #fff;
+  z-index: 99;
+  width: calc(100% - 250px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  height: 70px;
+}
+
+.Header .HeaderLeft {
+  display: flex;
+  align-items: center;
+}
+
+.Header .HeaderLeft .Toggle {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 15px 0 0;
+  cursor: pointer;
+  border: 1px solid #dbe2eb;
+}
+
+.Header .HeaderLeft .Toggle svg {
+  margin: 0 !important;
+}
+
+.Header .HeaderLeft .SearchBox {
+  position: relative;
+}
+
+.Header .HeaderLeft .SearchBox .form-control {
+  height: auto;
+  padding: 10px 30px 10px 15px;
+  background-color: #fff;
+  font-size: 14px;
+  box-shadow: none;
+  min-width: 500px;
+  border: 1px solid #dbe2eb;
+}
+
+.Header .HeaderLeft .SearchBox span {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: #afadad;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.Header .Logo {
+  width: 235px;
+  text-align: center;
+  padding: 8px 0;
+  float: left;
+  height: 60px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+  background-color: #fff;
+}
+
+.Header .Logo img {
+  width: 130px;
+}
+
+.Header .Navigation {
+  transition: all 0.2s ease;
+  padding: 0;
+  /* height:60px; */
+  /* background-image: linear-gradient(45deg,#fd701e,#fd894e); */
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.Header .Navigation .Bell {
+  display: inline-block;
+  position: relative;
+  margin: 0 0 0 20px;
+}
+
+.Header .Navigation .Bell .Count {
+  background-color: #fff;
+  position: absolute;
+  color: #000;
+  font-size: 11px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50px;
+  text-align: center;
+  right: -8px;
+  top: -4px;
+  font-weight: 700;
+  border: 1px solid #dbe2eb;
+  line-height: 19px;
+}
+
+.Header .Navigation .Bell a {
+  color: #666464;
+  font-size: 15px;
+  width: 49px;
+  height: 49px;
+  background: #fff;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid #dbe2eb;
+}
+
+.Header .Navigation .Avater {
+  margin: 0px 0 0px 20px;
+  position: relative;
+  display: inline-block;
+}
+
+.Header .Navigation .Avater a {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #000;
+  padding: 19px 0;
+}
+
+.Header .Navigation .Avater a figure {
+  width: 45px;
+  border-radius: 50%;
+  margin: 0 15px 0 0;
+  overflow: hidden;
+  height: 45px;
+}
+
+.Header .Navigation .Avater a figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.Header .Navigation .Avater ul {
+  position: absolute;
+  background: #fff;
+  left: auto;
+  box-shadow: 0 3px 11px 0 rgb(0 0 0 / 10%);
+  -webkit-transform: perspective(600px) rotateX(-90deg);
+  transform: perspective(600px) rotateX(-90deg);
+  -webkit-transform-origin: 0 0 0;
+  transform-origin: 0 0 0;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  z-index: 99;
+  top: 100%;
+  text-align: left;
+  min-width: 200px;
+  display: block;
+  width: auto;
+}
+
+.Header .Navigation .Avater ul.scroll {
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.Header .Navigation .Avater.First ul.scroll li:first-child {
+  padding-left: 0px;
+}
+
+.Header .Navigation .Avater ul li {
+  margin: 0;
+  border-bottom: 1px solid #d2d3d4;
+  height: 65px;
+}
+
+.Header .Navigation .Avater ul li:first-child {
+  position: relative;
+  padding: 15px 15px 15px 60px;
+  text-align: left;
+  border-bottom: 1px solid #fff;
+}
+
+.Header .Navigation .Avater ul li figure {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  border: 2px solid #fff;
+  overflow: hidden;
+  margin: 0;
+}
+
+.Header .Navigation .Avater ul li figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.Header .Navigation .Avater ul li h4 {
+  color: #fff;
+  font-size: 17px;
+  line-height: 18px;
+  color: #000;
+  transition: 0.5s all ease-in-out;
+}
+
+.Header .Navigation .Avater ul li h4 span {
+  font-size: 11px;
+  font-weight: 400;
+  display: block;
+  color: #000;
+  transition: 0.5s all ease-in-out;
+}
+
+.Header .Navigation .Avater ul li a {
+  color: #4e4e4e;
+  padding: 10px 20px;
+  font-weight: 400;
+  transition: 0.5s all ease-in-out;
+  height: 100%;
+}
+
+.Header .Navigation .Avater ul li a span {
+  margin: 0 10px 0 0
+}
+
+.Header .Navigation .Avater ul li:hover {
+  background-color: #028DEC;
+}
+
+.Header .Navigation .Avater ul li:hover h4,
+.Header .Navigation .Avater ul li:hover span {
+  color: #fff;
+}
+
+.Header .Navigation .Avater ul li a:hover {
+  background-color: #028DEC;
+  color: #fff;
+}
+
+/* .dropdown-menu.Notification {width: 300px!important;} */
+.Header .Navigation .Avater:hover ul {
+  opacity: 1;
+  visibility: visible;
+  transform: perspective(600px) rotateX(0deg);
+}
+
+.Avater.First {
+  left: auto;
+}
+
+.Header .Navigation .Avater.First ul li:first-child {
+  padding-left: 15px;
+}
+
+.Header .Navigation .Avater.First ul li a:first-child {
+  white-space: normal;
+}
+
+.Header .Navigation .FinacialBox {
+  text-align: center;
+}
+
+.Header .Navigation .FinacialBox h6 {
+  font-weight: 700;
+  color: #000;
+  font-size: 16px;
+}
+
+.Header .Navigation .FinacialBox p {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7c7c7c;
+  letter-spacing: 0.5px;
+}
+
+
+
+.SidenavBar {
+  height: calc(100% - 0px);
+  position: fixed;
+  width: 250px;
+  top: 0;
+  padding: 0;
+  box-shadow: 0 0 15px rgba(0, 0, 0, .1);
+}
+
+.SidenavBar::after {
+  content: "";
+  background-color: red;
+  bottom: 0;
+  width: 100px;
+  position: absolute;
+}
+
+.SidenavBar .Logo {
+  text-align: center;
+  padding: 10px 0;
+  height: 70px;
+  border-bottom: 1px solid #dbe2eb;
+  border-right: 1px solid #dbe2eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.SidenavBar .Logo img {
+  width: 150px;
+}
+
+.SidenavBar ul::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 0;
+}
+
+.SidenavBar ul::-webkit-scrollbar-thumb {
+  background: #e1e1e1;
+  transition: 0.5s all ease-in-out;
+  border-radius: 10px;
+  display: none;
+  transition: background-color 0.2s linear, width 0.2s ease-in-out;
+  -webkit-transition: background-color 0.2s linear, width 0.2s ease-in-out;
+}
+
+.SidenavBar ul:hover::-webkit-scrollbar-thumb {
+  display: block;
+}
+
+.SidenavBar ul::-webkit-scrollbar {
+  width: 4px;
+  border-radius: 20px;
+}
+
+.SidenavBar ul {
+  margin: 0;
+  height: calc(100vh - 70px - 153px);
+  overflow: auto;
+  padding: 15px 0 5px 0;
+}
+
+.SidenavBar ul li {
+  margin: 0 0 10px 0;
+  padding: 0 10px;
+}
+
+.SidenavBar ul li a {
+  display: block;
+  cursor: pointer;
+  transition: 0.5s all ease-in-out;
+  font-family: 'Plus Jakarta Sans';
+  padding: 12px 20px 12px 50px;
+  transition: 0.5s all ease-in-out;
+  color: #8E92BC;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: capitalize;
+  position: relative;
+  border-radius: 10px;
+}
+
+.SidenavBar ul li a span {
+  font-size: 14px;
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 32px;
+  /* height: 32px; */
+  /* background-color: #fff; */
+  text-align: center;
+  border-radius: 50px;
+  /* line-height: 33px; */
+  /* box-shadow: 0px 0px 4px #ddd; */
+}
+
+.SidenavBar ul li.active a span {
+  filter: brightness(0);
+}
+
+.SidenavBar ul li a.dropdown-toggle:after {
+  content: '\f105';
+  font-family: FontAwesome;
+  position: absolute;
+  top: 17px;
+  right: 15px;
+  font-size: 13px;
+  border: none;
+  font-weight: 700;
+  line-height: 10px;
+}
+
+.SidenavBar ul li a:hover {
+  background-color: #ebeef1;
+  color: #000;
+}
+
+.SidenavBar ul li a.active {
+  background-color: #1d75bd;
+  color: #141522;
+  font-weight: 600;
+}
+
+.SidenavBar ul li ol {
+  position: relative !important;
+  float: none;
+  transform: inherit !important;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.SidenavBar ul li ol li {
+  margin: 15px 0 15px 0;
+  padding: 0;
+}
+
+.SidenavBar ul li ol li:last-child {
+  margin-bottom: 0
+}
+
+.SidenavBar ul li ol li a {
+  padding: 0 0 0 50px;
+  background-color: transparent !important;
+  color: #5e5e5e !important;
+  font-weight: 400;
+}
+
+.SidenavBar ul li ol li.active a {
+  color: #f98c1c !important;
+}
+
+.SidenavBar ul li.active ol {
+  display: block;
+}
+
+.WrapperArea {
+  margin-left: 250px;
+  flex: 1 1 auto;
+  width: calc(100% - 250px);
+  display: flex;
+  flex-direction: column;
+  margin-top: 70px;
+  transition: 0.5s all ease-in-out
+}
+
+.WrapperArea .WrapperBox {
+  padding: 20px;
+  background-color: #fafafa;
+  min-height: calc(100vh - 70px);
+}
+
+.Small-Wrapper {
+  background-color: #fff;
+  padding: 40px 20px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.Small-Wrapper+.Small-Wrapper {
+  margin-top: 20px;
+}
+
+.TitleBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 20px 0;
+}
+
+.TitleBox h4.Title {
+  margin: 0;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-size: 22px;
+  font-family: 'Roboto';
+  background-image: linear-gradient(45deg, #fd701e, #fd894e);
+  background-color: transparent;
+  background-clip: text;
+  -o-background-clip: text;
+  -ms-background-clip: text;
+  -moz-background-clip: text;
+  -webkit-background-clip: text;
+  -o-text-fill-color: transparent;
+  -ms-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.TitleBox a.TitleLink {
+  background-image: linear-gradient(45deg, #fd701e, #fd894e);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.TitleBox a.TitleLink:hover {
+  background-color: #04bad2
+}
+
+.Filter {
+  display: flex;
+}
+
+.Filter .form-group {
+  margin: 0 10px 20px 0;
+  display: inline-block;
+}
+
+.Filter .form-group:last-child {
+  margin: 0 0 20px 0
+}
+
+.Filter .form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  color: #000;
+}
+
+.Filter .form-group .form-control {
+  height: 42px;
+  line-height: 25px;
+  padding: 8px 10px;
+  border: 1px solid #cbcaca;
+  font-size: 14px;
+  margin: 0 10px 0 0;
+  box-shadow: none;
+  color: #3e3d3d;
+  font-weight: 600;
+  border-radius: 5px;
+}
+
+.Overview {
+  background: #f1f1f1;
+  padding: 25px 25px;
+  border-left: 5px solid #b5b5b5;
+  border-radius: 10px;
+  margin: 0 0 20px 0;
+}
+
+.Overview h2 {
+  font-size: 16px;
+  color: #000;
+  font-weight: 600;
+  margin-bottom: 20px
+}
+
+.Overview aside {
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+
+.Overview aside i {
+  font-size: 30px;
+  color: #000
+}
+
+.Overview aside h3 {
+  font-size: 33px;
+  color: #000;
+  font-weight: 800
+}
+
+.CommonForm h4 {
+  font-size: 16px;
+  padding: 15px 20px;
+  background-color: #f1efef;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 20px 0px;
+}
+
+.CommonForm .form-group {
+  margin: 0 0 30px 0;
+  position: relative;
+}
+
+.CommonForm .form-group .form-group {
+  margin: 0 0 0 0
+}
+
+.CommonForm .form-group label {
+  display: block;
+  color: #000;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 10px 0
+}
+
+.CommonForm .EslcameHeading {
+  display: block;
+  color: #000;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 10px 0
+}
+
+.CommonForm .EslcameHeading span {
+  display: inline-block;
+  margin: 0 0 0 10px;
+}
+
+.CommonForm .form-group .form-control {
+  height: auto;
+  padding: 12px 10px 12px 15px;
+  border: 1px solid #e1e0e0;
+  border-radius: 10px;
+  box-shadow: none;
+  font-weight: 500;
+  font-family: 'Plus Jakarta Sans';
+  font-size: 14px;
+  display: inline-block;
+  color: rgba(20, 21, 34, 1);
+}
+
+.CommonForm .form-group .form-control::placeholder {
+  color: rgba(20, 21, 34, 1);
+}
+
+.CommonForm .form-group .UserPlan {
+  display: block;
+  text-align: center;
+}
+
+.CommonForm .form-group .UserPlan li {
+  display: inline-block;
+  margin: 0 15px;
+}
+
+.CommonForm .form-group .Avaialable li {
+  display: inline-block;
+  width: 24%;
+  margin: 0 0 15px 0;
+}
+
+.CommonForm .form-group label .EsclamSpan {
+  display: inline-block;
+  margin: 0 0 0 10px;
+  cursor: pointer;
+}
+
+.CommonForm .form-group .Icon {
+  position: absolute;
+  right: 15px;
+  top: 45px;
+}
+
+/* .UploadBox .Upload{border:2px dashed #b9b9b9;padding: 37px 0;border-radius: 8px;position:relative;display: inline-block;width: 160px;height: 135px;text-align: center;background-color: #fff;}
+.UploadBox .Upload i{font-size:24px}
+.UploadBox .Upload span{font-size: 14px;font-weight:600;color:#000;text-transform:capitalize;display: block;}
+.UploadBox .Upload input{position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;opacity:0}
+.UploadBox figure{margin:0 auto 0;width:170px} */
+
+.CommonForm .form-group .Verify {
+  color: #028107c2;
+  font-weight: 800;
+  position: absolute;
+  top: 42px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.CommonForm .ServiceAdd {
+  background-color: #ddd;
+  padding: 20px 20px 2px 20px;
+  border-radius: 5px;
+  margin: 0 0 20px 0;
+}
+
+.CommonForm .ServiceAdd .form-group {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.CommonForm .ServiceAdd .form-group aside {
+  display: flex;
+}
+
+.CommonForm .ServiceAdd .form-group aside .form-control {
+  margin: 0 10px 0 0;
+  width: 250px;
+}
+
+.CommonForm .ServiceAdd .form-group aside button.Delete {
+  border: none;
+  background-color: #ffe5e5;
+  padding: 0 15px;
+  border-radius: 5px;
+  color: #ed0000;
+  font-size: 22px;
+}
+
+.CommonForm .form-group .ck.ck-editor {
+  margin: 0 0 20px 0;
+}
+
+.CommonForm .form-group .ck.ck-label.ck-voice-label {
+  display: none;
+}
+
+.CommonForm .form-group .ck.ck-content.ck-editor__editable {
+  padding: 10px;
+  min-height: 275px;
+}
+
+.CommonForm .form-group .ExtraFeed li {
+  margin: 0 0 10px 0;
+}
+
+.CommonForm .form-group .ExtraFeed li:last-child {
+  margin: 0
+}
+
+.CommonForm .form-group .ExtraFeed li h5 {
+  margin: 0;
+  display: inline-block;
+  min-width: 220px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+.CommonForm .form-group .ExtraFeed li label {
+  display: inline-block;
+}
+
+.AdminAccess table tr td strong {
+  font-weight: 700;
+  color: #000;
+}
+
+.AdminAccess table tr td .CheckBox .checkmark {
+  min-width: auto;
+}
+
+.AdminAccess table tr td .CheckBox:hover .checkmark {
+  background-color: transparent;
+}
+
+.CommonTabs {
+  margin-bottom: 20px
+}
+
+.CommonTabs .nav-tabs {
+  border: none
+}
+
+.CommonTabs .nav-tabs li {
+  margin: 0 15px 0 0
+}
+
+.CommonTabs .nav-tabs li a {
+  background-color: #d0cece;
+  border-radius: 5px;
+  padding: 11px 35px;
+  border: none !important;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: capitalize;
+  margin: 0;
+  font-size: 15px
+}
+
+.CommonTabs .nav-tabs li a.active {
+  background-image: linear-gradient(45deg, #fd701e, #fd894e);
+  color: #fff
+}
+
+.ReportBox ul {
+  border: 1px solid #E3E3E3;
+  margin: 0;
+  border-radius: 10px;
+  background-color: #F6F6F6
+}
+
+.ReportBox ul li {
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  padding: 25px 30px 25px 65px;
+  position: relative;
+  align-items: center
+}
+
+.ReportBox ul li:last-child {
+  border: none
+}
+
+.ReportBox ul li span {
+  margin: 0;
+  width: 60px;
+  font-size: 30px;
+  position: absolute;
+  left: 20px;
+}
+
+.ReportBox ul li figcaption {
+  width: 100%
+}
+
+.ReportBox ul li figcaption h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 5px 0
+}
+
+.ReportBox ul li figcaption p {
+  font-size: 13px;
+  color: #6d6c6c;
+  font-weight: 500;
+}
+
+.ReportBox ul li aside {
+  display: flex;
+}
+
+.ReportBox ul li aside a {
+  display: inline-block;
+  font-size: 15px;
+  margin: 0 14px;
+}
+
+.StaticArea .card {
+  border: 1px solid #e9e9e9;
+  border-radius: 0;
+}
+
+.StaticArea .card+.card {
+  margin: 20px 0 0 0;
+}
+
+.StaticArea .card .card-header {
+  cursor: pointer;
+  background-color: #ffffff;
+  border-radius: 0;
+  padding: 15px 55px 15px 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.StaticArea .card .card-header:after {
+  content: '\f107';
+  font-family: FontAwesome;
+  color: #000;
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 14px;
+  transition: 0.5s all ease-in-out
+}
+
+.StaticArea .card .card-header[aria-expanded="true"]:after {
+  transform: rotate(180deg)
+}
+
+.StaticArea .card .card-header h4 {
+  font-size: 17px;
+  color: #000;
+  font-weight: 600;
+}
+
+.StaticArea .card .card-header h4 span {
+  margin: 0 10px 0px 0;
+}
+
+.StaticArea .card .card-header a {
+  color: #000;
+  font-size: 14px
+}
+
+.StaticArea .card .card-body {
+  padding: 15px;
+}
+
+.StaticArea .card .card-body:before {
+  content: none
+}
+
+.StaticArea .card .card-body p {
+  font-size: 15px;
+  line-height: 28px;
+  font-weight: 400;
+  color: #404040;
+}
+
+.StaticArea .card .card-body p+p {
+  margin-top: 15px
+}
+
+.UploadBills ul li {
+  margin: 0 10px 20px 0;
+  display: inline-block;
+  width: 32%
+}
+
+.UploadBills ul li aside {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  padding: 15px 15px 15px 60px;
+  border: 1px solid #ddd;
+  position: relative;
+  display: flex;
+  justify-content: space-between
+}
+
+.UploadBills ul li aside .Count {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  background-color: #cfcece;
+  border-radius: 50px;
+  text-align: center;
+  color: #000;
+  font-weight: 600;
+  line-height: 30px
+}
+
+.UploadBills ul li aside h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000
+}
+
+.UploadBills ul li aside a {
+  width: 30px;
+  height: 30px;
+  background-color: #cfcece;
+  border-radius: 50px;
+  text-align: center;
+  color: #000;
+  font-weight: 600;
+  line-height: 30px;
+  display: inline-block;
+  margin: 0 0 0 7px
+}
+
+.UploadBills ul li aside a.Green {
+  color: #37a713;
+  background-color: #d2fdc4
+}
+
+.UploadBills ul li aside a.Red {
+  background-color: #ffd0d0;
+  color: #e21818
+}
+
+.CommunityBox {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px #ddd
+}
+
+.CommunityBox article {
+  position: relative;
+  padding: 10px 10px 10px 63px;
+  margin: 0 0 10px 0;
+  background-color: #efefef;
+  border-radius: 5px;
+  min-height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+}
+
+.CommunityBox article .Icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50px;
+  overflow: hidden;
+  border: 2px solid #fff
+}
+
+.CommunityBox article h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 5px 0
+}
+
+.CommunityBox article h6 {
+  font-size: 13px;
+  color: #6e6e6e;
+  font-weight: 600
+}
+
+.CommunityBox article .Actions a {
+  font-size: 14px;
+  margin: 0 0 0 5px
+}
+
+.CommunityBox figure {
+  border-radius: 5px;
+  overflow: hidden
+}
+
+.CommunityBox figcaption p {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  line-height: 23px;
+  margin: 0 0 10px 0
+}
+
+.CommunityBox figcaption ul {
+  border-top: 1px solid #ddd;
+  padding: 10px 0 0 0
+}
+
+.CommunityBox figcaption ul li {
+  display: inline-block;
+  width: 20%
+}
+
+.CommunityBox figcaption ul li a {
+  font-size: 15px;
+  color: #5f5f5f
+}
+
+.CommunityBox figcaption ul li a i {
+  margin: 0 5px 0 0
+}
+
+.NotificationsBox ul li+li {
+  margin: 15px 0 0 0
+}
+
+.NotificationsBox ul li aside {
+  background: #f9f9f9;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px
+}
+
+.NotificationsBox ul li aside p {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 27px;
+  margin: 0 0 5px 0
+}
+
+.NotificationsBox ul li aside h6 {
+  text-align: right;
+  font-size: 15px;
+  font-weight: 700;
+  color: #000
+}
+
+.PaginationBox {
+  margin: 20px 0px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.PaginationBox .PaginationLeft p {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0px 10px 0px 0px;
+}
+
+.PaginationBox .PaginationLeft p span {
+  color: #6ad29e;
+}
+
+.PaginationBox .PaginationRight ul li {
+  display: inline-block;
+  margin: 0px 4px;
+}
+
+.PaginationBox .PaginationRight ul li a {
+  font-size: 15px;
+  font-weight: 500;
+  color: rgb(62, 62, 62);
+}
+
+.PaginationBox .PaginationRight ul li.active a {
+  color: #6ad29e;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.pagination a {
+  color: black;
+  float: left;
+  padding: 2px 6px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pagination a.active {
+  background-color: #000;
+  color: white;
+  border-radius: 5px;
+}
+
+
+.BackArrow {
+  text-align: right;
+  margin: 0 0 10px 0
+}
+
+.BackArrow a {
+  font-size: 16px;
+  color: #000;
+  font-weight: 600;
+}
+
+.BackArrow a i {
+  margin: 0 5px 0 0
+}
+
+.BackArrow a:hover {
+  color: #fd803e;
+}
+
+.UserPlanBox {
+  background: #f7f7f7;
+  padding: 20px 20px 5px 20px;
+  border-radius: 5px;
+  margin: 0 0 15px 0;
+}
+
+.CommonAddMore {
+  text-align: right;
+  margin: 0 0 10px 0
+}
+
+.CommonAddMore a {
+  font-size: 15px;
+  color: #000;
+  font-weight: 700;
+}
+
+.CommonAddMore a i {
+  margin: 0 5px 0 0
+}
+
+.CommonAddMore a:hover {
+  color: #fd803e;
+}
+
+.DetailsArea {
+  box-shadow: 0 1px 4px #ddd;
+  padding: 20px;
+  margin: 0;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.DetailsArea .DetailsProfile figure {
+  overflow: hidden;
+  width: 150px;
+}
+
+.DetailsArea .DetailsProfile figure img {
+  width: 100%;
+}
+
+.DetailsArea .DetailsContent {
+  width: 100%;
+  display: flex;
+}
+
+.DetailsArea .DetailsContent article {
+  width: 100%
+}
+
+.DetailsArea .DetailsContent aside {
+  width: 50%
+}
+
+.DetailsArea .DetailsContent h5 {
+  font-size: 18px;
+  margin: 0 0 15px 0;
+  font-weight: 700;
+  color: #000;
+}
+
+.DetailsArea .DetailsContent p {
+  margin: 0 0 15px 0
+}
+
+.DetailsArea .DetailsContent p label {
+  font-weight: 700;
+  text-transform: capitalize;
+  width: 150px;
+  display: inline-block;
+  position: relative;
+  margin: 0 15px 0 0;
+  padding: 0 10px 0 0;
+  color: #000;
+  font-size: 14px;
+}
+
+.DetailsArea .DetailsContent p label a {
+  margin-left: 5px;
+}
+
+.DetailsArea .DetailsContent p label:after {
+  content: ':';
+  position: absolute;
+  right: 0;
+  top: 0
+}
+
+.DetailsArea .DetailsContent p span {
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #5e5c5c;
+  font-size: 14px;
+}
+
+.DetailsArea .DetailsContent p span a {
+  color: #000;
+  margin: 0 0 0 10px
+}
+
+.BuildingsPast article {
+  display: flex;
+}
+
+.BuildingsPast article aside {
+  background-color: #fbfbfb;
+  padding: 20px;
+  width: 49%;
+  margin: 0 25px 20px 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.BuildingsPast article aside:nth-child(even) {
+  margin: 0 0px 20px 0;
+}
+
+.BuildingsPast article aside h6 {
+  float: right;
+  color: #000;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.BuildingsPast article aside h5 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #5e5c5c;
+}
+
+.BuildingsPast article aside h5 span {
+  color: #000;
+}
+
+.BuildingsPast article aside p {
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #5e5c5c;
+  font-size: 14px;
+  margin: 0 0 9px 0;
+}
+
+.BuildingsPast article aside p span {
+  font-weight: 700;
+  text-transform: capitalize;
+  display: inline-block;
+  position: relative;
+  color: #000;
+  font-size: 14px;
+}
+
+.BuildingsPast article aside a {
+  color: #3da508;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/*.BuildingArea{background-color: #efefef;padding: 20px;border-radius: 10px;}*/
+
+.BuildingArea .card {
+  border-radius: 7px;
+  overflow: hidden;
+  border: none;
+}
+
+.BuildingArea .card+.card {
+  margin-top: 20px
+}
+
+.BuildingArea .card .card-header {
+  cursor: pointer;
+  padding: 10px 45px 10px 15px;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+}
+
+.BuildingArea .card .card-header:after {
+  content: '\f107';
+  font-family: FontAwesome;
+  color: #000;
+  position: absolute;
+  top: 28px;
+  right: 20px;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 14px;
+  transition: 0.5s all ease-in-out
+}
+
+.BuildingArea .card .card-header[aria-expanded="true"]:after {
+  transform: rotate(180deg)
+}
+
+.BuildingArea .card .card-header h3 {
+  margin: 0 0 0px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #000;
+}
+
+.BuildingArea .card .card-header aside a {
+  background-image: linear-gradient(45deg, #fd701e, #fd894e);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 15px;
+  border-radius: 5px;
+  display: inline-block;
+  margin: 0 0 0 5px;
+}
+
+.BuildingArea .card .card-body {
+  background-color: #efefef;
+  padding: 15px 0;
+}
+
+.BuildingArea .BuildingPackage {
+  background-color: #fff;
+  padding: 20px;
+  margin: 0 0 20px 0;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px #ddd;
+  height: calc(100% - 20px);
+}
+
+.BuildingArea .BuildingPackage:last-child {
+  /* margin:0; */
+}
+
+.BuildingArea .BuildingPackage h4 {
+  margin: 0 0 14px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+}
+
+.BuildingArea .BuildingPackage p {
+  margin: 0 0 20px 0;
+  display: flex;
+}
+
+.BuildingArea .BuildingPackage p:last-child {
+  margin: 0
+}
+
+.BuildingArea .BuildingPackage p label {
+  font-weight: 700;
+  text-transform: capitalize;
+  width: 150px;
+  display: inline-block;
+  position: relative;
+  margin: 0 15px 0 0;
+  padding: 0 10px 0 0;
+  color: #000;
+  font-size: 13px;
+}
+
+.BuildingArea .BuildingPackage p label a {
+  margin-left: 5px;
+}
+
+.BuildingArea .BuildingPackage p label:after {
+  content: ':';
+  position: absolute;
+  right: 0;
+  top: 0
+}
+
+.BuildingArea .BuildingPackage p span {
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #5e5c5c;
+  font-size: 13px;
+  width: calc(100% - 175px);
+}
+
+.BuildingArea .BuildingPackage p span a {
+  color: #1a7cd1;
+  margin: 0 0 0 10px;
+  font-weight: 600;
+}
+
+.BuildingArea .BuildingPackage .View {
+  background: #fd7f3b;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 15px;
+  border-radius: 5px;
+  display: inline-block;
+  border: 2px solid #fd7f3b;
+  float: right;
+}
+
+.BuildingArea .BuildingPackage .BuildingPhotos ul li {
+  display: inline-block;
+  width: 175px;
+  margin: 0 10px 10px 0;
+}
+
+.BuildingArea .BuildingPackage .BuildingPhotos ul li figure {
+  margin: 0;
+  border: 3px solid #fff;
+  box-shadow: 0px 0px 4px #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.BuildingArea .BuildingPackage .BuildingFeedBox {
+  display: inline-block;
+  width: 33%;
+  margin: 5px 0;
+}
+
+.BuildingArea .BuildingPackage .BuildingFeedBox h4 {
+  margin: 0;
+  display: inline-block;
+  min-width: 140px;
+  font-size: 14px;
+}
+
+.BuildingArea .BuildingPackage .BuildingFeedBox+.BuildingFeedBox {}
+
+.AgreementDetails {
+  margin-bottom: 20px
+}
+
+.AgreementDetails figcaption p {
+  margin: 0 0 15px 0;
+  display: flex;
+}
+
+.AgreementDetails figcaption p label {
+  font-weight: 700;
+  text-transform: capitalize;
+  width: 150px;
+  display: inline-block;
+  position: relative;
+  margin: 0 15px 0 0;
+  padding: 0 10px 0 0;
+  color: #000;
+  font-size: 14px;
+}
+
+.AgreementDetails figcaption p label a {
+  margin-left: 5px;
+}
+
+.AgreementDetails figcaption p label:after {
+  content: ':';
+  position: absolute;
+  right: 0;
+  top: 0
+}
+
+.AgreementDetails figcaption p span {
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #5e5c5c;
+  font-size: 14px;
+  display: inline-block;
+}
+
+.AgreementDetails figure {
+  margin: 0 0 15px 0;
+}
+
+.AgreementDetails figure img {
+  width: 100%
+}
+
+
+.ModalBox.ModalWidth75 .modal-dialog {
+  max-width: 75%;
+  margin: 50px auto
+}
+
+.ModalBox.ModalWidth50 .modal-dialog {
+  max-width: 50%;
+  margin: 50px auto
+}
+
+.ModalBox .modal-dialog {
+  max-width: 460px;
+  margin: 50px auto
+}
+
+.ModalBox .modal-dialog .CloseModal {
+  position: absolute;
+  top: -13px;
+  right: -13px;
+  width: 26px;
+  height: 26px;
+  background-color: #fff;
+  border: 2px solid rgba(0, 0, 0, .5);
+  text-align: center;
+  color: #000;
+  font-size: 15px;
+  border-radius: 50%
+}
+
+.ModalBox .modal-dialog .Decline {
+  margin: 0
+}
+
+.ModalBox .modal-dialog .Decline h3 {
+  font-weight: 700;
+  font-size: 22px;
+  margin: 0 0 5px;
+  text-align: left
+}
+
+.ModalBox .modal-dialog .Decline p {
+  font-size: 16px;
+  color: #777;
+  text-align: left
+}
+
+.ModalBox .modal-dialog .Decline h4 {
+  margin: 15px 0 0 0;
+  text-align: right
+}
+
+.ModalBox .modal-dialog .Decline h4 a {
+  text-transform: capitalize;
+  margin: 0 0 0 30px;
+  font-size: 17px;
+  color: #49a0d5;
+  font-weight: 400;
+  -webkit-transition: 0.5s all ease-in-out;
+  transition: 0.5s all ease-in-out
+}
+
+.ModalBox .modal-dialog .Decline h4 a:hover {
+  color: #000
+}
+
+.ModalBox .modal-dialog .Category {
+  padding: 10px;
+}
+
+.ModalBox .modal-dialog .Category h3 {
+  font-weight: 600;
+  color: rgba(20, 21, 34, 1);
+  margin: 0 0 25px 0;
+  /* border-bottom:1px solid #ddd;padding:0 0 15px; */
+  font-family: 'Plus Jakarta Sans';
+  font-size: 20px
+}
+
+.ModalBox .modal-dialog .Category .form-group {
+  margin: 0 0 25px;
+  position: relative
+}
+
+.ModalBox .modal-dialog .Category .form-group label {
+  display: inline-block;
+  font-weight: 600;
+  font-family: 'Plus Jakarta Sans';
+  color: #000;
+  font-size: 14px;
+  margin: 0 0 10px 0;
+}
+
+.ModalBox .modal-dialog .Category .form-group .form-control {
+  box-shadow: none;
+  border: 1px solid #c3c3c3;
+  height: auto;
+  font-size: 14px;
+  color: #000;
+  line-height: 22px;
+  padding: 12px 15px 12px;
+}
+
+.ModalBox .modal-dialog .Category .form-group .Verify {
+  position: absolute;
+  color: #028107c2;
+  font-weight: 700;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.ModalBox .modal-dialog .Category .form-group textarea.form-control {
+  height: auto
+}
+
+.ModalBox .modal-dialog .Category .GatekeeperAdd {
+  background: #fd7f3b;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 20px;
+  border-radius: 5px;
+  display: inline-block;
+  float: right;
+  margin: -5px 0 0 0;
+}
+
+.ModalBox .modal-dialog .Category .Button {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.ModalBox.MediumModal .modal-dialog {
+  max-width: 750px;
+  margin: 50px auto
+}
+
+.ModalBox .modal-content {
+  border-radius: 10px;
+}
+
+/*New CSS*/
+
+.DashboardOverview {
+  background: #fff;
+  padding: 30px 25px;
+  border-left: 5px solid #b5b5b5;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  font-family: Roboto;
+  box-shadow: -8px 12px 18px 0 #dadee8
+}
+
+.DashboardOverview h2 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000
+}
+
+.DashboardOverview article {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0 0
+}
+
+.DashboardOverview article span {
+  font-size: 20px;
+  height: 42px;
+  border-radius: 50px;
+  width: 42px;
+  text-align: center;
+  line-height: 40px;
+  color: #fff
+}
+
+.DashboardOverview article h3 {
+  font-weight: 700;
+  color: #000
+}
+
+.DashboardOverview.Overview1 {
+  border-color: #f66d30
+}
+
+.DashboardOverview.Overview1 span {
+  background: #f66d30;
+  color: #fff
+}
+
+.DashboardOverview.Overview1 h3 {
+  color: #f66d30
+}
+
+.DashboardOverview.Overview2 {
+  border-color: #099d6d
+}
+
+.DashboardOverview.Overview2 span {
+  background: #099d6d
+}
+
+.DashboardOverview.Overview2 h3 {
+  color: #099d6d
+}
+
+.DashboardOverview.Overview3 {
+  border-color: #f84563
+}
+
+.DashboardOverview.Overview3 span {
+  background: #f84563
+}
+
+.DashboardOverview.Overview3 h3 {
+  color: #f84563
+}
+
+.DashboardOverview.Overview4 {
+  border-color: #015fea
+}
+
+.DashboardOverview.Overview4 span {
+  background: #015fea
+}
+
+.DashboardOverview.Overview4 h3 {
+  color: #015fea
+}
+
+.DashboardOverview.Overview5 {
+  border-color: #15b3b3
+}
+
+.DashboardOverview.Overview5 span {
+  background: #15b3b3
+}
+
+.DashboardOverview.Overview5 h3 {
+  color: #15b3b3
+}
+
+.DashboardOverview.Overview6 {
+  border-color: #42a8cf
+}
+
+.DashboardOverview.Overview6 span {
+  background: #42a8cf
+}
+
+.DashboardOverview.Overview6 h3 {
+  color: #42a8cf
+}
+
+.DashboardOverview.Overview7 {
+  border-color: #2ab33b;
+}
+
+.DashboardOverview.Overview7 span {
+  background: #2ab33b;
+}
+
+.DashboardOverview.Overview7 h3 {
+  color: #2ab33b;
+}
+
+.DashboardOverview.Overview8 {
+  border-color: #cd42cf;
+}
+
+.DashboardOverview.Overview8 span {
+  background: #cd42cf;
+}
+
+.DashboardOverview.Overview8 h3 {
+  color: #cd42cf;
+}
+
+.FilterArea {
+  display: flex;
+  justify-content: space-between;
+}
+
+.FilterArea .form-group {
+  margin: 0 10px 0px 0;
+  display: inline-block;
+}
+
+.FilterArea .form-group:last-child {
+  margin: 0 0 0px 0;
+}
+
+.FilterArea .form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  color: #000;
+}
+
+.FilterArea .form-group .form-control {
+  height: 42px;
+  line-height: 25px;
+  padding: 8px 10px;
+  border: 1px solid #cbcaca;
+  font-size: 13px;
+  margin: 0 10px 0 0;
+  box-shadow: none;
+  color: #3e3d3d;
+  font-weight: 600;
+  border-radius: 5px;
+}
+
+.TableList {
+  overflow: auto;
+}
+
+.TableList::-webkit-scrollbar-thumb {
+  background: #fd8343;
+  transition: 0.5s all ease-in-out;
+  border-radius: 10px;
+  display: none;
+  transition: background-color 0.2s linear, width 0.2s ease-in-out;
+  -webkit-transition: background-color 0.2s linear, width 0.2s ease-in-out;
+}
+
+.TableList:hover::-webkit-scrollbar-thumb {
+  display: block;
+}
+
+.TableList::-webkit-scrollbar {
+  width: 4px;
+  border-radius: 20px;
+  height: 5px;
+}
+
+.TableList table {
+  margin: 0 0 10px 0;
+}
+
+.TableList table tr th {
+  background-color: #dcdcdc;
+  font-weight: 700;
+  color: #000;
+  font-size: 14px;
+  padding: 10px 10px
+}
+
+.TableList table tr td {
+  font-weight: 600;
+  color: #404040;
+  padding: 10px 10px;
+  font-size: 13px;
+}
+
+.TableList table tr td a {
+  margin: 0 7px;
+}
+
+.TableList table tr td a:hover {
+  color: #000
+}
+
+.TableList table tr th:last-child,
+.TableList table tr td:last-child {
+  text-align: center;
+  min-width: 105px
+}
+
+.TableList table tr td:last-child a {
+  color: #545454;
+  margin: 0 5px;
+  font-size: 14px;
+  display: inline-block
+}
+
+.TableList table tr td:last-child a:hover {
+  color: #000
+}
+
+.TableList table tr:nth-child(even) {
+  font-weight: 500;
+  text-transform: capitalize;
+  color: #7C8493;
+  overflow: hidden;
+  border-radius: 11px;
+}
+
+.TableList table tr:nth-child(even) td {
+  background-color: #fff;
+}
+
+.TableList table tr:nth-child(even) td:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.TableList table tr:nth-child(even) td:last-child {
+  border-radius: 0px 10px 10px 0px;
+}
+
+.TableList table tr th:first-child {
+  border-radius: 10px 0 0 10px;
+}
+
+.TableList table tr th:last-child {
+  border-radius: 0px 10px 10px 0px;
+  background-image: none;
+}
+
+.TableList table tr td span {
+  padding: 8px 10px;
+  color: #fff;
+  border-radius: 5px;
+  width: auto;
+  display: inline-block;
+  text-align: center;
+  font-size: 12px;
+  min-width: 100px;
+}
+
+.TableList table tr td .Actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.TableList table tr td .Actions button {
+  padding: 6px 15px;
+  color: #fff;
+  border-radius: 25px;
+  width: auto;
+  display: inline-block;
+  text-align: center;
+  font-size: 13px;
+  border: none;
+  font-weight: 700;
+}
+
+.TableList table tr td .Actions select {
+  background-color: #fff;
+  padding: 7px 6px;
+  border-radius: 5px;
+  color: #000;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid #6e6e6e;
+  outline: 0;
+}
+
+.TableList table tr td .Actions a.Resend {
+  padding: 5px 15px;
+  color: #fff;
+  border-radius: 5px;
+  width: auto;
+  display: block;
+  text-align: center;
+  font-size: 13px;
+  background-color: #fd7325;
+}
+
+.TableList table tr td a.Green {
+  color: #37a713;
+}
+
+.TableList table tr td a.Red {
+  color: #e21818;
+}
+
+.TableList table tr td a.Blue {
+  color: #139bbf;
+}
+
+.TableList table tr td a.Yellow {
+  color: #feca05;
+}
+
+.TableList table tr td a.Pink {
+  color: #fd546d;
+}
+
+.TableList table tr td span.Green {
+  background-color: #37a713;
+}
+
+.TableList table tr td span.Blue {
+  background-color: #139bbf;
+}
+
+.TableList table tr td span.Red {
+  background-color: #bb0f0f;
+}
+
+.TableList table tr td span.Orange {
+  background-color: #fd813f;
+}
+
+.TableList table tr td .Actions button.Green {
+  background-color: #37a713;
+}
+
+.TableList table tr td .Actions button.Blue {
+  background-color: #139bbf;
+}
+
+.TableList table tr td .Actions button.Red {
+  background-color: #bb0f0f;
+}
+
+.TableList table tr td .Actions button.Orange {
+  background-color: #df9919;
+}
+
+.TableList table tr td .form-control {
+  height: auto;
+  padding: 6px 10px 6px 10px;
+  border: 1px solid #b3b3b3;
+  border-radius: 5px;
+  box-shadow: none;
+  font-weight: 600;
+  font-size: 14px
+}
+
+.UserBox {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px #ddd;
+  margin: 0 0 30px 0;
+}
+
+.UserBox figure {
+  text-align: center;
+}
+
+.UserBox figure span {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  border: 5px solid #fff;
+  box-shadow: 0px 0px 8px #ddd
+}
+
+.UserBox figure span img {
+  width: 100%;
+  height: 100%
+}
+
+.UserBox figcaption p {
+  margin: 0 0 15px 0;
+  display: flex;
+}
+
+.UserBox figcaption p strong {
+  font-weight: 700;
+  text-transform: capitalize;
+  width: 125px;
+  display: inline-block;
+  position: relative;
+  margin: 0 15px 0 0;
+  padding: 0 10px 0 0;
+  color: #000;
+  font-size: 13px;
+}
+
+.UserBox figcaption p strong a {
+  margin-left: 5px;
+}
+
+.UserBox figcaption p strong:after {
+  content: ':';
+  position: absolute;
+  right: 0;
+  top: 0
+}
+
+.UserBox figcaption p span {
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #5e5c5c;
+  font-size: 13px;
+  display: inline-block;
+}
+
+.UserBox figcaption p .Actions {}
+
+.UserBox figcaption p .Actions .switch {
+  float: none;
+  padding: 0 0 0 40px;
+  margin: 0 10px 0 0;
+}
+
+.UserBox figcaption p .Actions a {
+  margin: 0 10px 0 0;
+}
+
+.ModalBox .modal-dialog .Category .TableList table tr:nth-child(even) td {
+  background-color: #efefef;
+}
+
+
+
+.CategoryBox {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px #ddd;
+  margin: 0 0 30px 0;
+  display: flex;
+}
+
+.CategoryBox figure {
+  text-align: center;
+  width: 50px;
+  height: 50px;
+  margin: 0;
+}
+
+.CategoryBox figure span img {
+  width: 100%;
+  height: 100%
+}
+
+.CategoryBox figcaption {
+  width: calc(100% - 50px);
+  padding: 0 0 0 8px;
+}
+
+.CategoryBox figcaption p {
+  margin: 0 0 10px 0;
+  display: flex;
+}
+
+.CategoryBox figcaption p strong {
+  font-weight: 700;
+  text-transform: capitalize;
+  width: 113px;
+  display: inline-block;
+  position: relative;
+  margin: 0 15px 0 0;
+  padding: 0 10px 0 0;
+  color: #000;
+  font-size: 13px;
+}
+
+.CategoryBox figcaption p strong a {
+  margin-left: 5px;
+}
+
+.CategoryBox figcaption p strong:after {
+  content: ':';
+  position: absolute;
+  right: 0;
+  top: 0
+}
+
+.CategoryBox figcaption p span {
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #5e5c5c;
+  font-size: 13px;
+  display: inline-block;
+}
+
+.CategoryBox figcaption p:last-child {
+  margin: 0
+}
+
+.CategoryBox figcaption p .Actions .switch {
+  float: none;
+  padding: 0 0 0 40px;
+  margin: 0 10px 0 0;
+}
+
+.CategoryBox figcaption p .Actions a {
+  margin: 0 10px 0 0;
+}
+
+.AdminAccess table {
+  border: 1px solid #e1e1e1
+}
+
+.AdminAccess table tr th {
+  background-color: #e1e1e1;
+  font-weight: 700;
+  color: #000;
+  font-size: 14px;
+  padding: 10px 20px;
+  border: none;
+  border-right: 1px solid #bbb
+}
+
+.AdminAccess table tr td {
+  font-weight: 600;
+  color: #404040;
+  padding: 10px 20px;
+  font-size: 13px;
+  border-bottom: 1px solid #ddd;
+  border-top: none;
+  vertical-align: middle;
+  border-right: 1px solid #ddd
+}
+
+.AdminAccess table tr td .Read {
+  display: inline-block;
+  position: relative
+}
+
+.AdminAccess table tr td .Read input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer
+}
+
+.AdminAccess table tr td .Read span {
+  font-size: 16px;
+  color: #6e6e6e
+}
+
+.AdminAccess table tr td .Read input:checked~span {
+  color: #fd701e
+}
+
+.AdminAccess table tr td .Read input:checked~span i:before {
+  content: '\f070'
+}
+
+.AdminAccess table tr td .Access {
+  display: inline-block;
+  position: relative
+}
+
+.AdminAccess table tr td .Access input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer
+}
+
+.AdminAccess table tr td .Access span {
+  font-size: 18px;
+  color: #6e6e6e
+}
+
+.AdminAccess table tr td .Access input:checked~span {
+  color: #fd701e
+}
+
+.AdminAccess table tr td .Access input:checked~span i:before {
+  content: '\f13e'
+}
+
+.EarningBox {
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 35px;
+  border-radius: 10px;
+  margin: 0 0 25px 0;
+  align-items: center;
+  overflow: hidden;
+  position: relative
+}
+
+.EarningBox:before {
+  content: '';
+  position: absolute;
+  width: 125px;
+  height: 125px;
+  background-color: rgb(255 255 255 / 30%);
+  top: -25px;
+  right: -25px;
+  border-radius: 50%
+}
+
+.EarningBox:after {
+  content: '';
+  position: absolute;
+  width: 125px;
+  height: 125px;
+  background-color: rgb(255 255 255 / 30%);
+  bottom: -25px;
+  right: -25px;
+  border-radius: 50%
+}
+
+.EarningBox aside {
+  width: 90px;
+  height: 90px;
+  border: 7px solid #fff;
+  border-top-color: #fd8444;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+
+.EarningBox aside span {
+  font-size: 20px;
+  color: #fff;
+  font-weight: 800
+}
+
+.EarningBox article {
+  text-align: right
+}
+
+.EarningBox article h3 {
+  font-size: 16px;
+  color: #fff;
+  font-weight: 600;
+  margin: 0 0 6px 0
+}
+
+.EarningBox article h5 {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 800
+}
+
+.EarningBox.Earning1 {
+  background-color: #ac70ba
+}
+
+.EarningBox.Earning2 {
+  background: #00caa9
+}
+
+.EarningBox.Earning3 {
+  background-color: #016bb5
+}
+
+.EarningBox.Earning4 {
+  background-color: #03a4cf
+}
+
+.EarningBox.Earning5 {
+  background: #e17d43
+}
+
+.EarningBox.Earning6 {
+  background-color: #df1cd9
+}
+
+.EarningBox.Earning7 {
+  background: #7843e1
+}
+
+.EarningBox.Earning8 {
+  background-color: #1c8edf
+}
+
+
+
+.AmenitiesArea {}
+
+.AmenitiesArea ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -5px;
+}
+
+.AmenitiesArea ul li {
+  display: inline-block;
+  width: calc(100% / 5);
+  margin: 0 0px 15px;
+  padding: 0 5px;
+}
+
+.AmenitiesArea ul li .AmenitiesBox {
+  padding: 50px 20px 35px 20px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e8eef1;
+  -webkit-transition: all 300ms linear;
+  -o-transition: all 300ms linear;
+  transition: all 300ms linear;
+  border-radius: 6px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  -webkit-box-shadow: 0 0 30px 0 rgb(0 0 0 / 5%);
+  box-shadow: 0 0 30px 0 rgb(0 0 0 / 5%);
+  cursor: pointer;
+  min-height: 165px;
+}
+
+.AmenitiesArea ul li .AmenitiesBox aside {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.AmenitiesArea ul li .AmenitiesBox aside a {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  line-height: 30px;
+  border-radius: 5px;
+  margin: 0 0 0 5px;
+}
+
+.AmenitiesArea ul li .AmenitiesBox aside a.Green {
+  background-color: #00800021;
+}
+
+.AmenitiesArea ul li .AmenitiesBox aside a.Red {
+  background-color: #ff000017;
+}
+
+.AmenitiesArea ul li .AmenitiesBox figure {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto 15px;
+}
+
+.AmenitiesArea ul li .AmenitiesBox figure img {
+  width: 100%;
+  height: 100%
+}
+
+.AmenitiesArea ul li .AmenitiesBox h6 {
+  margin: 0;
+  text-transform: capitalize;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  line-height: 23px;
+}
+
+.AmenitiesArea ul li .AmenitiesBox .Icon {
+  color: #e8e8e8;
+  position: absolute;
+  bottom: 5px;
+  visibility: hidden;
+  pointer-events: none;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  left: 5px;
+  -webkit-transition: all 300ms linear;
+  -o-transition: all 300ms linear;
+  transition: all 300ms linear;
+  width: 35px;
+  height: 35px;
+}
+
+.AmenitiesArea ul li .AmenitiesBox:hover span.Icon {
+  bottom: 15px;
+  visibility: visible;
+  pointer-events: auto;
+  left: 15px;
+  opacity: .4;
+  filter: alpha(opacity=100);
+}
+
+.SidenavBar .SidenavFooter .Overlay {
+  position: absolute;
+  left: 50%;
+  top: -24px;
+  border-radius: 50%;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 49px;
+  height: 49px;
+  background-color: rgba(2, 141, 236, 1);
+  border: 4px solid #fff;
+  transform: translateX(-50%);
+  box-shadow: 0 0 16px 2px rgba(0, 0, 0, 0.2);
+}
+
+.SidenavBar .SidenavFooter {
+  background-color: rgba(2, 141, 236, 1);
+  padding: 40px 15px 10px;
+  position: absolute;
+  bottom: 10px;
+  width: calc(100% - 20px);
+  left: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.SidenavBar .SidenavFooter:before {
+  content: '';
+  width: 90px;
+  height: 90px;
+  background-color: rgba(255, 255, 255, 0.08);
+  position: absolute;
+  top: -35px;
+  left: -35px;
+  border-radius: 50%
+}
+
+.SidenavBar .SidenavFooter:after {
+  content: '';
+  width: 90px;
+  height: 90px;
+  background-color: rgba(255, 255, 255, 0.08);
+  position: absolute;
+  bottom: -35px;
+  right: -35px;
+  border-radius: 50%
+}
+
+.SidenavBar .SidenavFooter h5 {
+  color: #fff;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-family: 'Plus Jakarta Sans';
+}
+
+.SidenavBar .SidenavFooter p {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: #fff;
+  margin: 0 0 15px 0;
+  font-family: 'Plus Jakarta Sans';
+}
+
+.SidenavBar .SidenavFooter a {
+  display: block;
+  background-color: #fff;
+  padding: 11px 0;
+  border-radius: 10px;
+  color: rgba(20, 21, 34, 1);
+  letter-spacing: 0.2px;
+  font-weight: 700;
+  box-shadow: 0 1px 12px #999;
+  font-size: 14px;
+  position: relative;
+  z-index: 9;
+  font-family: 'Plus Jakarta Sans';
+}
+
+
+.Header .HeaderLeft h2 {
+  font-weight: 600;
+  color: rgba(20, 21, 34, 1);
+  font-family: 'Plus Jakarta Sans';
+  font-size: 22px;
+}
+
+
+
+.SelectModelBox {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  margin: 0 0 25px 0;
+  height: calc(100% - 25px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.SelectModelBox aside ul {
+  display: flex;
+  margin: 0 0 25px 0;
+}
+
+.SelectModelBox aside ul li {
+  width: 100%;
+  margin: 0px 10px;
+  max-height: 11rem;
+}
+
+.SelectModelBox aside ul li figure {
+
+  max-height: 11rem;
+}
+
+.SelectModelBox aside ul li figure img {
+ 
+  max-height: 11rem;
+  width: 100%;
+  border-radius: 10px;
+}
+
+
+.SelectModelBox aside ul li:first-child {
+  margin-left: 0px;
+}
+
+.SelectModelBox aside ul li:last-child {
+  margin-right: 0px;
+}
+
+.SelectModelBox h5 {
+  color: rgba(20, 21, 34, 1);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.SelectModelBox p {
+  color: rgba(84, 87, 122, 1);
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0 0 15px 0;
+}
+
+.SelectModelBox article ul {
+  margin: 0 0 20px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.SelectModelBox article ul li {
+  margin: 0 0 10px 0;
+  color: rgba(84, 87, 122, 1);
+  font-weight: 500;
+  display: inline-flex;
+}
+
+.SelectModelBox article ul li span {
+  margin: 0 15px 0 0;
+  width: 24px;
+  display: inline-block;
+}
+
+.SelectModelBox article ul li label {
+  width: calc(100% - 35px);
+  font-size: 13px;
+}
+
+.SelectModelBox article a.StartTraining {
+  border: none;
+  padding: 11px 30px;
+  text-align: center;
+  transition: 0.5s all ease-in-out;
+  font-weight: 600;
+  display: inline-block;
+  position: relative;
+  background-color: #028DEC;
+  font-size: 15px;
+  color: #fff;
+  text-transform: capitalize;
+  border-radius: 10px;
+  outline: 0 !important;
+  box-shadow: none;
+  display: inline-block;
+  font-family: 'Lato';
+  width: 100%;
+  margin: 10px 0 0 0;
+}
+
+.NewTitleBox {
+  margin: 0 0 20px 0;
+}
+
+.NewTitleBox h2.NewTitle {
+  font-weight: 600;
+  text-transform: capitalize;
+  font-size: 22px;
+  margin: 0 0 15px 0;
+}
+
+.NewTitleBox h2.NewTitle span {
+  font-size: 18px;
+}
+
+.NewTitleBox h4.NewTitle {
+  margin: 0;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-size: 17px;
+}
+
+
+
+.NewWrapperArea {
+  margin-left: 250px;
+  flex: 1 1 auto;
+  width: calc(100% - 250px);
+  display: flex;
+  transition: 0.5s all ease-in-out;
+  margin-top: 70px;
+}
+
+.NewWrapperArea .NewWrapperBox {
+  padding: 20px;
+  background-color: #fafafa;
+  min-height: 100vh;
+  width: calc(100% - 325px);
+}
+
+.AllProjectBox {
+  width: 325px;
+  background-color: rgba(245, 245, 247, 1);
+  padding: 20px;
+}
+
+.AllProjectBox .SmallProjectBox {
+  border-radius: 10px;
+  background-color: #fff;
+  padding: 20px;
+  margin: 0 0 25px 0;
+}
+
+.AllProjectBox .SmallProjectBox h2 {
+  color: rgba(20, 21, 34, 1);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.AllProjectBox .SmallProjectBox p {
+  color: rgba(84, 87, 122, 1);
+  font-weight: 500;
+  font-size: 14px;
+  margin: 15px 0;
+}
+
+.AllProjectBox .SmallProjectBox h3 {
+  color: rgba(20, 21, 34, 1);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.NewProjectBtn {
+  border: none;
+  padding: 9px 30px;
+  border: 2px solid #028DEC;
+  text-align: center;
+  transition: 0.5s all ease-in-out;
+  font-weight: 600;
+  display: inline-block;
+  position: relative;
+  background-color: #028DEC;
+  font-size: 15px;
+  color: #fff;
+  text-transform: capitalize;
+  border-radius: 10px;
+  outline: 0 !important;
+  box-shadow: none;
+  display: inline-block;
+  font-family: 'Lato';
+  width: 100%;
+  margin: 0 0 20px 0;
+}
+
+.OpenProjectBtn {
+  border: none;
+  padding: 9px 30px;
+  border: 2px solid #028DEC;
+  text-align: center;
+  transition: 0.5s all ease-in-out;
+  font-weight: 600;
+  display: inline-block;
+  position: relative;
+  background-color: #fff;
+  font-size: 15px;
+  color: #028DEC;
+  text-transform: capitalize;
+  border-radius: 10px;
+  outline: 0 !important;
+  box-shadow: none;
+  display: inline-block;
+  font-family: 'Lato';
+  width: 100%;
+  margin: 0 0 20px 0;
+}
+
+.NewProjectBtn:hover {
+  color: #fff;
+}
+
+.OpenProjectBtn:hover {
+  color: #028DEC;
+}
+
+
+.NewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  margin: 0 0 15px 0;
+}
+
+/* .NewHeader .NewHeaderLeft{display: flex;align-items: center;} */
+.NewHeader .NewHeaderLeft .Toggle {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 15px 0 0;
+  cursor: pointer;
+  border: 1px solid #dbe2eb;
+}
+
+.NewHeader .NewHeaderLeft .Toggle svg {
+  margin: 0 !important;
+}
+
+.NewHeader .NewHeaderLeft .SearchBox {
+  position: relative;
+}
+
+.NewHeader .NewHeaderLeft .SearchBox .form-control {
+  height: auto;
+  padding: 10px 30px 10px 15px;
+  background-color: #fff;
+  font-size: 14px;
+  box-shadow: none;
+  min-width: 500px;
+  border: 1px solid #dbe2eb;
+}
+
+.NewHeader .NewHeaderLeft .SearchBox span {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: #afadad;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.NewHeader .NewHeaderLeft h2 {
+  color: rgba(20, 21, 34, 1);
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0 0 10px 0;
+}
+
+.NewHeader .NewHeaderLeft p {
+  color: rgba(84, 87, 122, 1);
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.NewHeader .Logo {
+  width: 235px;
+  text-align: center;
+  padding: 8px 0;
+  float: left;
+  height: 60px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+  background-color: #fff;
+}
+
+.NewHeader .Logo img {
+  width: 130px;
+}
+
+.NewHeader .Navigation {
+  transition: all 0.2s ease;
+  padding: 0;
+  /* height:60px; */
+  /* background-image: linear-gradient(45deg,#fd701e,#fd894e); */
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.NewHeader .Navigation .Bell {
+  display: inline-block;
+  position: relative;
+  margin: 0 0 0 20px;
+}
+
+.NewHeader .Navigation .Bell .Count {
+  background-color: #fff;
+  position: absolute;
+  color: #000;
+  font-size: 11px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50px;
+  text-align: center;
+  right: -8px;
+  top: -4px;
+  font-weight: 700;
+  border: 1px solid #dbe2eb;
+  line-height: 19px;
+}
+
+.NewHeader .Navigation .Bell a {
+  color: #666464;
+  font-size: 15px;
+  width: 49px;
+  height: 49px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid #dbe2eb;
+}
+
+.NewHeader .Navigation .Avater {
+  margin: 0px 0 0px 30px;
+  position: relative;
+  display: inline-block;
+}
+
+.NewHeader .Navigation .Avater a {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #000;
+  padding: 19px 0;
+}
+
+.NewHeader .Navigation .Avater a figure {
+  width: 52px;
+  border-radius: 50%;
+  margin: 0 15px 0 0;
+  overflow: hidden;
+  height: 52px;
+}
+
+.NewHeader .Navigation .Avater ul {
+  position: absolute;
+  background: #fff;
+  box-shadow: 0 3px 11px 0 rgb(0 0 0 / 10%);
+  -webkit-transform: perspective(600px) rotateX(-90deg);
+  transform: perspective(600px) rotateX(-90deg);
+  -webkit-transform-origin: 0 0 0;
+  transform-origin: 0 0 0;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  z-index: 99;
+  top: 100%;
+  text-align: left;
+  min-width: 200px;
+  display: block;
+  width: auto;
+}
+
+.NewHeader .Navigation .Avater ul li {
+  height: 65px;
+}
+
+.NewHeader .Navigation .Avater ul li {
+  margin: 0;
+  border-bottom: 1px solid #d2d3d4;
+  color: #000;
+}
+
+.NewHeader .Navigation .Avater ul li:first-child {
+  background-color: #fff;
+  position: relative;
+  padding: 15px 15px 15px 60px;
+  text-align: left;
+  border-bottom: 1px solid #e9e9e9;
+  color: #fff;
+}
+
+.NewHeader .Navigation .Avater ul li:first-child:hover {
+  color: #fff;
+}
+
+.NewHeader .Navigation .Avater ul li figure {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  color: #fff;
+  border: 2px solid #fff;
+  overflow: hidden;
+  margin: 0;
+}
+
+.NewHeader .Navigation .Avater ul li:hover {
+  background-color: #028DEC;
+}
+
+.NewHeader .Navigation .Avater ul li h4 {
+  color: #fff;
+  font-size: 17px;
+  line-height: 18px;
+  color: #000;
+  transition: 0.5s all ease-in-out;
+}
+
+.NewHeader .Navigation .Avater ul li h4 span {
+  font-size: 11px;
+  font-weight: 400;
+  display: block;
+  color: #000;
+  transition: 0.5s all ease-in-out;
+}
+
+.NewHeader .Navigation .Avater ul li:hover h4 {
+  color: #fff;
+}
+
+.NewHeader .Navigation .Avater ul li:hover span {
+  color: #fff;
+}
+
+.NewHeader .Navigation .Avater ul li a {
+  color: #4e4e4e;
+  padding: 10px 20px;
+  font-weight: 400;
+  transition: 0.5s all ease-in-out;
+  height: 100%;
+}
+
+.NewHeader .Navigation .Avater ul li a span {
+  margin: 0 10px 0 0
+}
+
+.NewHeader .Navigation .Avater ul li a:hover {
+  /* background-image: linear-gradient(45deg,#fe4978,#fa754d); */
+  color: #fff;
+}
+
+.NewHeader .Navigation .Avater:hover ul {
+  opacity: 1;
+  visibility: visible;
+  transform: perspective(600px) rotateX(0deg);
+}
+
+textarea {
+  resize: none;
+}
+
+.Remarks {
+  text-align: center;
+  color: rgba(20, 21, 34, 1);
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0 0 20px 0;
+  border-bottom: 1px solid #e1e0e0;
+  padding: 0 0 15px 0;
+}
+
+.Upload {
+  border: 1px dashed rgba(2, 141, 236, 1);
+  position: relative;
+  padding: 12px 10px 12px 15px;
+  border-radius: 10px;
+  text-align: center;
+  color: rgba(84, 87, 122, 1);
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+}
+
+.Upload img {
+  margin: 0 10px 0 0;
+}
+
+.Upload input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.Upload.Big {
+  height: 160px;
+}
+
+.Upload.Big img {
+  margin: 0 0 10px 0;
+}
+
+.Upload span {
+  cursor: pointer;
+  z-index: 1;
+}
+
+.ButtonCenter {
+  text-align: center;
+  margin: 40px 0 0 0;
+}
+
+.AddRemarksBtn {
+  color: rgba(2, 141, 236, 1);
+  font-weight: 600;
+  font-size: 15px;
+  display: block;
+  text-align: right;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.AddRemarksBtn:hover {
+  color: rgba(2, 141, 236, 1);
+}
+
+.AdvanceSettingsCss {
+  color: rgba(2, 141, 236, 1);
+  font-weight: 600;
+  font-size: 15px;
+  display: block;
+}
+
+.AdvanceSettingsCss:hover {
+  color: rgba(2, 141, 236, 1);
+}
+
+.NotesArea h6 {
+  color: rgba(20, 21, 34, 1);
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+}
+
+.NotesArea p {
+  color: rgba(20, 21, 34, 1);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 20px 0;
+  line-height: 22px;
+}
+
+.ProjectAlreadyArea {
+  text-align: center;
+}
+
+.ProjectAlreadyArea figure {
+  margin: 0 0 40px;
+}
+
+.ProjectAlreadyArea h5 {
+  font-weight: 600;
+  color: rgba(20, 21, 34, 1);
+  font-family: 'Plus Jakarta Sans';
+  font-size: 20px;
+  margin: 0 0 40px 0;
+}
+
+.ProjectAlreadyArea h6 {
+  font-weight: 500;
+  color: rgba(20, 21, 34, 1);
+  margin: 0 0 20px 0;
+  font-family: 'Plus Jakarta Sans';
+  font-size: 16px;
+  line-height: 49px;
+  text-align: center;
+}
+
+.TwoButtons {
+  display: flex;
+  justify-content: space-between;
+  margin: 40px 0 0 0;
+}
+
+.TwoButtons .OutlineBtn {
+  background-color: transparent;
+  padding: 10px 30px;
+  text-align: center;
+  transition: 0.5s all ease-in-out;
+  font-weight: 600;
+  display: inline-block;
+  position: relative;
+  border: 1px solid #028DEC;
+  font-size: 15px;
+  color: #028DEC;
+  text-transform: capitalize;
+  border-radius: 10px;
+  outline: 0 !important;
+  box-shadow: none;
+  display: inline-block;
+  font-family: 'Lato';
+  width: 100%;
+  margin: 0 20px 0 0;
+}
+
+.TwoButtons .FillBtn {
+  border: 1px solid #028DEC;
+  padding: 10px 30px;
+  text-align: center;
+  transition: 0.5s all ease-in-out;
+  font-weight: 600;
+  position: relative;
+  background-color: #028DEC;
+  font-size: 15px;
+  color: #fff;
+  text-transform: capitalize;
+  border-radius: 10px;
+  outline: 0 !important;
+  box-shadow: none;
+  font-family: 'Lato';
+  width: 100%;
+  margin: 0 0 0 20px;
+}
+
+.TwoButtons .ResetBtn {
+  border: 1px solid #AF0000;
+  padding: 10px 30px;
+  text-align: center;
+  transition: 0.5s all ease-in-out;
+  font-weight: 600;
+  display: inline-block;
+  position: relative;
+  background-color: #AF0000;
+  font-size: 15px;
+  color: #fff;
+  text-transform: capitalize;
+  border-radius: 10px;
+  outline: 0 !important;
+  box-shadow: none;
+  display: inline-block;
+  font-family: 'Lato';
+  width: 100%;
+  margin: 0 10px;
+}
+
+
+.PreviewImagesArea h6 {
+  display: block;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 15px 0;
+}
+
+.PreviewImagesArea ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.PreviewImagesArea ul li {
+  width: calc(100% / 7 - 10px);
+  margin: 0 5px;
+}
+
+.PreviewImagesArea ul li figure img {
+  width: 100%;
+}
+
+.PreviewImagesArea ul li figure figcaption {
+  color: rgba(0, 0, 0, 1);
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  margin: 10px 0 0 0;
+}
+
+
+
+.StepBox ul {
+  display: flex;
+  margin: 0 0 25px 0;
+}
+
+.StepBox ul li {
+  width: 100%;
+  text-align: center;
+  position: relative
+}
+
+/* .StepBox ul li+li:before{content:'';position:absolute;width:100%;height:12px;background:#D5D5D5;left:-132px;top:19px} */
+.StepBox ul li:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 12px;
+  background: #CCCCCC;
+  left: 0;
+  top: 19px
+}
+
+.StepBox ul li .Icon {
+  display: block;
+  border: 6px solid #E8E8E8;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  margin: auto;
+  background-color: #4F4F4F;
+  padding: 9px;
+  position: relative;
+  z-index: 9
+}
+
+/* .StepBox ul li .Icon img{filter:brightness(0) invert(1)} */
+.StepBox ul li.active .Icon img {
+  filter: brightness(0) invert(1)
+}
+
+.StepBox ul li .Text {
+  display: inline-flex;
+  border-radius: 30px;
+  text-align: center;
+  min-width: 100px;
+  margin: 35px 0 0 0;
+  padding: 7px 2px;
+  align-items: center;
+  justify-content: center;
+  min-height: 45px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--black-color);
+  position: relative;
+  line-height: 16px
+}
+
+/* .StepBox ul li .Text:before{content:'';width:0;height:0;border-top:0 solid red;position:absolute;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:7px solid var(--black-color);top:-10px} */
+.StepBox ul li.active .Icon {
+  background: green
+}
+
+.StepBox ul li.active .Text {
+  color: #028DEC
+}
+
+.StepBox ul li.active .Text:before {
+  border-bottom: 7px solid green
+}
+
+.StepBox ul li.active:before {
+  background: #028DEC
+}
+
+.StepBox.Green {
+  width: 50%;
+  margin-left: auto;
+}
+
+.StepBox.Green ul li.active .Icon {
+  background: rgba(0, 176, 80, 1)
+}
+
+.StepBox.Green ul li.active .Text {
+  color: rgba(0, 176, 80, 1);
+}
+
+.StepBox.Green ul li.active .Text:before {
+  border-bottom: 7px solid rgba(0, 176, 80, 1);
+}
+
+.StepBox.Green ul li.active+li.active:before {
+  background-color: rgba(0, 176, 80, 1);
+}
+
+.StepBox ul li:last-child::before {
+  border-radius: 0 6px 6px 0;
+}
+
+.StepBox ul li:first-child::before {
+  border-radius: 6px 0 0 6px;
+}
+
+
+.AugmentationsBox .RangeArea {
+  display: flex;
+  align-items: flex-end;
+  margin: 0 0 25px 0;
+}
+
+.AugmentationsBox .CheckBox {
+  font-size: 16px !important;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.AugmentationsBox .CheckBox img {
+  margin: 0 0 0 10px;
+}
+
+.AugmentationsBox .RangeArea h1 {
+  color: #070E05;
+  font-size: 18px;
+  width: 125px;
+  margin: 0 10px 0 0;
+}
+
+.AugmentationsBox .RangeArea .RangeBox {
+  width: calc(60% - 125px - 10px);
+}
+
+.AugmentationsBox ul.PreviewAugment {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.AugmentationsBox ul.PreviewAugment li {
+  width: calc(100% / 2 - 75px);
+  margin: 0 50px 50px 0;
+}
+
+.AugmentationsBox ul.PreviewAugment li figure {
+  margin-bottom: 0px;
+  height: 100%;
+}
+
+.AugmentationsBox ul.PreviewAugment li img {
+  width: 100%;
+  height: 100%
+}
+
+.AugmentationsBox .PreviewAugment li figcaption {
+  text-align: center;
+}
+
+.AugmentationsBox .PreviewAugment li figcaption h6 {
+  color: #000;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0 0 10px 0;
+}
+
+.AugmentationsBox .PreviewAugment li figcaption h5 {
+  color: #141522;
+  font-weight: 500;
+  font-size: 16px;
+  font-style: italic;
+}
+
+.RangeHeading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.RangeHeading label {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+/* .ProjectAlreadyArea span {
+    width: 49px;
+    height: 49px;
+    margin: 0 0 20px 0;
+    display: inline-block;
+    background-color: rgba(254, 240, 240, 1);
+    line-height: 49px;
+    text-align: center;
+    border-radius: 50%;
+} */
+.SetValueBox .RangeHeading label {
+  font-size: 12px;
+  color: #070E05;
+  margin: 0;
+}
+
+
+.DataSplitRatioBox {
+  width: 550px;
+  margin: 50px auto;
+}
+
+.DataSplitRatioBox .RangeHeading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.DataSplitRatioBox .RangeHeading label {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.DataSplitRatioBox .RangeHeading label span {
+  color: #028DEC;
+  margin: 0 10px;
+}
+
+
+article .SetValueBox {
+  display: flex;
+  margin: 0 0 20px 0;
+}
+
+.SetValueBox .GpuCpuRadio {
+  display: flex;
+}
+
+.SetValueBox .GpuCpuRadio li {
+  margin: 0 30px 0 0;
+}
+
+article .Heading {
+  display: flex;
+}
+
+article .Heading h3 {
+  width: 50%;
+  color: rgba(20, 21, 34, 1);
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0 0 20px 0;
+}
+
+article .SetValueBox p {
+  display: inline-flex;
+  width: 50%;
+  align-items: center;
+  color: #000;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 10px 0
+}
+
+article .SetValueBox p img {
+  margin: 0 0 0 10px;
+}
+
+article .SetValueBox .form-group {
+  width: 50%;
+  margin: 0;
+}
+
+article .SetValueBox .switch {
+  float: inline-start;
+}
+
+
+.BrowseBtn {
+  border: none;
+  padding: 12px 30px;
+  text-align: center;
+  transition: 0.5s all ease-in-out;
+  width: 100%;
+  font-weight: 500;
+  display: inline-block;
+  position: relative;
+  background-color: #028DEC;
+  font-size: 15px;
+  color: #fff;
+  text-transform: capitalize;
+  border-radius: 10px;
+  outline: 0 !important;
+  min-width: 200px;
+  box-shadow: none;
+  display: inline-block;
+  font-family: 'Poppins';
+}
+
+.BrowseBtn input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+
+.DataPreviewAugment h6 {
+  display: block;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 15px 0;
+}
+
+.DataPreviewAugment ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.DataPreviewAugment ul li {
+  width: calc(100% / 3 - 25px);
+  margin: 0 25px 20px 0;
+  height: 150px;
+}
+
+.DataPreviewAugment ul li figure {
+  margin-bottom: 0px;
+  margin-bottom: 0;
+  height: 120px;
+}
+
+.DataPreviewAugment ul li img {
+  width: 100%;
+  height: 100%;
+}
+
+.DataPreviewAugment ul li figcaption {
+  text-align: center;
+}
+
+.DataPreviewAugment ul li figcaption h6 {
+  color: #000;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0 0 10px 0;
+}
+
+
+
+.DataPreviewAugmentLeftNew h6 {
+  display: block;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 15px 0;
+}
+
+.DataPreviewAugmentLeft h6 {
+  display: block;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 15px 0;
+}
+
+.DataPreviewAugmentLeft ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.DataPreviewAugmentLeft ul li {
+  /* width: calc(100% / 3 - 25px); */
+  margin: 0 0 20px 0;
+}
+
+.DataPreviewAugmentLeft ul li img {
+  width: 100%;
+  height: 300px
+}
+
+.DataPreviewAugmentLeft ul li figcaption {
+  text-align: center;
+}
+
+.DataPreviewAugmentLeft ul li figcaption h6 {
+  color: #000;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 0 0 10px 0;
+}
+
+
+
+.AddvanceSettingShow {
+  display: none;
+}
+
+.HideAdvanceSettingsBtn {
+  display: none;
+}
+
+.LargeModal .modal-dialog {
+  max-width: 920px;
+}
+
+.ProfileModalOpen {
+  overflow: hidden;
+}
+
+.ProfileModalOpen .modal {
+  overflow: hidden auto;
+}
+
+.ValidationTable {
+  max-height: 250px;
+  overflow-y: scroll;
+  margin: 0 0 20px 0;
+  max-height: 200px;
+  min-height: 120px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.ValidationTable h6 {
+  display: block;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 15px 0;
+}
+
+.HeadingNews {
+  display: block;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 15px 0;
+}
+
+.ValidationTable table thead tr th:first-child {
+  text-align: left;
+}
+
+.ValidationTable table tbody tr td:first-child {
+  text-align: left;
+}
+
+.ValidationTable table tbody tr:first-child th {
+  padding-top: 0px;
+}
+
+.ValidationTable table thead tr th {
+  color: #141522;
+  padding: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.ValidationTable table tbody tr td {
+  color: #141522;
+  padding: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+
+
+.ValidationTableNew {
+  margin: 0 0 20px 0;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.ValidationTableNew h6 {
+  display: block;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 15px 0;
+}
+
+.HeadingNews {
+  display: block;
+  color: #000;
+  font-weight: 600;
+  font-size: 16px;
+  font-family: 'Plus Jakarta Sans';
+  text-transform: capitalize;
+  margin: 0 0 15px 0;
+}
+
+.ValidationTableNew table thead tr th:first-child {
+  text-align: left;
+}
+
+.ValidationTableNew table tbody tr td:first-child {
+  text-align: left;
+}
+
+.ValidationTableNew table tbody tr:first-child th {
+  padding-top: 0px;
+}
+
+.ValidationTableNew table thead tr th {
+  color: #141522;
+  padding: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.ValidationTableNew table tbody tr td {
+  color: #141522;
+  padding: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.AccountProfile {
+  text-align: center;
+}
+
+.AccountProfile figure {
+  text-align: center;
+  display: inline-block;
+  margin: 0px auto;
+}
+
+.AccountProfile figure span {
+  display: inline-block;
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  box-shadow: 0px 0px 8px #ddd;
+  overflow: hidden;
+}
+
+.AccountProfile figure span img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* .    {display: none;}  */
+
+
+
+
+.NotiFiactionTopBox.dropdown .dropdown-menu {
+  display: block;
+  position: absolute;
+  left: auto;
+  right: -100px;
+  top: calc(100% + 30px);
+  margin: 0;
+  padding: 20px;
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  background: #fff;
+  box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
+  transition: 0.3s;
+  border: none;
+  width: 500px;
+  border-radius: 20px;
+  min-width: 500px;
+}
+
+.NotiFiactionTopBox.dropdown ul li {
+  background-color: #FAFAFA;
+  padding: 15px 20px;
+  margin: 0 0 15px 0;
+}
+
+.NotiFiactionTopBox.dropdown ul li:last-child {
+  background-color: #FAFAFA;
+  padding: 15px 20px;
+  margin: 0 0 15px 0;
+}
+
+.NotiFiactionTopBox.dropdown ul a {
+  padding: 10px 20px;
+  text-transform: none;
+  transition: all 0.5s;
+}
+
+.NotiFiactionTopBox.dropdown ul a i {
+  font-size: 12px;
+}
+
+.navbar .dropdown ul a:hover,
+.navbar .dropdown ul .active:hover,
+.navbar .dropdown ul li:hover>a {
+  color: rgba(255, 144, 0, 1);
+  background-color: transparent;
+}
+
+.NotiFiactionTopBox.dropdown:hover>ul {
+  opacity: 1;
+  top: 100%;
+  visibility: visible;
+}
+
+.NotiFiactionTopBox.dropdown .dropdown ul {
+  top: 0;
+  left: calc(100% - 30px);
+  visibility: hidden;
+}
+
+.NotiFiactionTopBox.dropdown .dropdown:hover>ul {
+  opacity: 1;
+  top: 0;
+  left: 100%;
+  visibility: visible;
+}
+
+.NotiFiactionTopBox ul.dropdown-menu li p {
+  margin: 0 0 15px 0;
+  font-size: 14px;
+}
+
+.NotiFiactionTopBox ul.dropdown-menu li span {
+  color: #A5ACB8;
+  font-size: 14px;
+  text-align: right;
+  display: block;
+}
+
+
+.UploadOverlay {
+  position: absolute;
+  bottom: 0;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+}
+
+.UploadOverlay input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  opacity: 0;
+}
+
+
+.ResizeDataSetBtn {
+  display: none;
+}
+
+.custom-slider .rc-slider-rail {
+  background-color: lightgray;
+  /* Color of the rail */
+  height: 8px;
+  /* Thickness of the rail */
+}
+
+.custom-slider .rc-slider-track {
+  background-color: darkblue;
+  /* Color of the track */
+  height: 8px;
+  /* Match the thickness of the rail */
+}
+
+.custom-slider .rc-slider-handle {
+  background-color: darkblue;
+  /* Fill the handle */
+  border-color: darkblue;
+  /* Ensure the border matches the handle */
+  width: 16px;
+  /* Width of the handle */
+  height: 16px;
+  /* Height of the handle */
+  margin-top: -5px;
+  /* Center the handle vertically based on rail height */
+  cursor: pointer;
+}
+
+.custom-slider .rc-slider-handle:hover {
+  background-color: darkblue;
+  /* Maintain handle color on hover */
+  border-color: darkblue;
+}
+
+.custom-slider .rc-slider-handle:focus {
+  box-shadow: 0 0 0 5px rgba(0, 0, 139, 0.2);
+  /* Optional focus effect */
+}
+
+.slider-container {
+  position: relative;
+  width: 100%;
+}
+
+.slider-value {
+  position: absolute;
+  top: -30px;
+  /* Adjust this value to position the value above the slider */
+  left: 50%;
+  /* Center horizontally */
+  transform: translateX(-50%);
+  background: white;
+  padding: 2px 5px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  /* Optional: Add a subtle shadow for better visibility */
+  white-space: nowrap;
+  /* Prevent text from wrapping */
+  font-size: 12px;
+  /* Adjust font size if needed */
+}
+
+/* CustomDataSplitSlider.css */
+
+/* CustomDataSplitSlider.css */
+
+.custom-slider-container {
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.custom-status-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: bold;
+}
+
+.custom-status-labels span {
+  flex: 1;
+  text-align: center;
+}
+
+.custom-status-labels .training {
+  color: green;
+}
+
+.custom-status-labels .validation {
+  color: red;
+}
+
+.custom-slider {
+  height: 10px;
+  margin: 10px 0;
+  position: relative;
+}
+
+.custom-slider-rail {
+  background: #e5e5e5;
+  height: 10px;
+  border-radius: 5px;
+}
+
+.custom-slider-track {
+  background: green;
+  height: 10px;
+  border-radius: 5px;
+}
+
+.custom-slider-handle {
+  border-color: #4CAF50;
+  height: 24px;
+  width: 24px;
+  margin-left: -12px;
+  margin-top: -7px;
+  background-color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.custom-slider-handle:focus {
+  border-color: #66BB6A;
+  box-shadow: 0 0 0 5px rgba(102, 187, 106, 0.2);
+}
+
+.custom-slider-handle:hover {
+  border-color: #66BB6A;
+}
+
+.slider-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 10px;
+  width: 100%;
+  background: linear-gradient(to right, green 0%, green var(--training-percent), red var(--training-percent), red 100%);
+  border-radius: 5px;
+  z-index: -1;
+}
+
+
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.BlackCodeArea {
+  background-color: #000;
+  max-height: 400px;
+  overflow-y: scroll;
+  color: #fff;
+  margin: 0 0 20px 0;
+  min-height: 329px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+
+.NewIcon {
+  width: 49px;
+  height: 49px;
+  margin: 0 0 20px 0;
+  display: inline-block;
+  background-color: rgba(2, 141, 236, 0.50);
+  line-height: 49px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 16px;
+}
+
+.heightModal {
+  height: 700px !important
+}
+
+.text-align-end {
+  text-align: initial !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: initial !important;
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.LogOutModalArea {
+  text-align: center;
+}
+
+.LogOutModalArea span {
+  width: 49px;
+  height: 49px;
+  margin: 0 0 20px 0;
+  display: inline-block;
+  background-color: rgba(254, 240, 240, 1);
+  line-height: 49px;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.LogOutModalArea h5 {
+  color: rgba(26, 28, 33, 1);
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0 0 15px 0;
+}
+
+.LogOutModalArea p {
+  color: rgba(102, 112, 133, 1);
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+.LogOutModalArea .Buttons {
+  padding: 20px 0 0 0;
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0 0 0;
+}
+
+.LogOutModalArea .Buttons .CancelBtn {
+  background-color: rgba(224, 226, 231, 1);
+  border-radius: 10px;
+  color: rgba(102, 112, 133, 1);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  padding: 8px 25px;
+  border: none;
+  outline: none;
+}
+
+.LogOutModalArea .Buttons .ConfirmBtn {
+  background-color: rgba(252, 52, 0, 1);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 1);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  padding: 8px 25px;
+  border: none;
+  outline: none;
+}
+
+.CommonForm .form-group .Eye {
+  position: absolute;
+  right: 15px;
+  top: 43px;
+}
+
+.RightNavbar ul {
+  display: flex;
+  align-items: center;
+}
+
+.RightNavbar ul li a.AccountBtn {
+  background-color: var(--primary-color);
+  border-radius: 30px;
+}
+
+.RightNavbar ul li a.AccountBtn {
+  color: #000;
+  font-weight: 400;
+  font-size: 15px;
+  padding: 12px 25px;
+}
+
+.RightNavbar ul li:first-child {
+  margin: 0 15px 0 0;
+}
+
+.RightNavbar ul li a {
+  color: #000;
+  display: flex;
+  align-items: center;
+}
+
+/*==============================================calender ui===============================================*/
+/* Calendar Header */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.month-year {
+  text-align: center;
+  font-size: 18px;
+  color: #333;
+}
+
+/* Days of the Week */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  /* 7 columns for 7 days */
+  margin-bottom: 5px;
+}
+
+.calendar-weekday {
+  font-weight: bold;
+  color: #666;
+  padding: 5px;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Row of Days */
+.calendar-days-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Individual Day Styling */
+.calendar-day {
+  font-size: 14px;
+  text-align: center;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: 1px solid #ddd;
+  margin: 0 5px 7px;
+  padding: 5px 0px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Highlight Today */
+.calendar-day.highlighted {
+  background-color: #0041f5;
+  color: #ffffff;
+  font-weight: bold;
+  border: 1px solid #0036b3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+
+
+
+
+.ProjectAlreadyArea {
+  background-color: #e3dddd;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.ProjectAlreadyArea .ProjectAlready h2 {
+  font-size: 15px;
+  margin: 0 0 5px 0;
+  letter-spacing: 0.5px;
+}
+
+.ProjectAlreadyArea .ProjectAlready {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.ProjectAlreadyArea .ProjectAlready p {
+  color: #8b8686;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.ProjectAlreadyArea .ProjectAlready table th {
+  padding: 7px 15px;
+  border: 1px solid #cfcfcf;
+  font-size: 13px;
+  text-align: left;
+  font-weight: 600;
+  color: #000;
+  background-color: #ddd;
+}
+
+.ProjectAlreadyArea .ProjectAlready table td {
+  padding: 7px 15px;
+  border: 1px solid #cfcfcf;
+  font-size: 13px;
+  text-align: left;
+  font-weight: 600;
+  color: #706b6b;
+}
+
+.ProjectAlreadyArea .ProjectAlready table tr:nth-child(odd) td {}
+
+
+
+
+.newTable table thead tr th:first-child,
+.newTable table tbody tr td:first-child {
+  text-align: left;
+}
+
+.newTable table thead tr th {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px;
+  color: #141522;
+  text-align: center;
+}
+
+.newTable table tbody tr td {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px;
+  color: #141522;
+  text-align: center;
+}
+
+.PreviewAugment {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.PreviewAugment li {
+  width: calc(100% / 3 - 20px);
+  margin: 0 10px;
+}
+
+.PreviewAugment li figure {
+  margin: 0 0 10px;
+}
+
+.ModalGreen {}
+
+.ModalGreen .modal-content {
+  background-color: #36a103;
+}
+
+.ModalRed .modal-content {
+  background-color:#880808;
+}
+
+
+.ModalGreen .ProjectAlreadyArea,
+.ModalRed .ProjectAlreadyArea,
+.ModalGreen .ProjectAlreadyArea h5,
+.ModalRed .ProjectAlreadyArea h5 {
+  color: #fff;
+  font-size: 33px;
+  font-weight: bold;
+}
+
+
+
+
+.ModalGreen .ProjectAlreadyArea .TwoButtons .OutlineBtn,
+.ModalRed .ProjectAlreadyArea .TwoButtons .OutlineBtn {
+  border-color: #fff;
+  color: #fff;
+}
+
+.ModalRed .ProjectAlreadyArea .TwoButtons .FillBtn {
+  background: #fff;
+  color: #d0320b;
+  border-color: #d0320b;
+}
+
+.ModalGreen .ProjectAlreadyArea .TwoButtons .FillBtn {
+  background-color: #fff;
+  color: #36a103;
+  border-color: #fff;
+}
+
+.inferModal {
+  color: black;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
