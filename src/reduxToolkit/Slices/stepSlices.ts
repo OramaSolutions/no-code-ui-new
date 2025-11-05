@@ -27,7 +27,7 @@
 
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import type { StepsSliceState, StepKey } from "types/objectDetection/training";
+import type { StepsSliceState, StepKey } from "../../types/objectDetection/training";
 
 const initialHasChanged: StepsSliceState['hasChangedSteps'] = {
   labelled: false,
