@@ -87,7 +87,7 @@ const StepContent: React.FC<StepContentProps> = ({
             url={url}
             state={state}
             username={userData?.activeUser?.userName}
-            task="objectdetection"
+            task="defectdetection"
             project={state?.name}
             version={state?.version}
           />
