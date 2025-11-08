@@ -10,15 +10,16 @@ const projectTypes = [
     {
         id: 'objectdetection',
         title: 'Object Detection',
-        description: 'Train a model with labeled data for detecting objects within images.',
+        description: 'Train a model with as little as 20 labeled data for detecting objects within images.',
         icon: MdImage,
         color: 'from-blue-500 to-indigo-600',
         bgColor: 'from-blue-50 to-indigo-50',
+        img: '/images/objectD.png',
 
-        requirements: [
-            'Use labeled data in YOLO format',
-            'Require a minimum of 300 images for training',
-            'Ensure proper labeling of objects without any errors'
+        applications: [
+            'Single Page Object Detection',
+            'Multiple Projects, User and Admin Supported Object Detection',
+            'Labelling Tool Integrated for Re-Training Support to Increase Accuracy'
         ]
     },
     {
@@ -28,11 +29,12 @@ const projectTypes = [
         icon: MdAutoFixHigh,
         color: 'from-blue-500 to-indigo-600',
         bgColor: 'from-purple-50 to-pink-50',
+        img: '/images/defectD.png',
 
-        requirements: [
-            'Prepare dataset in four folders: good_train, bad_train, good_test, bad_test',
-            'Each folder should contain 30 images',
-            'Folder name should be same as project name (lowercase, no spaces)'
+        applications: [
+            'Automated Industrial Defect Detection System',
+            'Supports Multi-Category Defect Analysis for Quality Control',
+            'Real-Time Feedback Loop for Improved Model Accuracy'
         ]
     },
     {
@@ -42,11 +44,12 @@ const projectTypes = [
         icon: MdCategory,
         color: 'from-blue-500 to-indigo-600',
         bgColor: 'from-green-50 to-teal-50',
+        img: '/images/classF.png',
 
-        requirements: [
-            'Train and Visualize Metrics',
-            'Monitor training progress in real-time',
-            'Evaluate on Saved Images & Camera'
+        applications: [
+            'Custom Image Classification Projects',
+            'Live Model Monitoring & Metric Visualization',
+            'Supports Incremental Training and Multi-Class Classification'
         ]
     },
     {
@@ -56,18 +59,20 @@ const projectTypes = [
         icon: MdTextFields,
         color: 'from-blue-500 to-indigo-600',
         bgColor: 'from-orange-50 to-red-50',
+        img: '/images/textE.png',
 
-        requirements: [
-            'Add labeled data with images and corresponding text labels',
-            'Train the Detector and the Recognizer',
-            'Test on images with options to alter settings'
+        applications: [
+            'OCR-Based Text Extraction from Images and Documents',
+            'Supports Multi-Language Text Recognition',
+            'Editable and Searchable Output Generation for Digital Archives'
         ]
     }
 ];
 
 
 
-const NewProjects = ({openCreateModal}) => {
+
+const NewProjects = ({ openCreateModal }) => {
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -99,16 +104,16 @@ const NewProjects = ({openCreateModal}) => {
                             <div className={`bg-white rounded-2xl border-2 border-gray-200 hover:border-blue-300 transition-all duration-300 shadow-sm hover:shadow-xl overflow-hidden h-full flex flex-col`}>
                                 {/* Image Header */}
                                 <div className="relative h-48 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
-                                    {/* <img 
-                                                    src={project.image} 
-                                                    alt={project.title}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                                /> */}
-                                    <div className="absolute top-4 right-4">
+                                    <img
+                                        src={project.img}
+                                        alt={project.title}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    />
+                                    {/* <div className="absolute top-4 right-4">
                                         <div className={`w-12 h-12 bg-gradient-to-br ${project.color} rounded-xl flex items-center justify-center shadow-lg`}>
                                             <Icon className="w-6 h-6 text-white" />
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 {/* Content */}
@@ -123,10 +128,10 @@ const NewProjects = ({openCreateModal}) => {
                                     {/* Requirements/Checkpoints */}
                                     <div className="flex-1 mb-4">
                                         <h4 className="text-xs font-semibold text-gray-500 uppercase mb-3">
-                                            Requirements
+                                            Applications
                                         </h4>
                                         <ul className="space-y-2">
-                                            {project.requirements.map((req, idx) => (
+                                            {project.applications?.map((req, idx) => (
                                                 <li key={idx} className="flex items-start gap-2 text-xs text-gray-700">
                                                     <FaCheck className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
                                                     <span className="leading-relaxed">{req}</span>

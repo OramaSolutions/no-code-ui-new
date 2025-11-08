@@ -53,59 +53,7 @@ const Dashboard = () => {
                 <div className="lg:col-span-2 space-y-6">
 
 
-                    {/* Quick Stats */}
-                    {/* <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2, duration: 0.5 }}
-                        className="grid grid-cols-1 sm:grid-cols-3 gap-4"
-                    >
-                        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-5 border border-blue-200">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-blue-600 text-sm font-medium mb-1">Total Projects</p>
-                                    <p className="text-3xl font-bold text-blue-900">
-                                        {dashboardData?.totalProjects || 0}
-                                    </p>
-                                </div>
-                                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                                    <MdImage className="w-6 h-6 text-white" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-5 border border-purple-200">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-purple-600 text-sm font-medium mb-1">In Progress</p>
-                                    <p className="text-3xl font-bold text-purple-900">
-                                        {dashboardData?.inProgress || 0}
-                                    </p>
-                                </div>
-                                <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-5 border border-green-200">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-green-600 text-sm font-medium mb-1">Completed</p>
-                                    <p className="text-3xl font-bold text-green-900">
-                                        {dashboardData?.completed || 0}
-                                    </p>
-                                </div>
-                                <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-                                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div> */}
+                  
 
                     {/* Create New Project Section */}
                     <NewProjects openCreateModal={openCreateModal} />
