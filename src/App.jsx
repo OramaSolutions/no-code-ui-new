@@ -1,6 +1,7 @@
 import logo from './logo.svg';
+
 import './App.css';
-// import React from 'react';
+
 import React, { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route, Navigate, BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
@@ -10,22 +11,17 @@ import Login from './componet/Auth/Login';
 import Forgot from './componet/Auth/Forgot';
 import ResetPassword from './componet/Auth/ResetPassword';
 import LoginVerification from './componet/Auth/LoginVerification';
-// import Dashboard from './componet/Dashboard/Dashboard';
+
 import MyAccout from './componet/Account/MyAccout';
 import ChangePassword from './componet/Account/ChangePassword';
 import Support from './componet/Support/Support';
 import Project from './componet/Project/Project';
-// import ObjectDetectionTraining from './componet/ObjectDetection/Training/TrainingMain';
-// import ProjectManagement from './componet/ProjectManagement/ProjectManagement';
-// import ClassificationTraining from './componet/Classification/ClassificationTraining';
-// import DefectDetectionTraining from './componet/DefectDetection/Training/TrainingMain';
 
 const Dashboard = lazy(() => import('./componet/Dashboard/Dashboard'));
 const ProjectManagement = lazy(() => import('./componet/ProjectManagement/ProjectManagement'));
 const DefectDetectionTraining = lazy(() => import('./componet/DefectDetection/Training/TrainingMain'));
 const ObjectDetectionTraining = lazy(() => import('./componet/ObjectDetection/Training/TrainingMain'));
 const ClassificationTraining = lazy(() => import('./componet/Classification/ClassificationTraining'));
-
 
 function App() {
   return (
@@ -35,6 +31,7 @@ function App() {
         <ToastContainer
           transition={Slide}
         />
+
         <BrowserRouter  >
           <Suspense
             fallback={
@@ -51,8 +48,6 @@ function App() {
               <Route path='/loginVerification' element={<LoginVerification />} />
               <Route path='/loginSuccess' element={<LoginVerification />} />
 
-
-
               <Route path='/projects' element={<Project />} />
               <Route path='/dashboard' element={<Dashboard />} />
               {/* training routes */}
@@ -66,9 +61,6 @@ function App() {
               <Route path='/change-password' element={<ChangePassword />} />
 
               <Route path='/support' element={<Support />} />
-
-
-
 
             </Routes>
           </Suspense>

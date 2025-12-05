@@ -51,8 +51,8 @@ function ClassificationTraining() {
     const [iState, updateIstate] = useState(() => {
         if (state) {
             const saved = JSON.parse(localStorage.getItem(LOCAL_KEY));
-            // return saved?.iState || 'labelled';
-            return 'remark'
+            return saved?.iState || 'labelled';
+            // return 'remark'
         }
         return 'labelled';
     });

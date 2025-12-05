@@ -232,7 +232,7 @@ function Classagumentation({ initial, setIstate, state, userData, onApply, onCha
                                         data-toggle="tooltip"
                                         title="Total uploaded images"
                                     >
-                                        {/* <img src={require("../../assets/images/esclamination.png")} /> */}
+                                        <img src={require("../../assets/images/esclamination.png")} />
                                     </span>
                                 </label>
                                 <input type="text" className="form-control" value={DatasetSize?.Size || 0} disabled={true} />
@@ -246,7 +246,7 @@ function Classagumentation({ initial, setIstate, state, userData, onApply, onCha
                                     data-toggle="tooltip"
                                     title="desired dataset size after augmentation"
                                 >
-                                    {/* <img src={require("../../assets/images/esclamination.png")} /> */}
+                                    <img src={require("../../assets/images/esclamination.png")} />
                                 </span>
                             </label>
                             <input
@@ -266,11 +266,11 @@ function Classagumentation({ initial, setIstate, state, userData, onApply, onCha
                                     {" "}
 
                                     Rotation
-                                    {/* <img
+                                    <img
                                         src={require("../../assets/images/esclamination.png")}
                                         data-toggle="tooltip"
                                         title="Rotate the image by certain degress. Helpful if object orientation keeps changing"
-                                    /> */}
+                                    />
                                     <input
                                         type="checkbox"
                                         name='rotation'
@@ -366,11 +366,11 @@ function Classagumentation({ initial, setIstate, state, userData, onApply, onCha
                                 <label className="CheckBox">
                                     {" "}
                                     Crop
-                                    {/* <img
+                                    <img
                                         src={require("../../assets/images/esclamination.png")}
                                         data-toggle="tooltip"
                                         title="Zoom the image and apply this if object distance keeps changing"
-                                    /> */}
+                                    />
                                     <input
                                         type="checkbox"
                                         name='crop'
@@ -475,11 +475,11 @@ function Classagumentation({ initial, setIstate, state, userData, onApply, onCha
                                 <label className="CheckBox">
                                     {" "}
                                     Vertical Flip
-                                    {/* <img
+                                    <img
                                         src={require("../../assets/images/esclamination.png")}
                                         data-toggle="tooltip"
                                         title="mirrors the image on vertical axis"
-                                    /> */}
+                                    />
                                     <input type="checkbox"
                                         name='verticalFlip'
                                         checked={verticalFlip}
@@ -546,11 +546,11 @@ function Classagumentation({ initial, setIstate, state, userData, onApply, onCha
                                 <label className="CheckBox">
                                     {" "}
                                     Horizontal Flip
-                                    {/* <img
+                                    <img
                                         src={require("../../assets/images/esclamination.png")}
                                         data-toggle="tooltip"
                                         title="mirrors the image on Horizontal axis"
-                                    /> */}
+                                    />
                                     <input
                                         type="checkbox"
                                         name='horizontalFlip'
@@ -619,11 +619,11 @@ function Classagumentation({ initial, setIstate, state, userData, onApply, onCha
                                 <label className="CheckBox">
                                     {" "}
                                     Brightness
-                                    {/* <img
+                                    <img
                                         src={require("../../assets/images/esclamination.png")}
                                         data-toggle="tooltip"
                                         title="Brighten and darken the image by a cerain value. Hepful if lighting keeps changing"
-                                    /> */}
+                                    />
                                     <input
                                         type="checkbox"
                                         name='brightness'
@@ -718,11 +718,11 @@ function Classagumentation({ initial, setIstate, state, userData, onApply, onCha
                                 <label className="CheckBox">
                                     {" "}
                                     Contrast
-                                    {/* <img
+                                    <img
                                         src={require("../../assets/images/esclamination.png")}
                                         data-toggle="tooltip"
                                         title="Increase the contrast and helpful if lighting keeps changing and objects appear diffrent"
-                                    /> */}
+                                    />
                                     <input
                                         type="checkbox"
                                         name='contrast'
@@ -910,11 +910,11 @@ function Classagumentation({ initial, setIstate, state, userData, onApply, onCha
                                 <label className="CheckBox">
                                     {" "}
                                     Noise{" "}
-                                    {/* <img
+                                    <img
                                         src={require("../../assets/images/esclamination.png")}
                                         data-toggle="tooltip"
                                         title="Add noise to image and this is helpful in outdoor conditions or where noise keeps coming (0.5 pixels is optimal)"
-                                    /> */}
+                                    />
                                     <input
                                         type="checkbox"
                                         name='noise'
@@ -1007,11 +1007,11 @@ function Classagumentation({ initial, setIstate, state, userData, onApply, onCha
                                 <label className="CheckBox">
                                     {" "}
                                     Blur
-                                    {/* <img
+                                    <img
                                         src={require("../../assets/images/esclamination.png")}
                                         data-toggle="tooltip"
                                         title="Blurs the image and this is helpful if the object is high speed"
-                                    /> */}
+                                    />
                                     <input
                                         type="checkbox"
                                         name='blur'

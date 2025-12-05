@@ -119,7 +119,7 @@ function ClassDataSplit({ onApply, userData, state }) {
                                         data-toggle="tooltip"
                                         title="Augmented images size"
                                     >
-                                        {/* <img src={require("../../assets/images/esclamination.png")} /> */}
+                                        <img src={require("../../assets/images/esclamination.png")} />
                                     </span>
                                 </label>
                                 <input
@@ -138,7 +138,7 @@ function ClassDataSplit({ onApply, userData, state }) {
                                         data-toggle="tooltip"
                                         title="Divides the dataset in training and validation set and training should always be 80% or above"
                                     >
-                                        {/* <img src={require("../../assets/images/esclamination.png")} /> */}
+                                        <img src={require("../../assets/images/esclamination.png")} />
                                     </span>
                                 </label>
                             </div>

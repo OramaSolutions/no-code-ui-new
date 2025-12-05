@@ -105,7 +105,7 @@ function ClassInferImages({ userData, state, onChange, onApply }) {
                                     />
                                 ) : (
                                     <span>
-                                        {/* <img src={require("../../assets/images/folder-open-big.png")} /> <br /> */}
+                                        <img src={require("../../assets/images/folder-open-big.png")} /> <br />
                                         Drag or browse from device
                                     </span>
                                 )}

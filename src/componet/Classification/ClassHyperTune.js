@@ -191,7 +191,7 @@ function ClassHyperTune({ onApply, state, userData, onChange }) {
                                     data-toggle="tooltip"
                                     title="Choose effecient for easy tasks(classes are less than 5 and dataset size is <600, small if classes are >5, dataset size is >1000.  Choose medium if dataset size is big and features to detect are hard to locate."
                                 >
-                                    {/* <img src={require("../../assets/images/esclamination.png")} /> */}
+                                    <img src={require("../../assets/images/esclamination.png")} />
                                 </span>
                             </label>
                             <select

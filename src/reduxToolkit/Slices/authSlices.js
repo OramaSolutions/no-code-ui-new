@@ -7,11 +7,10 @@ import { isLoggedIn } from "../../utils";
 const initialState = {
   adminData: {},
   loading: false,
-}
+} 
 
 export const userLogin = createAsyncThunk('auth/userLogin', async (payload, { rejectWithValue }) => {
   try {
-
     const response = await axios.post(`${Url}user/userLogin`, payload, { withCredentials: true });
 
     if (response.status === 200) {

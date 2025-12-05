@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { ResizeFolder } from "../../reduxToolkit/Slices/projectSlices";
 import ResizeModal from "../Project/ResizeModal";
 import ImportModal from "../Project/ImportModal";
-import {importClassData } from "../../reduxToolkit/Slices/classificationSlices";
+import { ClassResizeFolder, importClassData } from "../../reduxToolkit/Slices/classificationSlices";
 import { getUrl } from '../../config/config';
 const url = getUrl('classification')
 
@@ -226,7 +226,7 @@ function Classlabelled({ iState, updateIstate, userData, state, onApply, onChang
                                             data-toggle="tooltip"
                                             title="Add the required folder structure: xyz.zip -> xyz -> images and labels. Label folder must contain classes.txt."
                                         >
-                                            {/* <img src={require("../../assets/images/esclamination.png")} /> */}
+                                            <img src={require("../../assets/images/esclamination.png")} />
                                         </span></label>
                                     <input
                                         type="text"
@@ -246,7 +246,7 @@ function Classlabelled({ iState, updateIstate, userData, state, onApply, onChang
                         >
                             <input {...getInputProps()} style={{ position: 'absolute', width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }} />
                             <span>
-                                {/* <img src={require("../../assets/images/folder-open-big.png")} alt="Upload" /> <br /> */}
+                                <img src={require("../../assets/images/folder-open-big.png")} alt="Upload" /> <br />
                                 Drag or browse from device
                             </span>
                         </div>
@@ -261,7 +261,7 @@ function Classlabelled({ iState, updateIstate, userData, state, onApply, onChang
                                         data-toggle="tooltip"
                                         title="Resize the dataset to a set width and download for labelling"
                                     >
-                                        {/* <img src={require("../../assets/images/esclamination.png")} /> */}
+                                        <img src={require("../../assets/images/esclamination.png")} />
                                     </span>
                                     <input
                                         type="checkbox"
