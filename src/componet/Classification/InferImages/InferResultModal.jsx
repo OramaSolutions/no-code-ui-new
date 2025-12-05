@@ -2,27 +2,43 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
 import { MdCheckCircle, MdRefresh, MdZoomIn } from 'react-icons/md';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function InferResultModal({ onOpen, output, setOutput, state, userData, selectedFile, setSelectedFile, url, onApply, onChange }) {
+function InferResultModal({ onOpen, output, setOutput, state, userData, selectedFile, setSelectedFile, url, resultImage, onApply, onChange }) {
     const navigate = useNavigate();
-    const { inferData } = output;
+    const [imageData, setImageData] = useState('');
     const [loading, setLoading] = useState(null);
     const [isZoomed, setIsZoomed] = useState(false);
 
-    // derive imageData and metadata from inferData so the modal can render
-    const imageData = inferData?.heatmap ? `data:image/png;base64,${inferData.heatmap}` : null;
-    const resultMeta = {
-        anomaly_score: inferData?.anomaly_score,
-        confidence: inferData?.confidence,
-        status: inferData?.status,
-    };
+    useEffect(() => {
+        if (onOpen && resultImage) {
+            setImageData(resultImage);
+            setLoading(false);
+            return;
+        }
 
-    // close handler toggles output.onOpen (keeps same behavior as DefectInferResultModal)
-    const closeHandler = () => {
-        if (setOutput) setOutput((prev) => ({ ...prev, onOpen: !prev.onOpen, confidence: '' }));
-        if (setSelectedFile) setSelectedFile(null);
-    };
+        if (onOpen && selectedFile && !resultImage) {
+            const fetchImageData = async () => {
+                try {
+                    setLoading(true);
+                    const timestamp = new Date().getTime();
+                    const inferUrl = `${url}infer_yolov8?username=${userData?.activeUser?.userName}&task=objectdetection&project=${state?.name}&version=${state?.version}&timestamp=${timestamp}`;
+                    const response = await axios.get(inferUrl, {
+                        responseType: 'blob',
+                    });
+                    const imageBlob = response.data;
+                    const imageUrl = URL.createObjectURL(imageBlob);
+                    setImageData(imageUrl);
+                    setLoading(false);
+                } catch (error) {
+                    console.error('Error fetching image data', error);
+                    setLoading(null);
+                }
+            };
+            fetchImageData();
+        }
+    }, [onOpen, selectedFile, resultImage, url, userData, state]);
 
     const remarkHandler = () => {
         console.log('remarkHandler called');
@@ -30,19 +46,23 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
         onApply();
     };
 
-    const downloadImage = () => {
-        // Prefer the already derived data URL (imageData). If not present, try to build from inferData.heatmap
-        const href = imageData || (inferData?.heatmap ? `data:image/png;base64,${inferData.heatmap}` : null);
-        if (!href) return;
+    const closeHandler = () => {
+        setOutput((prev) => ({ ...prev, onOpen: !onOpen }));
+        setSelectedFile(null);
+        setImageData('');
+        setLoading(null);
+        setIsZoomed(false);
+    };
 
-        // Create a temporary link to trigger download. Works for data: and blob: URLs.
-        const link = document.createElement('a');
-        link.href = href;
-        const project = state?.name ? `${state.name.replace(/\s+/g, '_')}-` : '';
-        link.download = `${project}inference-${Date.now()}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    const downloadImage = () => {
+        if (imageData) {
+            const link = document.createElement('a');
+            link.href = imageData;
+            link.download = `inference-result-${Date.now()}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     };
 
     return (
@@ -124,16 +144,16 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
                                         )}
                                         {/* Success Badge */}
                                         {/* <motion.div
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-                                            className="flex items-center justify-center gap-2 text-green-600"
-                                        >
-                                            <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                                                <MdCheckCircle className="w-5 h-5" />
-                                            </div>
-                                            <span className="font-semibold">Inference Complete</span>
-                                        </motion.div> */}
+                                                          initial={{ scale: 0 }}
+                                                          animate={{ scale: 1 }}
+                                                          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+                                                          className="flex items-center justify-center gap-2 text-green-600"
+                                                      >
+                                                          <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
+                                                              <MdCheckCircle className="w-5 h-5" />
+                                                          </div>
+                                                          <span className="font-semibold">Inference Complete</span>
+                                                      </motion.div> */}
 
                                         {/* Image Container - Adjusted for better fit */}
                                         <div className="flex-1 relative rounded-xl overflow-hidden border-2 border-slate-200 bg-slate-50 flex items-center justify-center min-h-0">
@@ -142,46 +162,46 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
                                                     src={`data:image/png;base64,${inferData?.heatmap}`}
                                                     alt="Inference Result"
                                                     className={`max-w-full max-h-full min-h-full min-w-full object-contain transition-transform duration-300
-                                                        }`}
+                                                                      }`}
                                                     onClick={() => setIsZoomed(!isZoomed)}
                                                 />
 
                                                 {/* Overlay Controls */}
                                                 {/* {!isZoomed && (
-                                                    <motion.div
-                                                        initial={{ opacity: 0 }}
-                                                        whileHover={{ opacity: 1 }}
-                                                        className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity"
-                                                    >
-                                                        <div className="flex items-center gap-4">
-                                                            <button
-                                                                onClick={() => setIsZoomed(true)}
-                                                                className="px-4 py-2 bg-white rounded-lg font-medium text-slate-800 hover:bg-slate-100 transition-colors flex items-center gap-2"
-                                                            >
-                                                                <MdZoomIn className="w-5 h-5" />
-                                                                Zoom In
-                                                            </button>
-                                                            <button
-                                                                onClick={downloadImage}
-                                                                className="px-4 py-2 bg-indigo-600 rounded-lg font-medium text-white hover:bg-indigo-700 transition-colors flex items-center gap-2"
-                                                            >
-                                                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                                                </svg>
-                                                                Download
-                                                            </button>
-                                                        </div>
-                                                    </motion.div>
-                                                )} */}
+                                                                  <motion.div
+                                                                      initial={{ opacity: 0 }}
+                                                                      whileHover={{ opacity: 1 }}
+                                                                      className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity"
+                                                                  >
+                                                                      <div className="flex items-center gap-4">
+                                                                          <button
+                                                                              onClick={() => setIsZoomed(true)}
+                                                                              className="px-4 py-2 bg-white rounded-lg font-medium text-slate-800 hover:bg-slate-100 transition-colors flex items-center gap-2"
+                                                                          >
+                                                                              <MdZoomIn className="w-5 h-5" />
+                                                                              Zoom In
+                                                                          </button>
+                                                                          <button
+                                                                              onClick={downloadImage}
+                                                                              className="px-4 py-2 bg-indigo-600 rounded-lg font-medium text-white hover:bg-indigo-700 transition-colors flex items-center gap-2"
+                                                                          >
+                                                                              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                                              </svg>
+                                                                              Download
+                                                                          </button>
+                                                                      </div>
+                                                                  </motion.div>
+                                                              )} */}
                                             </div>
                                         </div>
 
                                         {/* Info Box */}
                                         {/* <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
-                                            <p className="text-sm text-blue-800">
-                                                <span className="font-semibold">Tip:</span> Click on the image to zoom in/out. Objects detected by your model are highlighted with bounding boxes.
-                                            </p>
-                                        </div> */}
+                                                          <p className="text-sm text-blue-800">
+                                                              <span className="font-semibold">Tip:</span> Click on the image to zoom in/out. Objects detected by your model are highlighted with bounding boxes.
+                                                          </p>
+                                                      </div> */}
                                     </motion.div>
                                 ) : (
                                     <div className="flex flex-col items-center justify-center h-full text-slate-400">

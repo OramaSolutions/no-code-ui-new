@@ -19,7 +19,7 @@ function ImagePreview({ imagePreview, fileName }) {
                     alt="Selected preview"
                     className="w-full max-h-[400px] object-contain"
                 />
-                {/* <motion.div
+                <motion.div
                     initial={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
                     className="absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity"
@@ -28,7 +28,7 @@ function ImagePreview({ imagePreview, fileName }) {
                         <MdZoomIn className="w-12 h-12 mx-auto mb-2" />
                         <p className="text-sm font-medium">{fileName}</p>
                     </div>
-                </motion.div> */}
+                </motion.div>
             </div>
         </motion.div>
     );
