@@ -66,186 +66,95 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
     };
 
     return (
-           <AnimatePresence>
-                    {onOpen && (
-                        <>
-                            {/* Backdrop */}
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
-                                onClick={closeHandler}
-                            />
-        
-                            {/* Modal - Increased size */}
-                            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                                    transition={{ duration: 0.3, ease: 'easeOut' }}
-                                    className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] max-h-[90vh] pointer-events-auto flex flex-col"
+        <AnimatePresence>
+            {onOpen && (
+                <>
+                    {/* Backdrop */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+                        onClick={closeHandler}
+                    />
+
+                    {/* Modal - Increased size */}
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                            transition={{ duration: 0.3, ease: 'easeOut' }}
+                            className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] max-h-[90vh] pointer-events-auto flex flex-col"
+                        >
+                            {/* Header */}
+                            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 relative flex-shrink-0">
+                                <motion.button
+                                    whileHover={{ scale: 1.1, rotate: 90 }}
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={closeHandler}
+                                    className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
                                 >
-                                    {/* Header */}
-                                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 relative flex-shrink-0">
-                                        <motion.button
-                                            whileHover={{ scale: 1.1, rotate: 90 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            onClick={closeHandler}
-                                            className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
-                                        >
-                                            <IoClose className="w-6 h-6" />
-                                        </motion.button>
-                                        <h2 className="text-2xl font-bold text-white">Inference Result</h2>
-                                        <p className="text-blue-100 text-sm mt-1">View your model's predictions</p>
-                                    </div>
-        
-                                    {/* Body - Adjusted for better image display */}
-                                    <div className="flex-1 overflow-hidden p-2">
-                                        {loading ? (
-                                            <div className="flex flex-col items-center justify-center h-full space-y-6">
-                                                <motion.div
-                                                    animate={{ rotate: 360 }}
-                                                    transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                                                    className="relative w-24 h-24"
-                                                >
-                                                    <div className="absolute inset-0 rounded-full border-4 border-indigo-100"></div>
-                                                    <div className="absolute inset-0 rounded-full border-4 border-t-indigo-600 border-r-purple-600"></div>
-                                                </motion.div>
-                                                <div className="text-center">
-                                                    <h3 className="text-lg font-bold text-slate-800">Processing Image</h3>
-                                                    <p className="text-sm text-slate-600 mt-2">Running inference on your model...</p>
-                                                </div>
-                                            </div>
-                                        ) : imageData ? (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                className="h-full flex flex-col space-y-3"
-                                            >
-                                                {/* Meta info */}
-                                                {resultMeta && (
-                                                    <div className="flex items-center justify-between gap-4 bg-gradient-to-r from-gray-50 to-white border border-slate-100 rounded-xl p-3">
-                                                        <div>
-                                                            <div className="text-sm text-slate-600">Anomaly Score</div>
-                                                            <div className="font-semibold text-slate-800">{resultMeta.anomaly_score ?? '-'} </div>
-                                                        </div>
-                                                        <div>
-                                                            <div className="text-sm text-slate-600">Confidence</div>
-                                                            <div className="font-semibold text-slate-800">{resultMeta.confidence ?? '-'} </div>
-                                                        </div>
-                                                        <div>
-                                                            <div className="text-sm text-slate-600">Status</div>
-                                                            <div className="font-semibold text-slate-800">{resultMeta.status ?? '-'} </div>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                                {/* Success Badge */}
-                                                {/* <motion.div
-                                                    initial={{ scale: 0 }}
-                                                    animate={{ scale: 1 }}
-                                                    transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-                                                    className="flex items-center justify-center gap-2 text-green-600"
-                                                >
-                                                    <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                                                        <MdCheckCircle className="w-5 h-5" />
-                                                    </div>
-                                                    <span className="font-semibold">Inference Complete</span>
-                                                </motion.div> */}
-        
-                                                {/* Image Container - Adjusted for better fit */}
-                                                <div className="flex-1 relative rounded-xl overflow-hidden border-2 border-slate-200 bg-slate-50 flex items-center justify-center min-h-0">
-                                                    <div className="relative w-full h-full flex items-center justify-center ">
-                                                        <img
-                                                            src={`data:image/png;base64,${inferData?.heatmap}`}
-                                                            alt="Inference Result"
-                                                            className={`max-w-full max-h-full min-h-full min-w-full object-contain transition-transform duration-300
-                                                                }`}
-                                                            onClick={() => setIsZoomed(!isZoomed)}
-                                                        />
-        
-                                                        {/* Overlay Controls */}
-                                                        {/* {!isZoomed && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0 }}
-                                                                whileHover={{ opacity: 1 }}
-                                                                className="absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity"
-                                                            >
-                                                                <div className="flex items-center gap-4">
-                                                                    <button
-                                                                        onClick={() => setIsZoomed(true)}
-                                                                        className="px-4 py-2 bg-white rounded-lg font-medium text-slate-800 hover:bg-slate-100 transition-colors flex items-center gap-2"
-                                                                    >
-                                                                        <MdZoomIn className="w-5 h-5" />
-                                                                        Zoom In
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={downloadImage}
-                                                                        className="px-4 py-2 bg-indigo-600 rounded-lg font-medium text-white hover:bg-indigo-700 transition-colors flex items-center gap-2"
-                                                                    >
-                                                                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                                                        </svg>
-                                                                        Download
-                                                                    </button>
-                                                                </div>
-                                                            </motion.div>
-                                                        )} */}
-                                                    </div>
-                                                </div>
-        
-                                                {/* Info Box */}
-                                                {/* <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
-                                                    <p className="text-sm text-blue-800">
-                                                        <span className="font-semibold">Tip:</span> Click on the image to zoom in/out. Objects detected by your model are highlighted with bounding boxes.
-                                                    </p>
-                                                </div> */}
-                                            </motion.div>
-                                        ) : (
-                                            <div className="flex flex-col items-center justify-center h-full text-slate-400">
-                                                <svg className="w-20 h-20 mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                                </svg>
-                                                <p className="text-xl font-semibold">No Result Available</p>
-                                            </div>
-                                        )}
-                                    </div>
-        
-                                    {/* Footer Actions */}
-                                    {!loading && imageData && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.2 }}
-                                            className="px-8 pb-8 pt-4 border-t-2 border-slate-200 flex justify-center gap-4 flex-shrink-0"
-                                        >
-                                            <motion.button
-                                                whileHover={{ scale: 1.02 }}
-                                                whileTap={{ scale: 0.98 }}
-                                                onClick={closeHandler}
-                                                className="px-6 py-3 bg-white border-2 border-indigo-600 text-indigo-600 rounded-xl font-semibold hover:bg-indigo-50 transition-colors duration-200 shadow-md flex items-center gap-2"
-                                            >
-                                                <MdRefresh className="w-5 h-5" />
-                                                Infer More Images
-                                            </motion.button>
-                                            <motion.button
-                                                whileHover={{ scale: 1.02 }}
-                                                whileTap={{ scale: 0.98 }}
-                                                onClick={remarkHandler}
-                                                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
-                                            >
-                                                <span>Continue & Add Remark</span>
-                                                <MdCheckCircle className="w-5 h-5" />
-                                            </motion.button>
-                                        </motion.div>
-                                    )}
-                                </motion.div>
+                                    <IoClose className="w-6 h-6" />
+                                </motion.button>
+                                <h2 className="text-2xl font-bold text-white">Inference Result</h2>
+                                <p className="text-blue-100 text-sm mt-1">View your model's predictions</p>
                             </div>
-                        </>
-                    )}
-                </AnimatePresence>
+
+                            {/* Body - Adjusted for better image display */}
+                            <div className="flex-1 overflow-hidden p-2">
+                                {loading ? (
+                                    <div className="flex flex-col items-center justify-center h-full space-y-6">
+                                        <motion.div
+                                            animate={{ rotate: 360 }}
+                                            transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                                            className="relative w-24 h-24"
+                                        >
+                                            <div className="absolute inset-0 rounded-full border-4 border-indigo-100"></div>
+                                            <div className="absolute inset-0 rounded-full border-4 border-t-indigo-600 border-r-purple-600"></div>
+                                        </motion.div>
+                                        <div className="text-center">
+                                            <h3 className="text-lg font-bold text-slate-800">Processing Image</h3>
+                                            <p className="text-sm text-slate-600 mt-2">Running inference on your model...</p>
+                                        </div>
+                                    </div>
+                                ) : null}
+                            </div>
+
+                            {/* Footer Actions */}
+                            {!loading && imageData && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="px-8 pb-8 pt-4 border-t-2 border-slate-200 flex justify-center gap-4 flex-shrink-0"
+                                >
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={closeHandler}
+                                        className="px-6 py-3 bg-white border-2 border-indigo-600 text-indigo-600 rounded-xl font-semibold hover:bg-indigo-50 transition-colors duration-200 shadow-md flex items-center gap-2"
+                                    >
+                                        <MdRefresh className="w-5 h-5" />
+                                        Infer More Images
+                                    </motion.button>
+                                    <motion.button
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={remarkHandler}
+                                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+                                    >
+                                        <span>Continue & Add Remark</span>
+                                        <MdCheckCircle className="w-5 h-5" />
+                                    </motion.button>
+                                </motion.div>
+                            )}
+                        </motion.div>
+                    </div>
+                </>
+            )}
+        </AnimatePresence>
     );
 }
 
