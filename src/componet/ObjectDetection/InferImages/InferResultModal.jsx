@@ -123,7 +123,7 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
                                     <div className="flex-1 relative rounded-xl overflow-hidden border-2 border-slate-200 bg-slate-50 flex items-center justify-center min-h-0">
                                         <div className="relative w-full h-full flex items-center justify-center ">
                                             <img
-                                                src={`data:image/png;base64,${inferData?.heatmap}`}
+                                                src={imageData}
                                                 alt="Inference Result"
                                                 className={`max-w-full max-h-full min-h-full min-w-full object-contain transition-transform duration-300
                                                         }`}
