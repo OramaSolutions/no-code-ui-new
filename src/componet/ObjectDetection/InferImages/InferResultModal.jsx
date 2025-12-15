@@ -119,7 +119,28 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
                                             <p className="text-sm text-slate-600 mt-2">Running inference on your model...</p>
                                         </div>
                                     </div>
-                                ) : null}
+                                ) : imageData ? (
+                                    <div className="flex-1 relative rounded-xl overflow-hidden border-2 border-slate-200 bg-slate-50 flex items-center justify-center min-h-0">
+                                        <div className="relative w-full h-full flex items-center justify-center ">
+                                            <img
+                                                src={`data:image/png;base64,${inferData?.heatmap}`}
+                                                alt="Inference Result"
+                                                className={`max-w-full max-h-full min-h-full min-w-full object-contain transition-transform duration-300
+                                                        }`}
+                                                onClick={() => setIsZoomed(!isZoomed)}
+                                            />
+
+
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center h-full text-slate-400">
+                                        <svg className="w-20 h-20 mb-4 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <p className="text-xl font-semibold">No Result Available</p>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Footer Actions */}
