@@ -9,7 +9,7 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
     const navigate = useNavigate();
     const [imageData, setImageData] = useState('');
     const [loading, setLoading] = useState(null);
-    const [isZoomed, setIsZoomed] = useState(false);
+
 
     useEffect(() => {
         if (onOpen && resultImage) {
@@ -51,7 +51,7 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
         setSelectedFile(null);
         setImageData('');
         setLoading(null);
-        setIsZoomed(false);
+
     };
 
     const downloadImage = () => {
@@ -120,18 +120,12 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
                                         </div>
                                     </div>
                                 ) : imageData ? (
-                                    <div className="flex-1 relative rounded-xl overflow-hidden border-2 border-slate-200 bg-slate-50 flex items-center justify-center min-h-0">
-                                        <div className="relative w-full h-full flex items-center justify-center ">
-                                            <img
-                                                src={imageData}
-                                                alt="Inference Result"
-                                                className={`max-w-full max-h-full min-h-full min-w-full object-contain transition-transform duration-300
-                                                        }`}
-                                                onClick={() => setIsZoomed(!isZoomed)}
-                                            />
-
-
-                                        </div>
+                                    <div className="flex-1 relative rounded-xl overflow-auto border-2 border-slate-200 bg-slate-50 flex items-center justify-center min-h-0">
+                                        <img
+                                            src={imageData}
+                                            alt="Inference Result"
+                                            className="max-h-full max-w-full object-contain"
+                                        />
                                     </div>
                                 ) : (
                                     <div className="flex flex-col items-center justify-center h-full text-slate-400">
