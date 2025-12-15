@@ -103,7 +103,7 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
                             </div>
 
                             {/* Body - Adjusted for better image display */}
-                            <div className="flex-1 overflow-hidden p-2">
+                            <div className="flex-1 overflow-hidden p-4">
                                 {loading ? (
                                     <div className="flex flex-col items-center justify-center h-full space-y-6">
                                         <motion.div
@@ -120,11 +120,11 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
                                         </div>
                                     </div>
                                 ) : imageData ? (
-                                    <div className="flex-1 relative rounded-xl overflow-auto border-2 border-slate-200 bg-slate-50 flex items-center justify-center min-h-0">
+                                    <div className="w-full h-full rounded-xl overflow-auto border-2 border-slate-200 bg-slate-50 flex items-center justify-center">
                                         <img
                                             src={imageData}
                                             alt="Inference Result"
-                                            className="max-h-full max-w-full object-contain"
+                                            className="w-auto h-auto max-w-full max-h-full object-contain"
                                         />
                                     </div>
                                 ) : (
