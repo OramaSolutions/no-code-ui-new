@@ -7,7 +7,7 @@ import { DefectModalTrain, InferAccuracy } from '../../../reduxToolkit/Slices/de
 import { toast } from 'react-toastify';
 import { commomObj } from '../../../utils';
 
-function DefectTrainModal({ data, setData, onApply, state, userData, type, model }) {
+function DefectTrainModal({ data, setData, onApply, state, username, type, model }) {
     const dispatch = useDispatch();
     const { defectTrainData, inferAccuracyData, loading } = useSelector((state) => state.defectDetection);
     const newData = type === "infer" ? inferAccuracyData : defectTrainData;
@@ -15,7 +15,7 @@ function DefectTrainModal({ data, setData, onApply, state, userData, type, model
     useEffect(() => {
         const getData = async () => {
             const res = await dispatch(DefectModalTrain({ 
-                username: userData?.activeUser?.userName, 
+                username: username, 
                 version: state?.version, 
                 project: state?.name, 
                 task: "defectdetection", 
@@ -35,7 +35,7 @@ function DefectTrainModal({ data, setData, onApply, state, userData, type, model
 
         const getAccuracyData = async () => {
             const res = await dispatch(InferAccuracy({ 
-                username: userData?.activeUser?.userName, 
+                username: username, 
                 version: state?.version, 
                 project: state?.name, 
                 task: "defectdetection", 

@@ -23,7 +23,7 @@ const initialState = {
     closeImport: false,
 }
 
-function Labelled({ userData, state, onApply, onChange, url }) {
+function Labelled({ username, state, onApply, onChange, url }) {
     const [istate, setIstate] = useState(initialState)
     const { imageUrls, imageFolder, loading, resizecheck, width, open, close, openImport, closeImport } = istate;
     const [isDirty, setIsDirty] = useState("")
@@ -36,7 +36,7 @@ function Labelled({ userData, state, onApply, onChange, url }) {
             console.log('Fetching dataset thumbnails...');
             try {
                 console.log('fetching thumbnails from server...');
-                const response = await fetch(`${url}get_import_dataset?username=${userData?.activeUser?.userName}&task=defectdetection&project_name=${state?.name}&version=${state?.version}`, {
+                const response = await fetch(`${url}get_import_dataset?username=${username}&task=defectdetection&project_name=${state?.name}&version=${state?.version}`, {
                     method: 'GET',
                 });
                 console.log(response, "responseeee")
@@ -63,7 +63,7 @@ function Labelled({ userData, state, onApply, onChange, url }) {
         };
 
         fetchThumbnails();
-    }, [url, userData?.activeUser?.userName, state?.name, state?.version]);
+    }, [url, username, state?.name, state?.version]);
 
 
     const onDrop = useCallback((acceptedFiles) => {
@@ -108,7 +108,7 @@ function Labelled({ userData, state, onApply, onChange, url }) {
 
         const formData = new FormData();
         formData.append("file", selectedFile);
-        formData.append("username", userData?.activeUser?.userName);
+        formData.append("username", username);
         formData.append("version", state?.version);
         formData.append("project", state?.name);
         formData.append("width", width);
@@ -153,7 +153,7 @@ function Labelled({ userData, state, onApply, onChange, url }) {
         }
         const formData = new FormData();
         formData.append("file", selectedFile);
-        formData.append("username", userData?.activeUser?.userName);
+        formData.append("username", username);
         formData.append("version", state?.version);
         formData.append("project", state?.name);
         formData.append("task", "defectdetection");

@@ -17,33 +17,18 @@ import { useStepPersistence } from "../useStepPersistence";
 import Loader from "../../../commonComponent/Loader";
 import type {
   ODProjectLocationState,
-  ODUserLogin,
+
   StepKey,
   StepOrder,
   RootState,
   StepsSliceState,
   UseStepPersistenceReturn,
 } from "../../../types/defectDetection/training";
+import type { User, AppRootState } from "../../../types/user";
 
 const url: string = getUrl("defectdetection");
 
-// import React, { useEffect, useState } from 'react'
-// import Header from '../../commonComponent/Header'
-// import Sidenav from '../../commonComponent/Sidenav'
-// import { useLocation } from 'react-router-dom';
-// import { useDispatch, useSelector } from 'react-redux'
-// import { markStepChanged, clearStepChange } from '../../reduxToolkit/Slices/stepSlices'
-// import Defectlabelled from './Defectlabelled';
-// import DefectDataSplit from './DefectDataSplit';
-// import DefectHypertune from './DefectHypertune';
-// import DefectInfer from './DefectInfer';
-// import axios from 'axios';
-// import { getUrl } from '../../config/config';
-// import DefectRemark from './DefectRemark';
-// import Application from './Application'
-// import { useStepPersistence } from './useStepPersistence';
-// import Loader from '../../commonComponent/Loader'
-// const url = getUrl('defectdetection')
+
 
 const stepsOrder: StepOrder = [
   "labelled",
@@ -58,10 +43,9 @@ function ProjectTraining(): JSX.Element {
   const dispatch = useDispatch();
   const [iState, updateIstate] = useState<StepKey | null>(null);
 
-  const rawUser = window.localStorage.getItem("userLogin");
-  const userData: ODUserLogin | null = rawUser
-    ? (JSON.parse(rawUser) as ODUserLogin)
-    : null;
+
+
+  const userData = useSelector((state: AppRootState) => state.auth.user) as User | null;
 
   const hasChangedSteps = useSelector<
     RootState,
@@ -70,7 +54,6 @@ function ProjectTraining(): JSX.Element {
 
   const [completedSteps, setCompletedSteps] = useState({
     labelled: false,
-
     HyperTune: false,
     infer: false,
     remark: false,
@@ -86,7 +69,7 @@ function ProjectTraining(): JSX.Element {
     fetchProjectStatus,
     updateStepStatus,
     isStepAccessible,
-  }: UseStepPersistenceReturn = useStepPersistence(userData, state);
+  }: UseStepPersistenceReturn = useStepPersistence(state);
 
   useEffect(() => {
     void fetchProjectStatus();

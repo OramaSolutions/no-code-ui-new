@@ -31,7 +31,7 @@ const initialState = {
     isDirty: false,
 };
 
-function HyperTune({ onApply, state, userData, onChange, url }) {
+function HyperTune({ onApply, state, username, onChange, url }) {
     const dispatch = useDispatch();
     const [istate, updateIstate] = useState(initialState);
     const { hypertuneModel } = useSelector((state) => state.project);
@@ -39,7 +39,7 @@ function HyperTune({ onApply, state, userData, onChange, url }) {
 
     useEffect(() => {
         const payload = {
-            username: userData?.activeUser?.userName,
+            username: username,
             version: state?.version,
             project: state?.name,
             task: 'objectdetection',
@@ -110,7 +110,7 @@ function HyperTune({ onApply, state, userData, onChange, url }) {
         }
 
         const formData = new FormData();
-        formData.append('username', userData?.activeUser?.userName);
+        formData.append('username', username);
         formData.append('version', state?.version);
         formData.append('project', state?.name);
         formData.append('task', 'objectdetection');
@@ -231,7 +231,7 @@ function HyperTune({ onApply, state, userData, onChange, url }) {
                 initialData={istate}
                 setState={updateIstate}
                 onApply={onApply}
-                userData={userData}
+                username={username}
                 state={state}
                 task="objectdetection"
                 apiPoint="train_yolov8"

@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendEmail } from '../../reduxToolkit/Slices/authSlices';
+import { sendEmail } from '../../reduxToolkit/Slices/oldauthSlices';
 import { commomObj } from '../../utils';
 import logoInner from "../../assets/images/Logo-Inner.png"
 let initialstate = {

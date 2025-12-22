@@ -5,7 +5,7 @@ import { MdCheckCircle, MdRefresh, MdZoomIn } from 'react-icons/md';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function InferResultModal({ onOpen, output, setOutput, state, userData, selectedFile, setSelectedFile, url, resultImage, onApply, onChange }) {
+function InferResultModal({ onOpen, output, setOutput, state, username, selectedFile, setSelectedFile, url, resultImage, onApply, onChange }) {
     const navigate = useNavigate();
     const [imageData, setImageData] = useState('');
     const [loading, setLoading] = useState(null);
@@ -23,7 +23,7 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
                 try {
                     setLoading(true);
                     const timestamp = new Date().getTime();
-                    const inferUrl = `${url}infer_yolov8?username=${userData?.activeUser?.userName}&task=objectdetection&project=${state?.name}&version=${state?.version}&timestamp=${timestamp}`;
+                    const inferUrl = `${url}infer_yolov8?username=${username}&task=objectdetection&project=${state?.name}&version=${state?.version}&timestamp=${timestamp}`;
                     const response = await axios.get(inferUrl, {
                         responseType: 'blob',
                     });
@@ -38,7 +38,7 @@ function InferResultModal({ onOpen, output, setOutput, state, userData, selected
             };
             fetchImageData();
         }
-    }, [onOpen, selectedFile, resultImage, url, userData, state]);
+    }, [onOpen, selectedFile, resultImage, url, username, state]);
 
     const remarkHandler = () => {
         console.log('remarkHandler called');

@@ -19,7 +19,7 @@ const initialstate = {
     inferData: "",
 };
 
-function InferImages({ userData, state, url, onApply, onChange }) {
+function InferImages({ username, state, url, onApply, onChange }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [istate, updateIstate] = useState(initialstate);
     const [imagePreview, setImagePreview] = useState(null);
@@ -57,7 +57,7 @@ function InferImages({ userData, state, url, onApply, onChange }) {
             const formData = new FormData();
 
 
-            formData.append("username", userData?.activeUser?.userName);
+            formData.append("username", username);
             formData.append("version", state?.version);
             formData.append("project_name", state?.name);
             formData.append("task", "defectdetection");
@@ -179,7 +179,7 @@ function InferImages({ userData, state, url, onApply, onChange }) {
                 onOpen={onOpen}
                 output={istate}
                 setOutput={updateIstate}
-                userData={userData}
+                username={username}
                 state={state}
                 onApply={onApply}
                 onChange={onChange}

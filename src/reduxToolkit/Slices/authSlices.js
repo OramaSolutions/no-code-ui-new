@@ -1,128 +1,38 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { Url } from '../../config/config.js';
-import { isLoggedIn } from "../../utils";
+import { createSlice } from "@reduxjs/toolkit";
 
-//=====================================auth login api=============================================================================
 const initialState = {
-  adminData: {},
-  loading: false,
-} 
-
-export const userLogin = createAsyncThunk('auth/userLogin', async (payload, { rejectWithValue }) => {
-  try {
-    const response = await axios.post(`${Url}user/userLogin`, payload, { withCredentials: true });
-
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return rejectWithValue(response.data);
-    }
-  }
-  catch (err) {
-    return rejectWithValue(err.response.data);
-  }
-})
-//====================================aut send email================================================================
-export const sendEmail = createAsyncThunk('auth/sentEmail', async (payload, { rejectWithValue }) => {
-  try {
-    console.log("heloooo")
-    const response = await axios.post(`${Url}user/sentEmail`, payload);
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return rejectWithValue(response.data);
-    }
-  }
-  catch (err) {
-    return rejectWithValue(err.response.data);
-  }
-})
-
-//====================================auth reset password================================================================
-export const SetPassword = createAsyncThunk('auth/setPassword', async (payload, { rejectWithValue }) => {
-  try {
-    console.log("heloooo")
-    const response = await axios.put(`${Url}user/setPassword?token=${payload.token}`, { password: payload.password });
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return rejectWithValue(response.data);
-    }
-  }
-  catch (err) {
-    return rejectWithValue(err.response.data);
-  }
-})
-
-//============================================change password=================================================
-export const changePassword = createAsyncThunk('auth/changePassword', async (payload, { rejectWithValue }) => {
-  try {
-    const token = isLoggedIn("userLogin");
-    const response = await axios.put(`${Url}user/changePassword`, payload, {
-      headers: { Authorization: `${token}` },
-    }); if (response.status === 200) {
-      return response.data;
-    } else {
-      return rejectWithValue(response.data);
-    }
-  }
-  catch (err) {
-    return rejectWithValue(err.response.data);
-  }
-})
-//===========================================update profile===================================================
-export const updateProfile = createAsyncThunk('auth/updateprofile', async (payload, { rejectWithValue }) => {
-  try {
-    const token = isLoggedIn("userLogin");
-    const response = await axios.post(`${Url}user/editProfile`, payload, {
-      headers: { Authorization: `${token}` },
-    });
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return rejectWithValue(response.data);
-    }
-  }
-  catch (err) {
-    return rejectWithValue(err.response.data);
-  }
-})
-//================================================view profile api==========================
-export const viewProfile = createAsyncThunk('auth/viewprofile', async (undefined, { rejectWithValue }) => {
-  try {
-    const token = isLoggedIn("userLogin");
-    const response = await axios.get(`${Url}user/viewProfile`, {
-      headers: { Authorization: `${token}` },
-    });
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return rejectWithValue(response.data);
-    }
-  }
-  catch (err) {
-    return rejectWithValue(err.response.data);
-  }
-})
+    user: null,
+    isAuthenticated: false,
+    loading: true,
+    wasAuthenticated: false,
+};
 
 const authSlice = createSlice({
-  name: 'auth',
-  initialState,
-  extraReducers: (builder) => {
-    builder
-      .addCase(userLogin.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(userLogin.fulfilled, (state, action) => {
-        state.loading = false;
-        state.adminData = action.payload;
-        window.localStorage.setItem('userLogin', JSON.stringify(action.payload));
-      })
-      .addCase(userLogin.rejected, (state, action) => {
-        state.loading = false;
-      })
-  },
+    name: "auth",
+    initialState,
+    reducers: {
+        setAuth: (state, action) => {
+            // console.log('Setting auth state with user data:', action.payload.user);
+            state.user = action.payload.user;
+            state.isAuthenticated = true;
+            state.loading = false;
+            state.wasAuthenticated = true;
+
+        },
+
+        logout: (state) => {
+            // console.log('Logging out user, resetting auth state');
+            state.user = null;
+            state.isAuthenticated = false;
+            state.loading = false;
+            state.wasAuthenticated = false;
+        },
+        authResolved: (state) => {
+            // console.log('Auth resolved without login');
+            state.loading = false; // resolved but not logged in
+        },
+    },
 });
 
+export const { setAuth, logout, authResolved } = authSlice.actions;
 export default authSlice.reducer;

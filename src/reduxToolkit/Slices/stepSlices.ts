@@ -31,7 +31,7 @@ import type { StepsSliceState, StepKey } from "../../types/objectDetection/train
 
 const initialHasChanged: StepsSliceState['hasChangedSteps'] = {
   labelled: false,
-  augumented: false,
+  augmented: false,
   images: false,
   dataSplit: false,
   HyperTune: false,

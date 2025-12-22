@@ -4,7 +4,7 @@ import { IoClose } from 'react-icons/io5';
 import { MdCheckCircle, MdRefresh, MdZoomIn } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
-function InferResultModal({ onOpen, output, setOutput, state, userData, selectedFile, setSelectedFile, url, onApply, onChange }) {
+function InferResultModal({ onOpen, output, setOutput, state, username, selectedFile, setSelectedFile, url, onApply, onChange }) {
     const navigate = useNavigate();
     const { inferData } = output;
     const [loading, setLoading] = useState(null);

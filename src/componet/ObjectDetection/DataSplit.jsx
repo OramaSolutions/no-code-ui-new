@@ -11,7 +11,7 @@ import { MdDataset, MdCheckCircle, MdInfo } from 'react-icons/md';
 import { IoClose } from 'react-icons/io5';
 import { HiAdjustments } from 'react-icons/hi';
 
-function DataSplit({ onApply, userData, state, onChange, url }) {
+function DataSplit({ onApply, username, state, onChange, url }) {
     const dispatch = useDispatch();
     const AgumentedSize = window.localStorage.getItem('AgumentedSize') || 0;
     const [trainingPercentage, setTrainingPercentage] = useState(80);
@@ -27,15 +27,17 @@ function DataSplit({ onApply, userData, state, onChange, url }) {
     useEffect(() => {
         const getData = async () => {
             const payload = {
-                username: userData?.activeUser?.userName,
+                username: username,
                 version: state?.version,
                 project: state?.name,
                 task: 'objectdetection',
             };
             const res = await dispatch(ReturnDataSplit({ payload, url }));
-            if (res?.status === 200) {
+            // console.log('res',res)
+            if (res?.payload?.status === 200) {
                 if (res?.payload?.data?.split_ratio) {
-                    setTrainingPercentage(res?.payload?.data?.split_ratio * 100 || 80);
+                    // console.log('>>>',res?.payload?.data?.split_ratio)
+                    setTrainingPercentage((res?.payload?.data?.split_ratio * 100).toFixed(2) || 80);
                 }
                 setFlag(true);
             } else {
@@ -50,7 +52,7 @@ function DataSplit({ onApply, userData, state, onChange, url }) {
         let isSplit = false;
 
         const payload = {
-            username: userData?.activeUser?.userName,
+            username: username,
             version: state?.version,
             project: state?.name,
             task: 'objectdetection',
@@ -199,7 +201,7 @@ function DataSplit({ onApply, userData, state, onChange, url }) {
                         </div>
 
                         {/* Progress Bar */}
-                        <div className="flex gap-1 h-2 rounded-full overflow-hidden bg-slate-100">
+                        {/* <div className="flex gap-1 h-2 rounded-full overflow-hidden bg-slate-100">
                             <motion.div
                                 initial={{ width: 0 }}
                                 animate={{ width: `${trainingPercentage}%` }}
@@ -212,7 +214,7 @@ function DataSplit({ onApply, userData, state, onChange, url }) {
                                 transition={{ duration: 0.5, ease: 'easeOut' }}
                                 className="bg-gradient-to-r from-rose-400 to-rose-600"
                             />
-                        </div>
+                        </div> */}
                     </motion.div>
 
                     {/* Split Results */}

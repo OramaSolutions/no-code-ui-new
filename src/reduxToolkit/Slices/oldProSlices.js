@@ -53,7 +53,7 @@ export const importData = createAsyncThunk('project/importData', async ({ payloa
   }
 })
 //==========================================Augumentation=====================================================
-export const AugumentedData = createAsyncThunk('project/augumentation', async ({ payload, signal, url }, { rejectWithValue }) => {
+export const augmentedData = createAsyncThunk('project/augumentation', async ({ payload, signal, url }, { rejectWithValue }) => {
   try {
     const response = await axios.post(`${url}augment`, payload, {
       headers: {
@@ -111,7 +111,7 @@ export const hyperTune = createAsyncThunk('project/hypertune', async ({ payload,
     return rejectWithValue(err.response.data);
   }
 })
-//============================================augumented images preview==================================
+//============================================augmented images preview==================================
 export const AgumentedImage = createAsyncThunk('project/agumentedImage', async ({ payload, url }, { rejectWithValue }) => {
   try {
     const response = await axios.get(`${url}preview_images?username=${payload?.username}&task=${payload?.task}&project=${payload?.project}&version=${payload?.version}`

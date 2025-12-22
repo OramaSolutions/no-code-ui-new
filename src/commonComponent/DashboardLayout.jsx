@@ -13,6 +13,8 @@ import sidenavIcon4 from "../assets/images/sidenav-4.png";
 import sidenavIcon5 from "../assets/images/sidenav-5.png";
 import { HiMenu, HiBell, HiChevronDown, HiQuestionMarkCircle } from 'react-icons/hi';
 import { MdLogout } from 'react-icons/md';
+import { useQuery } from "@tanstack/react-query";
+import { fetchUserDetails } from '../api/dashboardApi';
 
 const DashboardLayout = ({ children, pageTitle, pageDescription }) => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -24,30 +26,22 @@ const DashboardLayout = ({ children, pageTitle, pageDescription }) => {
     const { notificationData } = useSelector((state) => state.notification);
     const dispatch = useDispatch();
 
-    // Safe localStorage access with error handling
-    const getProfileImage = () => {
-        try {
-            const image = window.localStorage.getItem("sellerimage");
-            return image && image !== "null" ? JSON.parse(image) : null;
-        } catch (error) {
-            console.error("Error parsing profile image:", error);
-            return null;
-        }
-    };
+    // const {
+    //     data,
+    //     isLoading,
+    //     isError,
+    //     error,
+    // } = useQuery({
+    //     queryKey: ["dashboardUserDetails"],
+    //     queryFn: fetchUserDetails,
+    // });
 
-    const getUserLogin = () => {
-        try {
-            const seller = window.localStorage.getItem("userLogin");
-            return seller && seller !== "null" ? JSON.parse(seller) : {};
-        } catch (error) {
-            console.error("Error parsing seller login:", error);
-            return {};
-        }
-    };
+    // // Safe localStorage access with error handling
+    // const user = data?.data?.user;
 
-    const profileimage = getProfileImage();
-    const userLogin = getUserLogin();
-
+      const user = useSelector(
+        (state) => state.auth.user
+      ) 
 
     const menuItems = [
         { icon: sidenavIcon1, label: 'Dashboard', path: '/dashboard' },
@@ -57,13 +51,13 @@ const DashboardLayout = ({ children, pageTitle, pageDescription }) => {
         { icon: sidenavIcon5, label: 'Settings', path: '/settings' },
     ];
 
-    useEffect(() => {
-        dispatch(notificationList());
-        const interval = setInterval(() => {
-            dispatch(notificationList());
-        }, 120000);
-        return () => clearInterval(interval);
-    }, [dispatch]);
+    // useEffect(() => {
+    //     dispatch(notificationList());
+    //     const interval = setInterval(() => {
+    //         dispatch(notificationList());
+    //     }, 120000);
+    //     return () => clearInterval(interval);
+    // }, [dispatch]);
 
     const unreadCount = notificationData?.filter(n => !n.isRead)?.length || 0;
 
@@ -224,7 +218,7 @@ const DashboardLayout = ({ children, pageTitle, pageDescription }) => {
                                 ) : (
                                     <>
                                         <h2 className="text-lg font-semibold text-gray-900">
-                                            Welcome, {userLogin?.activeUser?.name || 'User'}!
+                                            Welcome, {user?.name || 'User'}!
                                         </h2>
                                         <p className="text-sm text-gray-500">
                                             Let's finish your task today!
@@ -256,15 +250,15 @@ const DashboardLayout = ({ children, pageTitle, pageDescription }) => {
                                 >
                                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center overflow-hidden">
                                         <span className="text-white font-semibold text-lg">
-                                            {userLogin?.activeUser?.name?.charAt(0)?.toUpperCase() || 'U'}
+                                            {user?.name?.charAt(0)?.toUpperCase() || 'U'}
                                         </span>
                                     </div>
                                     <div className="hidden md:block text-left">
                                         <p className="text-sm font-medium text-gray-900">
-                                            {userLogin?.activeUser?.name || 'User'}
+                                            {user?.name || 'User'}
                                         </p>
                                         <p className="text-xs text-gray-500">
-                                            {userLogin?.activeUser?.email || ''}
+                                            {user?.email || ''}
                                         </p>
                                     </div>
                                     <HiChevronDown className="w-5 h-5 text-gray-400" />

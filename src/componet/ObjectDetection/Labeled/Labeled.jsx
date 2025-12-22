@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useDispatch } from "react-redux";
 import { ResizeFolder, importData } from "../../../reduxToolkit/Slices/projectSlices";
 import { commomObj } from '../../../utils';
+import { useNavigate } from "react-router-dom";
 import FileUploadZone from "./FileUploadZone";
 import ResizeOptions from "./ResizeOptions";
 import ImagePreview from "./ImagePreview";
@@ -23,20 +24,23 @@ const initialState = {
     closeImport: false,
 }
 
-function Labelled({ userData, state, onApply, onChange, url }) {
+function Labelled({ username, state, onApply, onChange, url }) {
     const [istate, setIstate] = useState(initialState)
     const { imageUrls, imageFolder, loading, resizecheck, width, open, close, openImport, closeImport } = istate;
     const [isDirty, setIsDirty] = useState("")
     const [selectedFile, setSelectedFile] = useState(null);
+    const [postImportActionsVisible, setPostImportActionsVisible] = useState(false);
     const abortControllerReff = useRef();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const backLink = "object-detection-training";
 
     useEffect(() => {
         const fetchThumbnails = async () => {
             console.log('Fetching dataset thumbnails...');
             try {
                 const response = await fetch(
-                    `${url}get_thumbnails?username=${userData?.activeUser?.userName}&task=objectdetection&project=${state?.name}&version=${state?.version}&thumbnail_name=dataset_thumbnails`,
+                    `${url}get_thumbnails?username=${username}&task=objectdetection&project=${state?.name}&version=${state?.version}&thumbnail_name=dataset_thumbnails`,
                     { method: 'GET' }
                 );
 
@@ -55,7 +59,7 @@ function Labelled({ userData, state, onApply, onChange, url }) {
                         ...prev,
                         imageUrls: data.thumbnails
                     }));
-
+                    setPostImportActionsVisible(true)
                     console.log(`Found ${data.count} thumbnails`);
                 } else {
                     console.log("No thumbnails found.");
@@ -67,7 +71,7 @@ function Labelled({ userData, state, onApply, onChange, url }) {
         };
 
         fetchThumbnails();
-    }, [url, userData?.activeUser?.userName, state?.name, state?.version]);
+    }, [url, username, state?.name, state?.version]);
 
 
     const onDrop = useCallback((acceptedFiles) => {
@@ -100,6 +104,7 @@ function Labelled({ userData, state, onApply, onChange, url }) {
         worker.postMessage({ file });
     };
 
+    // useless 
     const handleUpload = async () => {
         if (!selectedFile) {
             toast.error("Please select a Zip file first", commomObj);
@@ -112,7 +117,7 @@ function Labelled({ userData, state, onApply, onChange, url }) {
 
         const formData = new FormData();
         formData.append("file", selectedFile);
-        formData.append("username", userData?.activeUser?.userName);
+        formData.append("username", username);
         formData.append("version", state?.version);
         formData.append("project", state?.name);
         formData.append("width", width);
@@ -139,15 +144,16 @@ function Labelled({ userData, state, onApply, onChange, url }) {
         }
     };
 
+    // upload
     const importUpload = async () => {
         if (isDirty === selectedFile.name) {
             const datasize = {
                 Size: imageUrls.length,
 
             }
-            
+
             // window.localStorage.setItem("DataSize", JSON.stringify(datasize))
-            
+
             onApply()
             return;
         }
@@ -157,16 +163,16 @@ function Labelled({ userData, state, onApply, onChange, url }) {
         }
         const formData = new FormData();
         formData.append("file", selectedFile);
-        formData.append("username", userData?.activeUser?.userName);
+        formData.append("username", username);
         formData.append("version", state?.version);
         formData.append("project", state?.name);
         formData.append("task", "objectdetection");
         try {
             abortControllerReff.current = new AbortController();
             setIstate({ ...istate, openImport: true })
-           
+
             const response = await dispatch(importData({ payload: formData, signal: abortControllerReff.current.signal, url }))
-           
+
             if (response?.payload?.status === 201) {
                 setIstate({ ...istate, openImport: false })
                 toast.success("Import Successfully", commomObj)
@@ -174,11 +180,17 @@ function Labelled({ userData, state, onApply, onChange, url }) {
                     Size: response?.payload?.data?.image_count,
 
                 }
-                
+
                 window.localStorage.setItem("DataSize", JSON.stringify(datasize))
-               
-                onChange();
-                onApply()
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                });
+
+                // Show post-import actions (view or label) instead of immediately proceeding
+                setPostImportActionsVisible(true);
+                setSelectedFile(null)
+                // Let parent know data changed when user chooses an action (handled on button click)
 
             } else {
                 setIstate({ ...istate, openImport: true, closeImport: true });
@@ -208,6 +220,29 @@ function Labelled({ userData, state, onApply, onChange, url }) {
         }
     };
 
+    const handleLabelDataset = () => {
+        console.log("Navigating to label dataset...", backLink, state);
+        navigate(
+            `/dataset-overview/${backLink}/${state.projectId}/${state.name}/${state.version}`
+        )
+    }
+
+    const handleViewDataset = () => {
+        // inform parent and navigate to dataset overview
+        onChange && onChange();
+        onApply && onApply();
+        setPostImportActionsVisible(false);
+        navigate(`/dataset-overview/${backLink}/${state.projectId}/${state.name}/${state.version}`);
+    }
+
+    const handleStartLabeling = () => {
+        // inform parent and navigate to labeling start (first image)
+        onChange && onChange();
+        onApply && onApply();
+        setPostImportActionsVisible(false);
+        navigate(`/image-label/${backLink}/${state.projectId}/${state.name}/${state.version}/image/1`);
+    }
+
     return (
         <>
             <motion.div
@@ -228,7 +263,43 @@ function Labelled({ userData, state, onApply, onChange, url }) {
                         <p className="text-sm text-slate-600">Upload your labeled images (ZIP format, up to 2GB)</p>
                     </div>
                 </div>
+                {postImportActionsVisible ? (
+                    <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 className="text-sm font-semibold text-green-800">Import successful</h4>
+                                <p className="text-xs text-slate-600">Your dataset was imported. Choose an action to continue.</p>
+                            </div>
+                        </div>
 
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={handleViewDataset}
+                                className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded shadow-sm hover:bg-slate-50"
+                            >
+                                View Dataset
+                            </button>
+                            <button
+                                onClick={handleStartLabeling}
+                                className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                            >
+                                Start Labeling
+                            </button>
+                            <button
+                                onClick={() => setPostImportActionsVisible(false)}
+                                className="px-3 py-2 bg-transparent text-slate-500 rounded hover:bg-slate-100"
+                                aria-label="Dismiss"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    </div>
+                ) : null}
                 {/* File Name Display */}
                 {selectedFile && (
                     <motion.div
@@ -271,7 +342,7 @@ function Labelled({ userData, state, onApply, onChange, url }) {
                     setIstate={setIstate}
                     setSelectedFile={setSelectedFile}
                     handleCancel={handleCancel}
-                    userData={userData}
+                    username={username}
                     state={state}
                     task="objectdetection"
                     url={url}
@@ -291,6 +362,7 @@ function Labelled({ userData, state, onApply, onChange, url }) {
                 setIstate={setIstate}
                 handleCancel={handleCancel}
             />
+
 
         </>
     );

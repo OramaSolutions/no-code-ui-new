@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import DashboardLayout from '../../commonComponent/DashboardLayout';
-import { dashboardList } from '../../reduxToolkit/Slices/dashboardSlices';
-import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux';
+import { commomObj, handledate } from '../../utils';
+import { useQuery } from "@tanstack/react-query";
+import { fetchDashboardList } from "../../api/dashboardApi";
+import { setDashboardData } from '../../reduxToolkit/Slices/dashboardSlices';
 import Loader from '../../commonComponent/Loader';
 import { useNavigate } from 'react-router-dom';
 import CalendarComponent from './Calender';
@@ -20,16 +24,42 @@ const Dashboard = () => {
         model: ""
     });
 
-    const { dashboardData, loader } = useSelector((state) => state.dashboard);
-   
+    const {
+        data,
+        isLoading,
+        isError,
+        error,
+    } = useQuery({
+        queryKey: ["dashboardList"],
+        queryFn: fetchDashboardList,
+    });
+
     useEffect(() => {
-        dispatch(dashboardList());
-    }, []);
+        if (data) {
+            dispatch(setDashboardData(data?.data));
+        }
+
+        if (isError) {
+            console.log('isError', error)
+            toast.error("Failed to fetch dashboard", commomObj);
+        }
+    }, [data, isError, error]);
+
+
+    const dashboardData = useSelector((state) => state.dashboard.dashboardData);
+
+// console.log('dashboardData', dashboardData)
+
 
     const navigateHandler = (projectName, versionNumber, projectId, model) => {
-        const redirect = model == "objectdetection" ? "/object-detection-training" :
-            model == "Classification" ? "/classification-training" :
-                "/defect-detection-training";
+        const redirect =
+            model === "objectdetection"
+                ? `/object-detection-training/${projectId}/${projectName}/${versionNumber}`
+                : model === "classification"
+                    ? `/classification-training/${projectId}/${projectName}/${versionNumber}`
+                    : `/defect-detection-training/${projectId}/${projectName}/${versionNumber}`;
+
+
         navigate(redirect, {
             state: { name: projectName, version: versionNumber, projectId: projectId }
         });
@@ -53,7 +83,7 @@ const Dashboard = () => {
                 <div className="lg:col-span-2 space-y-6">
 
 
-                  
+
 
                     {/* Create New Project Section */}
                     <NewProjects openCreateModal={openCreateModal} />
@@ -89,7 +119,7 @@ const Dashboard = () => {
                             </button>
                         </div>
 
-                        {loader ? (
+                        {isLoading ? (
                             <Loader />
                         ) : dashboardData?.result?.length > 0 ? (
                             <div className="space-y-3 max-h-96 overflow-y-auto">
@@ -104,7 +134,7 @@ const Dashboard = () => {
                                         onClick={() => navigateHandler(
                                             item?.name,
                                             item?.versionNumber,
-                                            item?.projectId,
+                                            item?._id,
                                             item?.model
                                         )}
                                     >

@@ -15,9 +15,10 @@ const initialstate = {
     openVisualize: false,
     defectTrainData: {},
     minimized: false, // Add minimized state
+    trainingStarted: false,
 };
 
-function TrainModel({ initialData, setState, onApply, userData, state, task, apiPoint }) {
+function TrainModel({ initialData, setState, onApply, username, state, task, apiPoint }) {
     const [istate, updateIstate] = useState(initialstate);
     const { opentrainModal, opentraincomplete, opendefectTraining, isTrainDataLoaded, openVisualize, defectTrainData, minimized } = istate;
     const [output, setOutput] = useState('');
@@ -28,37 +29,43 @@ function TrainModel({ initialData, setState, onApply, userData, state, task, api
 
     const handleOpen = async () => {
         try {
-            setTrainingStarted(true); // Mark training as started
-            updateIstate({ ...istate, opentrainModal: true });
+            setTrainingStarted(true);
+
+            updateIstate(prev => ({
+                ...prev,
+                opentrainModal: true,
+                trainingStarted: false,
+            }));
+
             handleclose();
 
             const response = await fetch(
-                `${url}${apiPoint}?username=${userData?.activeUser?.userName}&task=${task}&project=${state?.name}&version=${state?.version}`,
+                `${url}train_yolov8?username=${username}&task=${task}&project=${state?.name}&version=${state?.version}`,
                 { method: 'GET' }
             );
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
             const data = await response.json();
-            console.log('Response received:', data);
 
-            if (data.message === 'Training already completed.') {
-                updateIstate((prev) => ({ ...prev, opentraincomplete: true, opentrainModal: true }));
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to start training');
             }
 
-            const tId = data.task_id;
-            console.log('Task ID:', tId);
-            setTaskId(tId);
-        } catch (error) {
-            console.error('Error fetching stream:', error);
+            // If already trained, still open monitor
+            updateIstate(prev => ({
+                ...prev,
+                opentrainModal: true,
+                trainingStarted: true,
+            }));
+
+        } catch (err) {
+            console.error(err);
         }
     };
 
+
     const handleclose = () => {
         console.log('ran handle close in train modal');
-        setState({ ...initialData, openModal: false });
+        setState({ ...initialData, openModal: false, minimized: false });
     };
 
     const handleMinimize = () => {
@@ -116,7 +123,7 @@ function TrainModel({ initialData, setState, onApply, userData, state, task, api
                                         <motion.button
                                             whileHover={{ scale: 1.1, rotate: 90 }}
                                             whileTap={{ scale: 0.9 }}
-                                            onClick={trainingStarted ? handleMinimize : handleclose}
+                                            onClick={handleclose}
                                             className="text-white/80 hover:text-white transition-colors"
                                             title={trainingStarted ? 'Minimize' : 'Close'}
                                         >
@@ -241,11 +248,11 @@ function TrainModel({ initialData, setState, onApply, userData, state, task, api
                 flag={flag}
                 setFlag={setFlag}
                 onApply={onApply}
-                userData={userData}
+                username={username}
                 state={state}
                 task={task}
                 url={url}
-                taskId={taskId}
+
             />
 
             {opendefectTraining && (
@@ -253,7 +260,7 @@ function TrainModel({ initialData, setState, onApply, userData, state, task, api
                     data={istate}
                     setData={updateIstate}
                     onApply={onApply}
-                    userData={userData}
+                    username={username}
                     state={state}
                     task={task}
                     model={initialData.model}
@@ -265,7 +272,7 @@ function TrainModel({ initialData, setState, onApply, userData, state, task, api
                     data={istate}
                     setData={updateIstate}
                     onApply={onApply}
-                    userData={userData}
+                    username={username}
                     state={state}
                     task={task}
                     model={initialData.model}

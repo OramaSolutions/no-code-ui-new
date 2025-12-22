@@ -21,7 +21,7 @@ export interface ODUserLogin {
 // Canonical step keys used across the flow
 export type StepKey =
   | 'labelled'
-  | 'augumented'
+  | 'augmented'
   | 'images'
   | 'dataSplit'
   | 'HyperTune'

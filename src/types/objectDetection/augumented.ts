@@ -1,6 +1,6 @@
 // Types matching the actual data used in Augumentation.js
 
-export interface AugumentedState {
+export interface augmentedState {
 	rotation: boolean;
 	crop: boolean;
 	verticalFlip: boolean;

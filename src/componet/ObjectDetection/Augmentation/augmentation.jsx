@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 
 import 'rc-slider/assets/index.css';
 
-import { AugumentedData, ReturnAgumentation } from '../../../reduxToolkit/Slices/projectSlices';
+import { augmentedData, ReturnAgumentation } from '../../../reduxToolkit/Slices/projectSlices';
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 import { commomObj } from '../../../utils';
@@ -162,32 +162,32 @@ const initialState = {
     noise: false,
     blur: false,
     rotate_limit: 0,
-    rotate_prob: 0,
-    vertical_flip_prob: 0,
-    horizontal_flip_prob: 0,
-    brightness_limit: 5,
-    brightness_prob: 0,
+    rotate_prob: 0.5,
+    vertical_flip_prob: 0.5,
+    horizontal_flip_prob: 0.5,
+    brightness_limit: 0.5,
+    brightness_prob: 0.5,
     contrast_limit: 5,
-    contrast_prob: 0,
+    contrast_prob: 0.5,
     hue_saturation_limit: 5,
-    hue_saturation_prob: 0,
+    hue_saturation_prob: 0.5,
     gauss_noise_var_limit: 1,
-    gauss_noise_prob: 0,
+    gauss_noise_prob: 0.5,
     blur_limit: 0,
-    blur_prob: 0,
+    blur_prob: 0.5,
     cropX: 0,
     cropY: 0,
     cropXratio: 0.6,
     cropYratio: 0.6,
     num_of_images_to_be_generated: "1",
-    cropProb: 0,
+    cropProb: 0.5,
     openModal: false,
     onClose: false,
     isDirty: false,
 }
 
 
-function Augumentation({ state, userData, onApply, onChange, url }) {
+function Augumentation({ state, username, onApply, onChange, url }) {
     const { hasChangedSteps } = useSelector((state) => state.steps);
     const DatasetSize = JSON.parse(window.localStorage.getItem("DataSize")) || {}
     const [iState, updateIstate] = useState(initialState)
@@ -202,7 +202,7 @@ function Augumentation({ state, userData, onApply, onChange, url }) {
         const fetchData = async () => {
             try {
                 const payload = {
-                    username: userData?.activeUser?.userName,
+                    username: username,
                     version: state?.version,
                     project: state?.name,
                     task: "objectdetection",
@@ -262,7 +262,7 @@ function Augumentation({ state, userData, onApply, onChange, url }) {
         const fetchSampleImage = async () => {
             try {
                 const params = new URLSearchParams({
-                    username: userData?.activeUser?.userName,
+                    username: username,
                     task: "objectdetection",
                     project: state?.name,
                     version: state?.version
@@ -277,7 +277,7 @@ function Augumentation({ state, userData, onApply, onChange, url }) {
             }
         };
         fetchSampleImage();
-    }, [userData, state]);
+    }, [username, state]);
 
     const sanitizePayload = (a) => {
         const out = { ...a };
@@ -356,7 +356,7 @@ function Augumentation({ state, userData, onApply, onChange, url }) {
 
     const saveHandler = async () => {
         // console.log('save handler called,isDirty:', isDirty, 'hasChangedSteps:', hasChangedSteps);
-        // if (!isDirty || hasChangedSteps?.augumented == false) {
+        // if (!isDirty || hasChangedSteps?.augmented == false) {
         //     window.localStorage.setItem("AgumentedSize", (DatasetSize?.Size) * num_of_images_to_be_generated)
         //     onApply()
         //     return;
@@ -377,7 +377,7 @@ function Augumentation({ state, userData, onApply, onChange, url }) {
 
 
 
-                formData.append("username", userData?.activeUser?.userName);
+                formData.append("username", username);
                 formData.append("version", state?.version)
                 formData.append("project", state?.name);
                 formData.append("task", "objectdetection");
@@ -388,7 +388,7 @@ function Augumentation({ state, userData, onApply, onChange, url }) {
                 //     console.log(`${pair[0]}:`, pair[1]);
                 // }
 
-                const response = await dispatch(AugumentedData({ payload: formData, signal: abortControllerReff.current.signal, url }))
+                const response = await dispatch(augmentedData({ payload: formData, signal: abortControllerReff.current.signal, url }))
                 console.log(response, "augmentations response")
                 if (response?.payload?.code === 201) {
                     updateIstate({ ...iState, openModal: false })

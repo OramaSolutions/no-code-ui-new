@@ -20,11 +20,11 @@ function CreateVersion({ show, setShow, model }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const redirect = model === "objectdetection"
-        ? "/object-detection-training"
-        : model === "Classification"
-            ? "/classification-training"
-            : "/defect-detection-training";
+    // const redirect = model === "objectdetection"
+    //     ? "/object-detection-training"
+    //     : model === "Classification"
+    //         ? "/classification-training"
+    //         : "/defect-detection-training";
 
     const handleClose = () => {
         setShow({ ...show, openVersion: false });
@@ -49,13 +49,23 @@ function CreateVersion({ show, setShow, model }) {
                 if (response?.payload?.code === 200 || response?.payload?.code === 201) {
                     toast.success(response?.payload?.message, commomObj);
                     setShow({ ...show, openVersion: false });
+                    const projectData = response?.payload?.data || response?.payload?.addBanner;
+
+                    const redirect =
+                        model === "objectdetection"
+                            ? `/object-detection-training/${projectData._id}/${projectData.name}/${projectData.versionNumber}`
+                            : model === "classification"
+                                ? `/classification-training/${projectData._id}/${projectData.name}/${projectData.versionNumber}`
+                                : `/defect-detection-training/${projectData._id}/${projectData.name}/${projectData.versionNumber}`;
+
                     navigate(redirect, {
                         state: {
-                            name: response?.payload?.data?.name || response?.payload?.addBanner?.name,
-                            version: response?.payload?.data?.versionNumber || response?.payload?.addBanner?.versionNumber,
-                            projectId: response?.payload?.data?._id || response?.payload?.addBanner?._id
-                        }
+                            name: projectData?.name,
+                            version: projectData?.versionNumber,
+                            projectId: projectData?._id,
+                        },
                     });
+                    
                 } else {
                     toast.error(response?.payload?.message, commomObj);
                 }
@@ -129,8 +139,8 @@ function CreateVersion({ show, setShow, model }) {
                                             onKeyPress={handleKeyPress}
                                             placeholder="e.g., 1.0.0"
                                             className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl transition-all duration-200 focus:outline-none ${error && !versionNumber.trim()
-                                                    ? 'border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
-                                                    : 'border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10'
+                                                ? 'border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
+                                                : 'border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10'
                                                 }`}
                                         />
                                     </div>

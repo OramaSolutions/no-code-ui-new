@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Url} from '../../config/config.js';
-import { isLoggedIn } from "../../utils";
+import axiosInstance from '../../api/axiosInstance.js';
 
 const initialState = {
     notificationData: [],
@@ -9,12 +9,11 @@ const initialState = {
 }
 
 //====================================notification List==========================================
+// need axios instance
 export const notificationList = createAsyncThunk('notification/notificationList', async (payload, { rejectWithValue }) => {
     try {
-        const token = isLoggedIn("userLogin");
-        const response = await axios.get(`${Url}user/notificationList?`, {
-            headers: { Authorization: `${token}` },
-        });
+        
+        const response = await axios.get(`${Url}user/notificationList?`);
         if (response.status === 200) {
             return response.data;
         } else {

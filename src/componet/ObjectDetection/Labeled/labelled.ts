@@ -2,11 +2,7 @@
 
 // Component Props
 export interface LabelledProps {
-    userData: {
-        activeUser: {
-            userName: string;
-        };
-    };
+    username: string;
     state: {
         name: string;
         version: string;

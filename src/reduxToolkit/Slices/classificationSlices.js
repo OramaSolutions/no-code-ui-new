@@ -32,7 +32,7 @@ export const importClassData = createAsyncThunk('classification/importData', asy
     }
 })
 //==========================================Augumentation=====================================================
-export const ClassAugumentedData = createAsyncThunk('classification/augumentation', async ({ payload, signal, url }, { rejectWithValue }) => {
+export const ClassaugmentedData = createAsyncThunk('classification/augumentation', async ({ payload, signal, url }, { rejectWithValue }) => {
     try {
         const response = await axios.post(`${url}augment_cls`, payload, {
             headers: {
@@ -51,7 +51,7 @@ export const ClassAugumentedData = createAsyncThunk('classification/augumentatio
         return rejectWithValue(err.response.data);
     }
 })
-//============================================augumented images preview==================================
+//============================================augmented images preview==================================
 export const ClassAgumentedImage = createAsyncThunk('classification/agumentedImage', async ({ payload, url }, { rejectWithValue }) => {
     try {
         const response = await axios.get(`${url}preview_images_cls?username=${payload?.username}&task=${payload?.task}&project=${payload?.project}&version=${payload?.version}`

@@ -2,19 +2,31 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { FiLogOut, FiX } from "react-icons/fi";
 import { commomObj } from "../utils";
+import { logout } from "../reduxToolkit/Slices/authSlices";
+import { logoutUser } from "../api/authApi";
 
 const LogoutModal = ({ istate, updateIstate }) => {
   const { openModal } = istate;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleLogout = () => {
-    toast.success("Logout Successfully", commomObj);
-    localStorage.removeItem("userLogin");
-    localStorage.removeItem("profileimage");
-    updateIstate({ ...istate, openModal: false });
-    navigate("/", { replace: true });
+  const handleLogout = async () => {
+    try {
+      await logoutUser();  // ✅ Wait for backend to clear cookie
+
+      dispatch(logout());
+      toast.success("Logout Successfully", commomObj);
+
+      updateIstate({ ...istate, openModal: false });
+      navigate("/", { replace: true });
+
+    } catch (error) {
+      console.error("Logout failed", error);
+      toast.error("Logout failed", commomObj);
+    }
   };
 
   const handleClose = () => {

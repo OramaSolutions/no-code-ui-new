@@ -31,7 +31,7 @@ const initialState = {
     isDirty: false,
 };
 
-function HyperTune({ onApply, state, userData, onChange, url }) {
+function HyperTune({ onApply, state, username, onChange, url }) {
     const dispatch = useDispatch();
     const [istate, updateIstate] = useState(initialState);
     const { defectModal } = useSelector((state) => state.defectDetection);
@@ -39,13 +39,13 @@ function HyperTune({ onApply, state, userData, onChange, url }) {
 
     useEffect(() => {
         const payload = {
-            username: userData?.activeUser?.userName,
+            username: username,
             version: state?.version,
             project: state?.name,
             task: 'defectdetection',
         };
         dispatch(DefectModal({
-            username: userData?.activeUser?.userName,
+            username: username,
             version: state?.version,
             project: state?.name,
             task: "defectdetection",
@@ -54,7 +54,7 @@ function HyperTune({ onApply, state, userData, onChange, url }) {
         const fetchData = async () => {
             try {
                 const res = await dispatch(ReturnDefectHypertune({
-                    username: userData?.activeUser?.userName,
+                    username: username,
                     version: state?.version,
                     project_name: state?.name,
                     task: "defectdetection",
@@ -121,7 +121,7 @@ function HyperTune({ onApply, state, userData, onChange, url }) {
         }
 
         const data = {
-            username: userData?.activeUser?.userName,
+            username: username,
             version: state?.version,
             project_name: state?.name,
             task: "defectdetection",
@@ -247,7 +247,7 @@ function HyperTune({ onApply, state, userData, onChange, url }) {
                 initialData={istate}
                 setState={updateIstate}
                 onApply={onApply}
-                userData={userData}
+                username={username}
                 state={state}
                 task="defectdetection"
                 apiPoint=""

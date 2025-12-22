@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import LogoutModal from './LogoutModal'
-import { viewProfile } from '../reduxToolkit/Slices/authSlices';
+import { viewProfile } from '../reduxToolkit/Slices/oldauthSlices';
 import { notificationList } from '../reduxToolkit/Slices/notificationSlices';
 import bellIcon from "../assets/images/bell-icon.png";
 
@@ -22,14 +22,14 @@ function Header() {
     const openLogoutModal = () => {
         updateIstate({ ...istate, openModal: true })
     }
-    useEffect(() => {
-        dispatch(notificationList());
+    // useEffect(() => {
+    //     dispatch(notificationList());
 
-        const interval = setInterval(() => {
-          dispatch(notificationList());
-        }, 120000);        
-        return () => clearInterval(interval);
-      }, [dispatch]);
+    //     const interval = setInterval(() => {
+    //       dispatch(notificationList());
+    //     }, 120000);        
+    //     return () => clearInterval(interval);
+    //   }, [dispatch]);
 
     return (
         <div>

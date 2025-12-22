@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { MdTableChart } from 'react-icons/md';
 import Loader from '../../../../commonComponent/Loader';
 
-function ValidationMatrix({ task, rows, showButtons, status, fetchData }) {
+function ValidationMatrix({ task, data, fetchAllowed, rows, showButtons, status, fetchData }) {
     const tableRef = useRef(null);
 
     useEffect(() => {
@@ -22,18 +22,19 @@ function ValidationMatrix({ task, rows, showButtons, status, fetchData }) {
             <div className="bg-gradient-to-r from-slate-50 to-purple-50 px-4 py-3 border-b-2 border-slate-200 flex items-center justify-between">
                 <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                     <MdTableChart className="w-5 h-5 text-indigo-600" />
-                    Validation Matrix
+                    Matrix
                 </h3>
-                {showButtons && (
+                {data.trainingStarted && fetchAllowed &&
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={fetchData}
-                        className="px-3 py-1 text-sm bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors"
+                        disabled={!data.trainingStarted || !fetchAllowed}
+                        className="px-3 py-1 text-sm bg-indigo-600  text-white rounded-lg font-medium transition-colors"
                     >
                         Fetch Data
                     </motion.button>
-                )}
+                }
             </div>
 
             {status.loadingMatrix && <div className="px-4 py-2 text-indigo-600 text-sm">Loading validation matrix...</div>}

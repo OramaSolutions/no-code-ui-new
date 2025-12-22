@@ -7,7 +7,7 @@ import { commomObj } from '../../utils';
 import { HiPhotograph } from 'react-icons/hi';
 import { MdCheckCircle, MdClose } from 'react-icons/md';
 
-function AugumentImages({ onApply, userData, state, onChange, url }) {
+function AugumentImages({ onApply, username, state, onChange, url }) {
     const { hasChangedSteps } = useSelector((state) => state.steps);
     const dispatch = useDispatch();
     const { agumentedImages, agumentedGeneratedImages, loading } = useSelector((state) => state.project);
@@ -20,7 +20,7 @@ function AugumentImages({ onApply, userData, state, onChange, url }) {
             console.log('Fetching dataset thumbnails...');
             try {
                 const response = await fetch(
-                    `${url}get_thumbnails?username=${userData?.activeUser?.userName}&task=objectdetection&project=${state?.name}&version=${state?.version}&thumbnail_name=preview_images_thumbnails`,
+                    `${url}get_thumbnails?username=${username}&task=objectdetection&project=${state?.name}&version=${state?.version}&thumbnail_name=preview_images_thumbnails`,
                     { method: 'GET' }
                 );
 
@@ -46,7 +46,7 @@ function AugumentImages({ onApply, userData, state, onChange, url }) {
         };
 
         fetchThumbnails();
-    }, [url, userData?.activeUser?.userName, state?.name, state?.version]);
+    }, [url, username, state?.name, state?.version]);
 
     const base64ToImageUrl = (base64) => {
         return `data:image/png;base64,${base64}`;
@@ -55,7 +55,7 @@ function AugumentImages({ onApply, userData, state, onChange, url }) {
     const generatedImages = async () => {
         try {
             const payload = {
-                username: userData?.activeUser?.userName,
+                username: username,
                 version: state?.version,
                 project: state?.name,
                 task: "objectdetection",

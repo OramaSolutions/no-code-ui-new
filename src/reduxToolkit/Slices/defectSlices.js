@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-import { isLoggedIn } from "../../utils";
+
 
 import {getUrl } from '../../config/config';
 

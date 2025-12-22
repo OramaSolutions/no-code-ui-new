@@ -12,7 +12,7 @@ interface StepNavigationProps {
 
 const steps = [
   { key: "labelled" as StepKey, label: "Upload Labelled Data", icon: "📤" },
-  { key: "augumented" as StepKey, label: "Augmentations", icon: "🔄" },
+  { key: "augmented" as StepKey, label: "Augmentations", icon: "🔄" },
   { key: "images" as StepKey, label: "Augmented Images", icon: "🖼️" },
   { key: "dataSplit" as StepKey, label: "Data Split Ratio", icon: "📊" },
   { key: "HyperTune" as StepKey, label: "Tune Hyper Parameters", icon: "⚙️" },

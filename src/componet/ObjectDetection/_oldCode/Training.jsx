@@ -30,7 +30,7 @@ function ProjectTraining() {
     console.log('This is the hasChangedStep object >>>', hasChangedSteps)
     const [completedSteps, setCompletedSteps] = useState({
         labelled: false,
-        augumented: false,
+        augmented: false,
         images: false,
         dataSplit: false,
         HyperTune: false,
@@ -40,7 +40,7 @@ function ProjectTraining() {
     const { state } = useLocation();
     // console.log('state in OD', state)
 
-    const stepsOrder = ['labelled', 'augumented', 'images', 'dataSplit', 'HyperTune', 'infer', 'remark', 'application'];
+    const stepsOrder = ['labelled', 'augmented', 'images', 'dataSplit', 'HyperTune', 'infer', 'remark', 'application'];
     // Integrate useStepPersistence
     const { stepStatus, currentStep, isLoading, fetchProjectStatus, updateStepStatus, isStepAccessible } =
         useStepPersistence(userData, state);
@@ -159,13 +159,13 @@ function ProjectTraining() {
                                     {stepStatus?.labelled?.status === 'completed' && ' ✓'}
                                 </a>
                             </li>
-                            <li className={iState == "augumented" ? "active" : ""}>
+                            <li className={iState == "augmented" ? "active" : ""}>
                                 <a className="Text"
-                                    onClick={() => isStepAccessible('augumented') && updateIstate('augumented')}
-                                    style={{ pointerEvents: isStepAccessible('augumented') ? 'auto' : 'none', color: isStepAccessible('augumented') ? '#3cab4a' : '#aaa' }}
+                                    onClick={() => isStepAccessible('augmented') && updateIstate('augmented')}
+                                    style={{ pointerEvents: isStepAccessible('augmented') ? 'auto' : 'none', color: isStepAccessible('augmented') ? '#3cab4a' : '#aaa' }}
                                 >
                                     Augmentations
-                                    {stepStatus?.augumented?.status === 'completed' && ' ✓'}
+                                    {stepStatus?.augmented?.status === 'completed' && ' ✓'}
                                 </a>
                             </li>
                             <li className={iState == "images" ? "active" : ""}>
@@ -229,13 +229,13 @@ function ProjectTraining() {
                         state={state}
                         userData={userData}
                         onApply={() => handleApply('labelled')}
-                        onChange={() => handleChange("augumented")}
+                        onChange={() => handleChange("augmented")}
                         url={url}
                     />}
-                    {iState == "augumented" && <Augumentation
+                    {iState == "augmented" && <Augumentation
                         state={state}
                         userData={userData}
-                        onApply={() => handleApply('augumented')}
+                        onApply={() => handleApply('augmented')}
                         onChange={() => handleChange("images")}
                         url={url}
                     />}

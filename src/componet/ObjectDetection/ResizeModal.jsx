@@ -3,14 +3,14 @@ import Loader from '../../commonComponent/Loader'
 import Modal from 'react-bootstrap/Modal';
 
 
-function ResizeModal({ onOpen, onClose,istate,setIstate,setSelectedFile,handleCancel,userData,state,task, url }) {
+function ResizeModal({ onOpen, onClose,istate,setIstate,setSelectedFile,handleCancel,username,state,task, url }) {
     const closeHandler=()=>{ 
         handleCancel()      
         setIstate({...istate,open:false,close:null})       
     }
 
     const handleDownloadAndCloseModal = () => {
-        const downloadUrl = `${url}download_resized_images?username=${userData?.activeUser?.userName}&task=${task}&project=${state?.name}&version=${state?.version}`;         
+        const downloadUrl = `${url}download_resized_images?username=${username}&task=${task}&project=${state?.name}&version=${state?.version}`;         
         window.open(downloadUrl, '_blank');
         setIstate({...istate,imageUrls:[],open:false,resizecheck:false,width:null,})
         setSelectedFile(null) 

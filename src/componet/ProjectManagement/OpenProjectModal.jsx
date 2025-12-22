@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { IoClose } from 'react-icons/io5';
 import { MdFolderOpen, MdCheck } from 'react-icons/md';
-import { projectOpen, versionList } from '../../reduxToolkit/Slices/openSlices';
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { fetchVersionList, openProjectApi } from "../../api/projectApi";
+import { setVersionData } from '../../reduxToolkit/Slices/openSlices';
 import { commomObj } from '../../utils';
 
 const initialState = {
@@ -21,37 +23,60 @@ function OpenProjectModal({ istate, setIstate }) {
     const { versionData, loader } = useSelector((state) => state.openProject);
     const [error, setError] = useState(false);
 
+    const versionQuery = useQuery({
+        queryKey: ["versionList", projectName],
+        queryFn: async () => {
+            // console.log("queryFn running...");
+            const res = await fetchVersionList({ projectName });
+            // console.log("QUERY RESULT => ", res);
+            return res.data;
+        },
+        enabled: false,
+    });
+
     useEffect(() => {
-        if (openModal) {
-            dispatch(versionList({ projectName: projectName }));
+        if (versionQuery.isSuccess) {
+            // console.log("res of version", versionQuery.data);
+            dispatch(setVersionData(versionQuery.data));
         }
-    }, [openModal]);
+    }, [versionQuery.isSuccess]);
 
-    const handleclose = () => {
-        setIstate({ ...istate, openModal: false, projectName: '' });
-        updateIstate(initialState);
-        setError(false);
-    };
-
-    const saveHandler = async () => {
-        if (versionNumber?.trim() === '') {
-            setError(true);
-            return;
+    // Trigger manually
+    useEffect(() => {
+        if (openModal && projectName) {
+            // console.log("refetch called");
+            versionQuery.refetch();
         }
+    }, [openModal, projectName]);
 
-        try {
-            const data = { name: projectName, versionNumber };
-            const res = await dispatch(projectOpen(data));
-            
-            if (res?.payload?.code === 200) {
-                const projectData = res?.payload?.askedProject;
+    const openMutation = useMutation({
+        mutationFn: openProjectApi,
+
+        onSuccess: (res) => {
+            if (res?.data?.code === 200) {
+                const projectData = res.data.askedProject;
+
+                // const redirect =
+                //     model === 'objectdetection'
+                //         ? '/object-detection-training'
+                //         : model === 'classification'
+                //             ? '/classification-training'
+                //             : '/defect-detection-training';
+
+                // navigate(redirect, {
+                //     state: {
+                //         name: projectData?.name,
+                //         version: projectData?.versionNumber,
+                //         projectId: projectData?._id,
+                //     },
+                // });
                 const redirect =
-                    model === 'objectdetection'
-                        ? '/object-detection-training'
-                        : model === 'Classification'
-                        ? '/classification-training'
-                        : '/defect-detection-training';
-                
+                    model === "objectdetection"
+                        ? `/object-detection-training/${projectData._id}/${projectData.name}/${projectData.versionNumber}`
+                        : model === "classification"
+                            ? `/classification-training/${projectData._id}/${projectData.name}/${projectData.versionNumber}`
+                            : `/defect-detection-training/${projectData._id}/${projectData.name}/${projectData.versionNumber}`;
+
                 navigate(redirect, {
                     state: {
                         name: projectData?.name,
@@ -59,17 +84,38 @@ function OpenProjectModal({ istate, setIstate }) {
                         projectId: projectData?._id,
                     },
                 });
-                
+
                 setIstate({ ...istate, openModal: false, projectId: '' });
                 updateIstate(initialState);
                 setError(false);
             } else {
-                toast.error(res?.payload?.message, commomObj);
+                toast.error(res?.data?.message, commomObj);
             }
-        } catch (err) {
-            console.error(err);
+        },
+
+        onError: () => {
             toast.error('Failed to open project', commomObj);
+        },
+    });
+
+    const handleclose = () => {
+        setIstate({ ...istate, openModal: false, projectName: '' });
+        updateIstate(initialState);
+        setError(false);
+    };
+
+    const saveHandler = () => {
+        if (versionNumber?.trim() === '') {
+            setError(true);
+            return;
         }
+
+        const data = {
+            name: projectName,
+            versionNumber,
+        };
+
+        openMutation.mutate(data);
     };
 
     return (
@@ -166,11 +212,10 @@ function OpenProjectModal({ istate, setIstate }) {
                                                     updateIstate({ ...Istate, versionNumber: e.target.value });
                                                     setError(false);
                                                 }}
-                                                className={`w-full px-4 py-3 bg-white border-2 rounded-xl text-slate-800 font-medium focus:outline-none transition-all ${
-                                                    error && versionNumber.trim() === ''
-                                                        ? 'border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
-                                                        : 'border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10'
-                                                }`}
+                                                className={`w-full px-4 py-3 bg-white border-2 rounded-xl text-slate-800 font-medium focus:outline-none transition-all ${error && versionNumber.trim() === ''
+                                                    ? 'border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
+                                                    : 'border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10'
+                                                    }`}
                                             >
                                                 <option value="">-- Select Version --</option>
                                                 {versionData?.result?.length > 0 ? (

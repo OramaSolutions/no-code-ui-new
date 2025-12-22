@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import Slider from "rc-slider";
 import 'rc-slider/assets/index.css';
 import CustomHandle from '../../commonComponent/Tooltip';
-import { AugumentedData, ReturnAgumentation } from '../../reduxToolkit/Slices/projectSlices';
+import { augmentedData, ReturnAgumentation } from '../../reduxToolkit/Slices/projectSlices';
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify';
 import { commomObj } from '../../utils';
@@ -117,7 +117,7 @@ function Augumentation({ initial, setIstate, state, userData, onApply, onChange 
     }
 
     const saveHandler = async () => {
-        if (isDirty || hasChangedSteps?.augumented == false) {
+        if (isDirty || hasChangedSteps?.augmented == false) {
             window.localStorage.setItem("AgumentedSize", (DatasetSize?.Size) * num_of_images_to_be_generated)
             onApply()
             return;
@@ -167,7 +167,7 @@ function Augumentation({ initial, setIstate, state, userData, onApply, onChange 
                 formData.append("task", "objectdetection");
                 formData.append("json_data", jsonString);
                 formData.append("num_of_images_to_be_generated", num_of_images_to_be_generated);
-                const response = await dispatch(AugumentedData({ formData, signal: abortControllerReff.current.signal }))
+                const response = await dispatch(augmentedData({ formData, signal: abortControllerReff.current.signal }))
                 console.log(response, "augmentations response")
                 if (response?.payload?.code === 201) {
                     updateIstate({ ...iState, openModal: false })

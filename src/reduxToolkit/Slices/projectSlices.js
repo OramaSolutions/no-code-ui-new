@@ -1,11 +1,91 @@
+//uses wrong token in some apis 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { Url } from '../../config/config.js';
-import { isLoggedIn } from "../../utils.js";
+
+import axiosInstance from '../../api/axiosInstance.js';
 
 
 let path = window.location.href.split("/")?.at(-1)
 
+//======================================create project===================================================
+
+// need axios instance
+export const createProject = createAsyncThunk('project/createproject', async (payload, { rejectWithValue }) => {
+  try {
+    
+    const response = await axiosInstance.post(`user/createProject`, payload);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      return rejectWithValue(response.data);
+    }
+  }
+  catch (err) {
+    return rejectWithValue(err.response.data);
+  }
+})
+
+
+//======================================create project===================================================
+
+// need axios instance
+export const checkProject = createAsyncThunk('project/checkproject', async (payload, { rejectWithValue }) => {
+  try {
+    
+    const response = await axiosInstance.post(`${Url}user/checkProject`, payload);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      return rejectWithValue(response.data);
+    }
+  }
+  catch (err) {
+    return rejectWithValue(err.response.data);
+  }
+})
+
+
+//=============================================remark data================================================
+// need axios instance
+export const remarkData = createAsyncThunk('project/remarkdata', async ({ payload, url }, { rejectWithValue }) => {
+  try {
+   
+    const response = await axios.post(`${url}remark`, payload);
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      return rejectWithValue(response.data);
+    }
+  }
+  catch (err) {
+    return rejectWithValue(err.response.data);
+  }
+})
+
+// need axios instance
+export const getRemarkData = createAsyncThunk('project/getRemarkData', async ({ url, username, task, project, version }, { rejectWithValue }) => {
+  try {
+   
+    const response = await axios.get(`${url}remark`, {
+     
+      params: {
+        username,
+        task,
+        project,
+        version
+      }
+    });
+    if (response.status === 200) {
+      return response.data;
+    } else {
+      return rejectWithValue(response.data);
+    }
+  }
+  catch (err) {
+    return rejectWithValue(err.response?.data || err.message);
+  }
+})
 
 //============================================resize the folder=============================================
 export const ResizeFolder = createAsyncThunk('project/resizeFolder', async ({ payload, signal, url }, { rejectWithValue }) => {
@@ -55,7 +135,7 @@ export const importData = createAsyncThunk('project/importData', async ({ payloa
   }
 })
 //==========================================Augumentation=====================================================
-export const AugumentedData = createAsyncThunk('project/augumentation', async ({ payload, signal, url }, { rejectWithValue }) => {
+export const augmentedData = createAsyncThunk('project/augumentation', async ({ payload, signal, url }, { rejectWithValue }) => {
   try {
     const response = await axios.post(`${url}augment`, payload, {
       headers: {
@@ -113,7 +193,7 @@ export const hyperTune = createAsyncThunk('project/hypertune', async ({ payload,
     return rejectWithValue(err.response.data);
   }
 })
-//============================================augumented images preview==================================
+//============================================augmented images preview==================================
 export const AgumentedImage = createAsyncThunk('project/agumentedImage', async ({ payload, url }, { rejectWithValue }) => {
   try {
     const response = await axios.get(`${url}preview_images?username=${payload?.username}&task=${payload?.task}&project=${payload?.project}&version=${payload?.version}`
@@ -294,7 +374,7 @@ export const inferImages = createAsyncThunk('project/inferimages', async ({ payl
 //=============================================data Transfer stop api==================================
 export const StopDataTransfer = createAsyncThunk('project/StopDataTransfer', async ({ payload, url }, { rejectWithValue }) => {
   try {
-    const response = await axios.post(`${url}stop`, payload, {
+    const response = await axios.post(`${url}stop_training`, payload, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -310,90 +390,6 @@ export const StopDataTransfer = createAsyncThunk('project/StopDataTransfer', asy
     return rejectWithValue(err.response.data);
   }
 })
-//======================================create project===================================================
-
-
-export const createProject = createAsyncThunk('project/createproject', async (payload, { rejectWithValue }) => {
-  try {
-    const token = isLoggedIn("userLogin");
-    const response = await axios.post(`${Url}user/createProject`, payload, {
-      headers: { Authorization: `${token}` },
-    });
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return rejectWithValue(response.data);
-    }
-  }
-  catch (err) {
-    return rejectWithValue(err.response.data);
-  }
-})
-
-
-//======================================create project===================================================
-
-
-export const checkProject = createAsyncThunk('project/checkproject', async (payload, { rejectWithValue }) => {
-  try {
-    const token = isLoggedIn("userLogin");
-    const response = await axios.post(`${Url}user/checkProject`, payload, {
-      headers: { Authorization: `${token}` },
-    });
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return rejectWithValue(response.data);
-    }
-  }
-  catch (err) {
-    return rejectWithValue(err.response.data);
-  }
-})
-
-
-//=============================================remark data================================================
-export const remarkData = createAsyncThunk('project/remarkdata', async ({ payload, url }, { rejectWithValue }) => {
-  try {
-    const token = isLoggedIn("userLogin");
-    const response = await axios.post(`${url}remark`, payload, {
-      headers: { Authorization: `${token}` },
-    });
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return rejectWithValue(response.data);
-    }
-  }
-  catch (err) {
-    return rejectWithValue(err.response.data);
-  }
-})
-
-
-export const getRemarkData = createAsyncThunk('project/getRemarkData', async ({ url, username, task, project, version }, { rejectWithValue }) => {
-  try {
-    const token = isLoggedIn("userLogin");
-    const response = await axios.get(`${url}remark`, {
-      headers: { Authorization: `${token}` },
-      params: {
-        username,
-        task,
-        project,
-        version
-      }
-    });
-    if (response.status === 200) {
-      return response.data;
-    } else {
-      return rejectWithValue(response.data);
-    }
-  }
-  catch (err) {
-    return rejectWithValue(err.response?.data || err.message);
-  }
-})
-
 
 //====================================return agumentation==========================================
 export const ReturnAgumentation = createAsyncThunk('project/Returnagumentation', async ({ payload, url }, { rejectWithValue }) => {

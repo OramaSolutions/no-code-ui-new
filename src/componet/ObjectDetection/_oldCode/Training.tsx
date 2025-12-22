@@ -24,7 +24,7 @@ import Loader from "../../../commonComponent/Loader";
 import type {
   ODProjectLocationState, // location.state for this page
   ODUserLogin, // structure of localStorage "userLogin"
-  StepKey, // 'labelled' | 'augumented' | 'images' | 'dataSplit' | 'HyperTune' | 'infer' | 'remark' | 'application'
+  StepKey, // 'labelled' | 'augmented' | 'images' | 'dataSplit' | 'HyperTune' | 'infer' | 'remark' | 'application'
   StepOrder, // readonly StepKey[] or type alias
   StepStatusMap, // { [K in StepKey]?: { status: 'not_started' | 'in_progress' | 'completed' } }
   CompletedStepsState, // { [K in StepKey]: boolean }
@@ -63,7 +63,7 @@ function ProjectTraining(): JSX.Element {
   
   const [completedSteps, setCompletedSteps] = useState<CompletedStepsState>({
     labelled: false,
-    augumented: false,
+    augmented: false,
     images: false,
     dataSplit: false,
     HyperTune: false,
@@ -81,7 +81,7 @@ function ProjectTraining(): JSX.Element {
   // enforce a canonical steps order
   const stepsOrder: StepOrder = [
     "labelled",
-    "augumented",
+    "augmented",
     "images",
     "dataSplit",
     "HyperTune",
@@ -221,21 +221,21 @@ function ProjectTraining(): JSX.Element {
                   {stepStatus?.labelled?.status === "completed" && " ✓"}
                 </a>
               </li>
-              <li className={iState === "augumented" ? "active" : ""}>
+              <li className={iState === "augmented" ? "active" : ""}>
                 <a
                   className="Text"
                   onClick={() =>
-                    isStepAccessible("augumented") && updateIstate("augumented")
+                    isStepAccessible("augmented") && updateIstate("augmented")
                   }
                   style={{
-                    pointerEvents: isStepAccessible("augumented")
+                    pointerEvents: isStepAccessible("augmented")
                       ? "auto"
                       : "none",
-                    color: isStepAccessible("augumented") ? "#3cab4a" : "#aaa",
+                    color: isStepAccessible("augmented") ? "#3cab4a" : "#aaa",
                   }}
                 >
                   Augmentations
-                  {stepStatus?.augumented?.status === "completed" && " ✓"}
+                  {stepStatus?.augmented?.status === "completed" && " ✓"}
                 </a>
               </li>
               <li className={iState === "images" ? "active" : ""}>
@@ -343,16 +343,16 @@ function ProjectTraining(): JSX.Element {
               state={state}
               userData={userData}
               onApply={() => handleApply("labelled")}
-              onChange={() => handleChange("augumented")}
+              onChange={() => handleChange("augmented")}
               url={url}
             />
           )}
 
-          {iState === "augumented" && (
+          {iState === "augmented" && (
             <Augumentation
               state={state}
               userData={userData}
-              onApply={() => handleApply("augumented")}
+              onApply={() => handleApply("augmented")}
               onChange={() => handleChange("images")}
               url={url}
             />

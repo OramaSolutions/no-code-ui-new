@@ -66,10 +66,10 @@ function FilterSection({ startdate, enddate, search, timeFrame, addinputhandler,
                         className="w-full px-2 py-1 bg-white border-2 border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all"
                     >
                         <option value="">Select timeframe</option>
-                        <option value="today">Today</option>
-                        <option value="week">This Week</option>
-                        <option value="month">This Month</option>
-                        <option value="year">This Year</option>
+                        <option value="Today">Today</option>
+                        <option value="Week">This Week</option>
+                        <option value="Month">This Month</option>
+                        <option value="Year">This Year</option>
                     </select>
                 </div>
             </div>

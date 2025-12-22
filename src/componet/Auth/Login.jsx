@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { userLogin } from '../../reduxToolkit/Slices/authSlices';
+// import { userLogin } from '../../reduxToolkit/Slices/oldauthSlices';
 import { commomObj } from '../../utils';
 import { toast } from 'react-toastify';
+
+import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from 'react-redux';
+import { userLogin } from '../../api/authApi';
+import { setAuth } from '../../reduxToolkit/Slices/authSlices';
+
+
 import { Link, useNavigate } from 'react-router-dom';
 import HelpSupport from './HelpCenter';
 import LogoInner from "../../assets/images/Logo-Inner.png";
+import LoginIllustrationBlur from "/images/login-bg_blur.webp"
 import LoginIllustration from "/images/login-bg.webp"; // Your SVG path
 import { HiMail, HiLockClosed, HiEye, HiEyeOff } from 'react-icons/hi';
 import { BiLoader } from 'react-icons/bi';
@@ -14,17 +21,63 @@ import { BiLoader } from 'react-icons/bi';
 const initialState = {
     email: "",
     password: "",
-    loading: false,
+
     errors: {},
     modal: false,
     showPassword: false,
 }
 
 const Login = () => {
+    const [loaded, setLoaded] = useState(false);
     const [show, setShow] = useState(initialState);
-    const { email, password, loading, errors, modal, showPassword } = show;
+    const { email, password, errors, modal, showPassword } = show;
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const loginMutation = useMutation({
+        mutationFn: userLogin,
+
+        onSuccess: (res) => {
+
+            const data = res.data;
+
+            if (data?.code === 200) {
+
+
+                setShow(prev => ({ ...prev, modal: true, loading: false }));
+
+
+                console.log('Login Success setting the dispatch:', data);
+                dispatch(setAuth({
+
+                    user: data.activeUser,
+                }));
+
+                // navigate('/dashboard');
+                toast.success(data.message, commomObj);
+
+                setShow(prev => ({
+                    ...prev,
+                    email: "",
+                    password: "",
+                    loading: false
+                }));
+
+            } else {
+                toast.error(data?.message, commomObj);
+                setShow(prev => ({ ...prev, loading: false }));
+            }
+        },
+
+        onError: (err) => {
+            toast.error(
+                err?.response?.data?.message || "Login failed",
+                commomObj
+            );
+            setShow(prev => ({ ...prev, loading: false }));
+        },
+    });
+
 
     // Input handler
     const inputHandler = (e) => {
@@ -38,30 +91,20 @@ const Login = () => {
     }
 
     // Handle submit
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        let formValid = handleValidation();
-        if (formValid) {
-            try {
-                const data = { userName: email.trim(), password: password.trim() };
-                const res = await dispatch(userLogin(data));
 
-                if (res?.payload?.code === 200) {
-                    if (!res?.payload?.is_login) {
-                        setShow({ ...show, modal: true });
-                    } else {
-                        navigate('/dashboard');
-                        toast.success(res.payload.message, commomObj);
-                        setShow({ ...show, email: "", password: "", loading: false });
-                    }
-                } else {
-                    toast.error(res?.payload?.message, commomObj);
-                    setShow({ ...show, loading: false });
-                }
-            } catch (err) {
-                toast.error(err?.payload?.message, commomObj);
-            }
-        }
+        let formValid = handleValidation();
+        if (!formValid) return;
+
+        setShow(prev => ({ ...prev, loading: true }));
+
+        const data = {
+            email: email.trim(),
+            password: password.trim()
+        };
+
+        loginMutation.mutate(data);
     };
 
     // Validation
@@ -69,11 +112,20 @@ const Login = () => {
         let error = {};
         let formValid = true;
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // Email empty check
         if (!email.trim()) {
             error.emailIdError = "Email cannot be empty";
             formValid = false;
         }
+        // Email format check
+        else if (!emailRegex.test(email.trim())) {
+            error.emailIdError = "Enter a valid email address";
+            formValid = false;
+        }
 
+        // Password empty check
         if (!password.trim()) {
             error.PasswordError = "Password cannot be empty";
             formValid = false;
@@ -81,75 +133,71 @@ const Login = () => {
 
         setShow({ ...show, errors: error });
         return formValid;
-    }
+    };
+
 
     const onSubmit = () => {
         setShow({ ...show, modal: false });
         navigate('/dashboard');
-        toast.success("Login Successfully", commomObj);
+        // toast.success("Login Successfully", commomObj);
     }
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-indigo-50 relative overflow-hidden">
             {/* Mobile: SVG Background with overlay */}
-            <div
+            {/* <div
                 className="absolute inset-0  bg-cover bg-center bg-no-repeat opacity-100"
                 style={{ backgroundImage: `url(${LoginIllustration})` }}
+            /> */}
+            {/* BLURRED LOW-RES IMAGE */}
+            <img
+                src={LoginIllustrationBlur}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover blur-xl scale-105"
             />
+
+            {/* HD IMAGE (FADES IN WHEN LOADED) */}
+            <img
+                src={LoginIllustrationBlur}
+                alt=""
+                className={`
+                    absolute inset-0 w-full h-full object-cover transition-opacity duration-700
+                    ${loaded ? "opacity-100" : "opacity-0"}
+                `}
+                onLoad={() => setLoaded(true)}
+
+                decoding="async"
+            />
+
 
             {/* Container for Desktop/Tablet Layout */}
             <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 relative z-10">
                 <div className="flex  justify-end items-center">
 
-                    {/* Left Side: SVG Illustration (Hidden on Mobile) */}
-                    {/* <motion.div
-                        className="hidden md:flex items-center justify-center"
-                        initial={{ opacity: 0, x: -50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
-                    >
-                        <motion.img
-                            src={LoginIllustration}
-                            alt="Login Illustration"
-                            className="w-full max-w-lg h-auto"
-                            initial={{ scale: 0.9 }}
-                            animate={{ scale: 1 }}
-                            transition={{
-                                duration: 0.8,
-                                ease: "easeOut",
-                                delay: 0.2
-                            }}
-                        />
-                    </motion.div> */}
+
 
                     {/* Right Side: Login Form */}
-                    <motion.div
+                    <div
                         className="w-full md:w-1/2 "
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
+
                     >
-                        <div className=" rounded-2xl shadow-xl p-8 sm:p-10 bg-white/50  backdrop-blur-sm ">
+                        <div className=" rounded-2xl shadow-xl p-8 sm:p-10 bg-white/80  backdrop-blur-sm ">
                             {/* Logo */}
-                            <motion.div
+                            <div
                                 className="flex justify-center mb-8"
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.3, duration: 0.4 }}
+
                             >
                                 <img
                                     src={LogoInner}
                                     alt="Logo"
                                     className="h-auto max-h-16 w-auto"
                                 />
-                            </motion.div>
+                            </div>
 
                             {/* Form */}
-                            <motion.form
+                            <form
                                 onSubmit={handleSubmit}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.4, duration: 0.4 }}
+
                             >
                                 {/* Header */}
                                 <div className="text-center mb-8">
@@ -276,14 +324,13 @@ const Login = () => {
                                 </div>
 
                                 {/* Submit Button */}
-                                <motion.button
+                                <button
                                     type="submit"
-                                    disabled={loading}
+                                    disabled={loginMutation.isPending}
                                     className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2 px-6 rounded-xl text-base shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
-                                    whileHover={!loading ? { scale: 1.02 } : {}}
-                                    whileTap={!loading ? { scale: 0.98 } : {}}
+
                                 >
-                                    {loading ? (
+                                    {loginMutation.isPending ? (
                                         <span className="flex items-center justify-center gap-2">
                                             <motion.span
                                                 animate={{ rotate: 360 }}
@@ -297,7 +344,7 @@ const Login = () => {
                                     ) : (
                                         'Sign In'
                                     )}
-                                </motion.button>
+                                </button>
 
                                 {/* Additional Links */}
                                 <div className="mt-6 text-center">
@@ -313,7 +360,15 @@ const Login = () => {
                                 </div>
 
 
-                            </motion.form>
+                            </form>
+                            <div className="mt-8 pt-8 border-t border-gray-200 text-center">
+                                <p className="text-gray-600">
+                                    Don&apos;t have an account?{" "}
+                                    <Link to="/signup" className="text-blue-600 font-semibold hover:text-blue-700 transition-colors">
+                                        Sign Up
+                                    </Link>
+                                </p>
+                            </div>
                         </div>
 
                         {/* Support Link */}
@@ -330,7 +385,8 @@ const Login = () => {
                                 </button>
                             </p>
                         </motion.div> */}
-                    </motion.div>
+
+                    </div>
 
                 </div>
             </div>

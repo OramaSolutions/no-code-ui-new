@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from "../reduxToolkit/Slices/authSlices.js"
+import authReducer from "./Slices/authSlices.js"
 import projectSlice from "../reduxToolkit/Slices/projectSlices.js"
 import openSlice from "../reduxToolkit/Slices/openSlices.js"
 import dashboardSlice from "../reduxToolkit/Slices/dashboardSlices.js"

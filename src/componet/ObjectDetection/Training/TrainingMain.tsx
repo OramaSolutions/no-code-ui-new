@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import DashboardLayout from "../../../commonComponent/DashboardLayout";
@@ -24,12 +24,13 @@ import type {
   StepsSliceState,
   UseStepPersistenceReturn,
 } from "../../../types/objectDetection/training";
+import type { User, AppRootState } from "../../../types/user";
 
 const url: string = getUrl("objectdetection");
 
 const stepsOrder: StepOrder = [
   "labelled",
-  "augumented",
+  "augmented",
   "images",
   "dataSplit",
   "HyperTune",
@@ -40,12 +41,13 @@ const stepsOrder: StepOrder = [
 
 function ProjectTraining(): JSX.Element {
   const dispatch = useDispatch();
+  const { projectName, version, projectId } = useParams();
+  const navigate = useNavigate();
   const [iState, updateIstate] = useState<StepKey | null>(null);
 
-  const rawUser = window.localStorage.getItem("userLogin");
-  const userData: ODUserLogin | null = rawUser
-    ? (JSON.parse(rawUser) as ODUserLogin)
-    : null;
+  const userData = useSelector(
+    (state: AppRootState) => state.auth.user
+  ) as User | null;
 
   const hasChangedSteps = useSelector<
     RootState,
@@ -54,7 +56,7 @@ function ProjectTraining(): JSX.Element {
 
   const [completedSteps, setCompletedSteps] = useState({
     labelled: false,
-    augumented: false,
+    augmented: false,
     images: false,
     dataSplit: false,
     HyperTune: false,
@@ -63,7 +65,18 @@ function ProjectTraining(): JSX.Element {
     application: false,
   });
 
-  const { state } = useLocation() as { state: ODProjectLocationState | null };
+  if (!projectName || !version || !projectId) {
+    throw new Error("Invalid route params");
+  }
+
+  const state: ODProjectLocationState = {
+    name: projectName,
+    version,
+    projectId,
+  };
+  // useEffect(() => {
+  //   console.log("Location state in TrainingMain>>>", state);
+  // }, [state]);
 
   const {
     stepStatus,
@@ -72,7 +85,12 @@ function ProjectTraining(): JSX.Element {
     fetchProjectStatus,
     updateStepStatus,
     isStepAccessible,
-  }: UseStepPersistenceReturn = useStepPersistence(userData, state);
+  }: UseStepPersistenceReturn = useStepPersistence({
+    projectName,
+    version,
+    task: "objectdetection",
+    projectId,
+  });
 
   useEffect(() => {
     void fetchProjectStatus();
@@ -135,7 +153,6 @@ function ProjectTraining(): JSX.Element {
   }
 
   return (
-    
     <DashboardLayout
       pageTitle="Object Detection"
       pageDescription="Follow the steps to train and download your application."

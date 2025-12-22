@@ -2,10 +2,11 @@
 
 // useStepPersistence.ts
 import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { getUrl } from "../../config/config";
 import type {
-  ODUserLogin,
+ 
   ODProjectLocationState,
   StepKey,
   StepOrder,
@@ -13,6 +14,7 @@ import type {
   StepStatusMap,
   UseStepPersistenceReturn,
 } from "../../types/defectDetection/training";
+import type { User, AppRootState } from "../../types/user";
 
 const url = getUrl("defectdetection");
 
@@ -33,14 +35,15 @@ const isStepStatusValue = (v: unknown): v is StepStatusValue =>
   v === "not_started" || v === "in_progress" || v === "completed";
 
 export const useStepPersistence = (
-  userData: ODUserLogin | null,
   projectState: ODProjectLocationState | null
 ): UseStepPersistenceReturn => {
   const [stepStatus, setStepStatus] = useState<StepStatusMap>();
   const [currentStep, setCurrentStep] = useState<StepKey | null>("labelled");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const token = userData?.token ?? "";
+
+  const userData = useSelector((state: AppRootState) => state.auth.user) as User | null;
+  const token = userData?.jwtToken ?? "";
 
   const fetchProjectStatus = useCallback(async (): Promise<void> => {
     try {
@@ -48,7 +51,7 @@ export const useStepPersistence = (
 
       const response = await axios.get(`${url}status`, {
         params: {
-          username: userData?.activeUser?.userName,
+          username: userData?.userName,
           projectId: projectState?.projectId,
           task: "objectdetection",
           project_name: projectState?.name,
@@ -91,7 +94,7 @@ export const useStepPersistence = (
     projectState?.projectId,
     projectState?.version,
     token,
-    userData?.activeUser?.userName,
+    userData?.userName,
   ]);
 
   const updateStepStatus = useCallback(
@@ -114,7 +117,7 @@ export const useStepPersistence = (
         await axios.post(
           `${url}update_step_status`,
           {
-            username: userData?.activeUser?.userName,
+            username: userData?.userName,
             projectId: projectState?.projectId,
             project_name: projectState?.name,
             task: "objectdetection",
@@ -142,7 +145,7 @@ export const useStepPersistence = (
       projectState?.projectId,
       projectState?.version,
       token,
-      userData?.activeUser?.userName,
+      userData?.userName,
     ]
   );
 

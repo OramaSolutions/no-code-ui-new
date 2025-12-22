@@ -9,16 +9,15 @@ import Application from "../Application";
 import type {
   StepKey,
   ODProjectLocationState,
-  ODUserLogin,
 } from "../../../types/objectDetection/training";
-
+import type { User } from "../../../types/user";
 interface StepContentProps {
   currentStep: StepKey;
   handleApply: (step: StepKey) => Promise<void>;
   handleChange: (step: StepKey) => Promise<void>;
   url: string;
   state: ODProjectLocationState;
-  userData: ODUserLogin;
+  userData: User | null;
 }
 
 const contentVariants = {
@@ -41,20 +40,18 @@ const StepContent: React.FC<StepContentProps> = ({
         return (
           <Labelled
             state={state}
-            userData={userData}
+            username={userData?.userName}
             onApply={() => handleApply("labelled")}
-            onChange={() => handleChange("augumented")}
+            onChange={() => handleChange("augmented")}
             url={url}
           />
         );
-     
-      
-     
+
       case "HyperTune":
         return (
           <HyperTune
             state={state}
-            userData={userData}
+            username={userData?.userName}
             onApply={() => handleApply("HyperTune")}
             onChange={() => handleChange("infer")}
             url={url}
@@ -64,7 +61,7 @@ const StepContent: React.FC<StepContentProps> = ({
         return (
           <InferImages
             state={state}
-            userData={userData}
+            username={userData?.userName}
             onApply={() => handleApply("infer")}
             onChange={() => handleChange("remark")}
             url={url}
@@ -73,7 +70,7 @@ const StepContent: React.FC<StepContentProps> = ({
       case "remark":
         return (
           <Remark
-            username={userData?.activeUser?.userName}
+            username={userData?.userName}
             task="defectdetection"
             project={state?.name}
             version={state?.version}
@@ -86,7 +83,7 @@ const StepContent: React.FC<StepContentProps> = ({
           <Application
             url={url}
             state={state}
-            username={userData?.activeUser?.userName}
+            username={userData?.userName}
             task="defectdetection"
             project={state?.name}
             version={state?.version}

@@ -17,7 +17,7 @@ const initialstate = {
     onOpen: false,
 };
 
-function InferImages({ userData, state, url, onApply, onChange }) {
+function InferImages({ username, state, url, onApply, onChange }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [istate, updateIstate] = useState(initialstate);
     const [imagePreview, setImagePreview] = useState(null);
@@ -52,7 +52,7 @@ function InferImages({ userData, state, url, onApply, onChange }) {
         setLoading(true);
         try {
             const formData = new FormData();
-            formData.append('username', userData?.activeUser?.userName);
+            formData.append('username', username);
             formData.append('version', state?.version);
             formData.append('project', state?.name);
             formData.append('task', 'objectdetection');
@@ -60,6 +60,7 @@ function InferImages({ userData, state, url, onApply, onChange }) {
             formData.append('conf', conf);
 
             const response = await dispatch(inferImages({ payload: formData, url })).unwrap();
+            
             const imgUrl = URL.createObjectURL(response.data);
             setResultImage(imgUrl);
             updateIstate({ ...istate, onOpen: true });
@@ -75,6 +76,7 @@ function InferImages({ userData, state, url, onApply, onChange }) {
             console.error('Error uploading file:', error);
         } finally {
             setLoading(false);
+            setImagePreview(null);
         }
     };
 
@@ -156,7 +158,7 @@ function InferImages({ userData, state, url, onApply, onChange }) {
                 onOpen={onOpen}
                 output={istate}
                 setOutput={updateIstate}
-                userData={userData}
+                username={username}
                 state={state}
                 onApply={onApply}
                 onChange={onChange}

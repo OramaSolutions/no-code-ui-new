@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom'
 import { commomObj } from '../../utils';
 import { toast } from 'react-toastify';
-import { SetPassword } from '../../reduxToolkit/Slices/authSlices';
+import { SetPassword } from '../../reduxToolkit/Slices/oldauthSlices';
 
 const initialState={
     password:"",

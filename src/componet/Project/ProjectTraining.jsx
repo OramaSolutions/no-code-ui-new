@@ -24,7 +24,7 @@ const userData = JSON.parse(window.localStorage.getItem("userLogin"))
 const { hasChangedSteps } = useSelector((state) => state.steps);
 const [completedSteps, setCompletedSteps] = useState({
     labelled:false,
-    augumented:false,
+    augmented:false,
     images:false,
     dataSplit:false,
     HyperTune:false,
@@ -33,7 +33,7 @@ const [completedSteps, setCompletedSteps] = useState({
 });
 const {state} = useLocation();
 
-const stepsOrder = ['labelled', 'augumented', 'images', 'dataSplit', 'HyperTune', 'infer', 'remark'];
+const stepsOrder = ['labelled', 'augmented', 'images', 'dataSplit', 'HyperTune', 'infer', 'remark'];
 
     const handleApply = (step) => {
         setCompletedSteps((prevSteps) => ({...prevSteps,[step]: true}));      
@@ -78,13 +78,13 @@ const stepsOrder = ['labelled', 'augumented', 'images', 'dataSplit', 'HyperTune'
                             </li>
                             <li className={iState=="labelled"?"":"active"}>
                                 <a className="Text" 
-                                onClick={() => isStepAccessible('augumented') && updateIstate('augumented')}
-                                style={{ pointerEvents: isStepAccessible('augumented') ? 'auto' : 'none', color: isStepAccessible('augumented') ? 'inherit' : '#aaa' }}
+                                onClick={() => isStepAccessible('augmented') && updateIstate('augmented')}
+                                style={{ pointerEvents: isStepAccessible('augmented') ? 'auto' : 'none', color: isStepAccessible('augmented') ? 'inherit' : '#aaa' }}
                                 >
                                     Augmentations
                                 </a>
                             </li>
-                            <li className={iState=="labelled"||iState=="augumented"?"":"active"}>
+                            <li className={iState=="labelled"||iState=="augmented"?"":"active"}>
                                 <a className="Text" 
                                 onClick={() => isStepAccessible('images') ? updateIstate('images'??""):null}
                                 style={{ pointerEvents: isStepAccessible('images') ? 'auto' : 'none', color: isStepAccessible('images') ? 'inherit' : '#aaa' }}
@@ -92,7 +92,7 @@ const stepsOrder = ['labelled', 'augumented', 'images', 'dataSplit', 'HyperTune'
                                     Augmented <br /> Images
                                 </a>
                             </li>
-                            <li className={iState=="labelled"||iState=="augumented"||iState=="images"?"":"active"}>
+                            <li className={iState=="labelled"||iState=="augmented"||iState=="images"?"":"active"}>
                                 <a className="Text"
                                  onClick={() => isStepAccessible('dataSplit') && updateIstate("dataSplit"??"")}
                                  style={{ pointerEvents: isStepAccessible('dataSplit') ? 'auto' : 'none', color: isStepAccessible('dataSplit') ? 'inherit' : '#aaa' }}
@@ -100,7 +100,7 @@ const stepsOrder = ['labelled', 'augumented', 'images', 'dataSplit', 'HyperTune'
                                     Data Split Ratio
                                 </a>
                             </li>
-                            <li className={iState=="labelled"||iState=="augumented"||iState=="images"||iState=="dataSplit"?"":"active"}>
+                            <li className={iState=="labelled"||iState=="augmented"||iState=="images"||iState=="dataSplit"?"":"active"}>
                                 <a className="Text" 
                                 onClick={() => isStepAccessible('HyperTune') && updateIstate("HyperTune")}
                                 style={{ pointerEvents: isStepAccessible('HyperTune') ? 'auto' : 'none', color: isStepAccessible('HyperTune') ? 'inherit' : '#aaa' }}
@@ -108,7 +108,7 @@ const stepsOrder = ['labelled', 'augumented', 'images', 'dataSplit', 'HyperTune'
                                     Tune Hyper Parameters
                                 </a>
                             </li>
-                            <li className={iState=="labelled"||iState=="augumented"||iState=="images"||iState=="dataSplit"||iState=="HyperTune"?"":"active"}>
+                            <li className={iState=="labelled"||iState=="augmented"||iState=="images"||iState=="dataSplit"||iState=="HyperTune"?"":"active"}>
                                 <a className="Text" 
                                 onClick={() => isStepAccessible('infer') && updateIstate("infer")}
                                 style={{ pointerEvents: isStepAccessible('infer') ? 'auto' : 'none', color: isStepAccessible('infer') ? 'inherit' : '#aaa' }}
@@ -131,12 +131,12 @@ const stepsOrder = ['labelled', 'augumented', 'images', 'dataSplit', 'HyperTune'
                   state={state}
                   userData={userData}
                   onApply={() => handleApply('labelled')} 
-                  onChange={() => handleChange("augumented")}                 
+                  onChange={() => handleChange("augmented")}                 
                   />}                
-                  {iState=="augumented"&& <Augumentation                  
+                  {iState=="augmented"&& <Augumentation                  
                    state={state}
                    userData={userData}
-                   onApply={() => handleApply('augumented')}
+                   onApply={() => handleApply('augmented')}
                    onChange={() => handleChange("images")}
                   />}                
                   {iState=="images"&& <AugumentImages 

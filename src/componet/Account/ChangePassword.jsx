@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { changePassword } from '../../reduxToolkit/Slices/authSlices';
+import { changePassword } from '../../reduxToolkit/Slices/oldauthSlices';
 import { commomObj } from '../../utils';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
