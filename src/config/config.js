@@ -2,8 +2,8 @@
 const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
 
 // Main backend API
-// export const Url = 'https://nocode-node.oramasolutions.in/api/v1/';
-export const Url = 'http://localhost:3100/api/v1/';
+export const Url = 'https://nocode-node.oramasolutions.in/api/v1/';
+// export const Url = 'http://localhost:3100/api/v1/';
 
 // Dynamic service resolver
 export function getUrl(key) {
@@ -13,8 +13,8 @@ export function getUrl(key) {
         'classification': 'https://nocode-classification.oramasolutions.in/',
         // 'classification': 'http://192.168.1.177:5008/',
         'text-extraction': 'https://nocode-text-extraction.oramasolutions.in/',
-        // 'objectdetection': 'https://nocode-object-detection.oramasolutions.in/'
-        'objectdetection': 'http://192.168.1.177:5009/'
+        'objectdetection': 'https://nocode-object-detection.oramasolutions.in/'
+        // 'objectdetection': 'http://192.168.1.177:5009/'
     };
 
     if (urls[key]) {
