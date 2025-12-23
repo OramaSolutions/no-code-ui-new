@@ -26,7 +26,7 @@ export const PreviewPair = ({ original, transformed, transformStyle, label }) =>
               <img
                 src={original}
                 alt="Original"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
@@ -49,7 +49,7 @@ export const PreviewPair = ({ original, transformed, transformStyle, label }) =>
               <img
                 src={transformed}
                 alt="Transformed"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 style={transformStyle || {}}
               />
             ) : (

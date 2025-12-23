@@ -4,9 +4,10 @@ import { IoClose } from 'react-icons/io5';
 import Loader from '../../../commonComponent/Loader';
 function ImportModal({ onOpen, onClose, istate, setIstate, handleCancel }) {
     const handleclose = () => {
-        setIstate({ ...istate, openImport: false, closeImport: false });
+        setIstate({ ...istate, openImport: false, closeImport: false, importError:'' });
         handleCancel();
     };
+    // console.log('isatte', istate)
 
     return (
         <AnimatePresence>
@@ -104,7 +105,7 @@ function ImportModal({ onOpen, onClose, istate, setIstate, handleCancel }) {
                                             <IoClose className="w-6 h-6" />
                                         </motion.button>
                                         <h2 className="text-2xl font-bold text-white">Import Failed</h2>
-                                        <p className="text-red-100 text-sm mt-1">Something went wrong</p>
+                                        <p className="text-red-100 text-sm mt-1">{istate.importError}</p>
                                     </div>
 
                                     {/* Body - Error Content */}
@@ -123,7 +124,7 @@ function ImportModal({ onOpen, onClose, istate, setIstate, handleCancel }) {
 
                                         {/* Error Message */}
                                         <h3 className="text-xl font-bold text-gray-800 mb-2">
-                                            Import Failed
+                                            {istate.importError}
                                         </h3>
                                         <p className="text-gray-600 mb-8">
                                             Please try again or contact support if the issue persists.

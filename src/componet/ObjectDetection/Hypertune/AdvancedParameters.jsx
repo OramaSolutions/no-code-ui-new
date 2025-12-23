@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import ParameterInput from './ParameterInput';
 import ParameterSlider from './ParameterSlider';
+import ParameterInputFloat from './ParameterInputFloat';
 import { MdInfo } from 'react-icons/md';
 
 function AdvancedParameters({ values, onValueChange }) {
@@ -97,6 +98,56 @@ function AdvancedParameters({ values, onValueChange }) {
                     value={values.close_mosaic}
                     onChange={(value) => onValueChange('close_mosaic', value)}
                 />
+                {/*  erasing:0,
+    scale:0,
+    translate:0,
+    shear:0,
+    hsv_h:0,
+    hsv_s:0,
+    hsv_v:0, */}
+                <ParameterInputFloat
+                    name="scale"
+                    label="Scale"
+                    tooltip="Randomly scale images by a factor during training to improve scale invariance."
+                    value={values.scale}
+                    onChange={(value) => onValueChange('scale', value)}
+                />
+                <ParameterInputFloat
+                    name="translate"
+                    label="Translate"
+                    tooltip="Randomly translate images horizontally and vertically as a fraction of image size."
+                    value={values.translate}
+                    onChange={(value) => onValueChange('translate', value)}
+                />
+                <ParameterInputFloat
+                    name="shear"
+                    label="Shear"
+                    tooltip="Randomly apply shear transformation to images to simulate camera angle and perspective changes."
+                    value={values.shear}
+                    onChange={(value) => onValueChange('shear', value)}
+                />
+                <ParameterInputFloat
+                    name="hsv_h"
+                    label="hsv_h"
+                    tooltip="Randomly adjust image hue by a fraction to improve color robustness."
+                    value={values.hsv_h}
+                    onChange={(value) => onValueChange('hsv_h', value)}
+                />
+                <ParameterInputFloat
+                    name="hsv_s"
+                    label="hsv_s"
+                    tooltip="Randomly adjust image saturation to simulate different lighting conditions."
+                    value={values.hsv_s}
+                    onChange={(value) => onValueChange('hsv_s', value)}
+                />
+                <ParameterInputFloat
+                    name="hsv_v"
+                    label="hsv_v"
+                    tooltip="Randomly adjust image brightness (value) to improve performance under varying illumination."
+                    value={values.hsv_v}
+                    onChange={(value) => onValueChange('hsv_v', value)}
+                />
+
             </div>
 
             {/* Dropout Slider */}

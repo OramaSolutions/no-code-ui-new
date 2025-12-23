@@ -11,6 +11,14 @@ import BasicParameters from './BasicParameters';
 import AdvancedParameters from './AdvancedParameters';
 import ActionButtons from './ActionButtons';
 
+// "erasing": float(erasing),
+//                 "scale": float(scale),
+//                 "translate": float(translate),
+//                 "shear": float(shear),
+//                 "hsv_h": float(hsv_h),
+//                 "hsv_s": float(hsv_s),
+//                 "hsv_v": float(hsv_v),
+
 const initialState = {
     pre_trained_model: '',
     imgsz: 640,
@@ -25,6 +33,13 @@ const initialState = {
     patience: 20,
     single_cls: false,
     validation_conf: 0.25,
+    erasing: 0,
+    scale: 0,
+    translate: 0,
+    shear: 0,
+    hsv_h: 0,
+    hsv_s: 0,
+    hsv_v: 0,
     advanced: false,
     loader: false,
     openModal: false,
@@ -65,6 +80,13 @@ function HyperTune({ onApply, state, username, onChange, url }) {
                         patience: res?.payload?.data?.patience || 20,
                         single_cls: res?.payload?.data?.single_cls === 'true',
                         validation_conf: res?.payload?.data?.validation_conf || 0.25,
+                        erasing: res?.payload?.data?.erasing || 0,
+                        scale: res?.payload?.data?.scale || 0,
+                        translate: res?.payload?.data?.translate || 0,
+                        shear: res?.payload?.data?.shear || 0,
+                        hsv_h: res?.payload?.data?.hsv_h || 0,
+                        hsv_s: res?.payload?.data?.hsv_s || 0,
+                        hsv_v: res?.payload?.data?.hsv_v || 0,
                         isDirty: true,
                     }));
                 }
@@ -127,6 +149,14 @@ function HyperTune({ onApply, state, username, onChange, url }) {
         formData.append('patience', istate.patience || 20);
         formData.append('single_cls', istate.single_cls);
         formData.append('validation_conf', istate.validation_conf || 0.25);
+
+        formData.append('erasing', istate.erasing || 0);
+        formData.append('scale', istate.scale || 0);
+        formData.append('translate', istate.translate || 0);
+        formData.append('shear', istate.shear || 0);
+        formData.append('hsv_h', istate.hsv_h || 0);
+        formData.append('hsv_s', istate.hsv_s || 0);
+        formData.append('hsv_v', istate.hsv_v || 0);
 
         try {
             updateIstate({ ...istate, loader: true });

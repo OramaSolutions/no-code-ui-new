@@ -33,20 +33,24 @@ function AugumentImages({ onApply, username, state, onChange, url }) {
 
                 if (data?.thumbnails && data.thumbnails.length > 0) {
                     setBlobUrls(data.thumbnails);
-                    setLoader(false);
                 } else {
                     toast.error('No thumbnails found', commomObj);
-                    setLoader(false);
                 }
             } catch (err) {
                 console.error("Error fetching thumbnails:", err);
                 toast.error("Oops! Something went wrong", commomObj);
+            } finally {
                 setLoader(false);
             }
         };
 
-        fetchThumbnails();
+        setLoader(true);
+
+        const timer = setTimeout(fetchThumbnails, 3000); // ⏱ wait 3s
+
+        return () => clearTimeout(timer);
     }, [url, username, state?.name, state?.version]);
+
 
     const base64ToImageUrl = (base64) => {
         return `data:image/png;base64,${base64}`;
@@ -88,8 +92,16 @@ function AugumentImages({ onApply, username, state, onChange, url }) {
         setLoader(false);
     };
 
+    const getRealImageUrl = (thumbnailUrl) => {
+        return thumbnailUrl
+            .replace("/thumbnails/", "/augmented_image/")
+            .replace("/preview_images_thumbnails/", "/")
+            .replace('.webp', ".jpg")
+    };
+
     const openImageModal = (imgSrc, index) => {
-        setSelectedImage({ src: imgSrc, index });
+        const realImage = getRealImageUrl(imgSrc);
+        setSelectedImage({ src: realImage, index });
     };
 
     const closeImageModal = () => {
@@ -201,13 +213,29 @@ function AugumentImages({ onApply, username, state, onChange, url }) {
                         transition={{ delay: 0.4 }}
                         className="flex justify-center"
                     >
-                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-full">
+                        <div className="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 rounded-full">
                             <div className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
+
                             <span className="text-sm font-medium text-slate-700">
-                                {blobUrls.length} {blobUrls.length === 1 ? 'image' : 'images'} loaded for preview
+                                {blobUrls.length} {blobUrls.length === 1 ? "image" : "images"} loaded
                             </span>
+
+                            {/* Divider */}
+                            <span className="h-4 w-px bg-indigo-200" />
+
+                            {/* Refresh button */}
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                               onClick={() => window.location.reload()}
+                                disabled={loader}
+                                className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Fetch more
+                            </motion.button>
                         </div>
                     </motion.div>
+
                 )}
             </motion.div>
 
@@ -244,9 +272,9 @@ function AugumentImages({ onApply, username, state, onChange, url }) {
                             <img
                                 src={selectedImage.src}
                                 alt={`Augmented Image ${selectedImage.index + 1}`}
-                                className="w-full h-full object-contain rounded-sm"
+                                className="max-w-full max-h-[90vh] object-contain rounded-sm"
                             />
-                            
+
                             {/* Image Number Badge */}
                             {/* <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium">
                                 Image #{selectedImage.index + 1} of {blobUrls.length}

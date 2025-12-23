@@ -57,20 +57,42 @@ const augmentationsConfig = [
     {
         key: "brightness",
         label: "Brightness",
-        tooltip: "Adjust brightness; backend expects 0–1 limit mapped to (-limit, +limit).",
+        title: "Brightness Strength",
         controls: [
-            { stateKey: "brightness_limit", title: "Value (0–1)", min: 0, max: 1, step: 0.05 },
+            { stateKey: "brightness_limit", title: "Value (0–1)", min: -0.5, max: 0.5, step: 0.05 },
             { stateKey: "brightness_prob", title: "Probability", min: 0, max: 1, step: 0.05 },
         ],
         preview: (s) => {
             if (!s.brightness) return {};
-            const lim = clamp(s.brightness_limit, 0, 1);
-            // Map 0..1 to CSS brightness multiplier ~ 0.5..1.5 for perceptual similarity
-            const factor = 1 + (lim - 0.5); // lim=0 -> 0.5, lim=0.5 -> 1, lim=1 -> 1.5
-            return { filter: `brightness(${factor})` };
+
+            // slider: -0.5 → 0.5
+            const v = clamp(s.brightness_limit, -0.5, 0.5);
+
+            // normalize to -1 → +1
+            const t = v / 0.5;
+
+            if (t < 0) {
+                // 🔽 DARKEN — stronger falloff
+                // brightness range: 1 → 0.3
+                const brightness = 1 + t * 0.5; // t=-1 → 0.3
+                const contrast = 1 + (-t) * 0.2; // add contrast for punch
+
+                return {
+                    filter: `brightness(${brightness}) contrast(${contrast})`
+                };
+            }
+
+            // 🔼 BRIGHTEN — strong washout
+            // brightness range: 1 → 2.2
+            const brightness = 1 + t * 1.1; // t=1 → 2.2
+            const contrast = 1 - t * 0.3; // heavy highlight wash
+
+            return {
+                filter: `brightness(${brightness}) contrast(${contrast})`
+            };
         },
         toPayload: (s) => ({
-            brightness_limit: [0, clamp(s.brightness_limit, 0, 1)],
+            brightness_limit: clamp(s.brightness_limit, -0.5, 0.5),
             brightness_prob: clamp(s.brightness_prob, 0, 1),
         }),
     },
@@ -79,18 +101,40 @@ const augmentationsConfig = [
         label: "Contrast",
         tooltip: "Adjust contrast; backend expects 0–1 limit mapped to (-limit, +limit).",
         controls: [
-            { stateKey: "contrast_limit", title: "Value (0–1)", min: 0, max: 1, step: 0.05 },
+            { stateKey: "contrast_limit", title: "Value (0–1)", min: -0.5, max: 0.5, step: 0.05 },
             { stateKey: "contrast_prob", title: "Probability", min: 0, max: 1, step: 0.05 },
         ],
         preview: (s) => {
             if (!s.contrast) return {};
-            const lim = clamp(s.contrast_limit, 0, 1);
-            // Map 0..1 to CSS contrast multiplier ~ 0.5..1.5
-            const factor = 1 + (lim - 0.5);
-            return { filter: `contrast(${factor})` };
+
+            // slider is -0.5 → 0.5
+            const v = clamp(s.contrast_limit, -0.5, 0.5);
+
+            // normalize to -1 → +1
+            const t = v / 0.5;
+
+            if (t < 0) {
+                // 🔽 Low contrast (flatten image)
+                // contrast range: 1 → 0.4
+                const contrast = 1 + t * 0.6; // t=-1 → 0.4
+                const brightness = 1 - t * 0.05; // slight lift to avoid muddy look
+
+                return {
+                    filter: `contrast(${contrast}) brightness(${brightness})`
+                };
+            }
+
+            // 🔼 High contrast (punchy)
+            // contrast range: 1 → 2.2
+            const contrast = 1 + t * 1.2; // t=1 → 2.2
+            const brightness = 1 - t * 0.1; // tame highlights slightly
+
+            return {
+                filter: `contrast(${contrast}) brightness(${brightness})`
+            };
         },
         toPayload: (s) => ({
-            contrast_limit: [0, clamp(s.contrast_limit, 0, 1)],
+            contrast_limit: clamp(s.contrast_limit, -0.5, 0.5),
             contrast_prob: clamp(s.contrast_prob, 0, 1),
         }),
     },
@@ -144,7 +188,7 @@ const augmentationsConfig = [
         preview: (s) => {
             if (!s.blur) return {};
             // Visual hint: light blur so preview reflects effect without kernel control
-            return { filter: `blur(2px)` };
+            return { filter: `blur(0.5px)` };
         },
         toPayload: (s) => ({ blur_prob: clamp(s.blur_prob, 0, 1) }),
     },
@@ -165,9 +209,9 @@ const initialState = {
     rotate_prob: 0.5,
     vertical_flip_prob: 0.5,
     horizontal_flip_prob: 0.5,
-    brightness_limit: 0.5,
+    brightness_limit: 0,
     brightness_prob: 0.5,
-    contrast_limit: 5,
+    contrast_limit: 0,
     contrast_prob: 0.5,
     hue_saturation_limit: 5,
     hue_saturation_prob: 0.5,
@@ -197,6 +241,13 @@ function Augumentation({ state, username, onApply, onChange, url }) {
     const dispatch = useDispatch()
     const [sampleImageUrl, setSampleImageUrl] = useState(null);
 
+    const STATS_STORAGE_KEY = `project_stats:${state?.name}:${state?.version}:objectdetection`;
+    const projectStats =
+        JSON.parse(window.localStorage.getItem(STATS_STORAGE_KEY)) || {};
+
+    const labeledImages = projectStats.labeledImages ?? 0;
+    const totalImages = projectStats.totalImages ?? 0
+
     // for return data
     useEffect(() => {
         const fetchData = async () => {
@@ -215,7 +266,25 @@ function Augumentation({ state, username, onApply, onChange, url }) {
                     // const asUpper = (v, fallback = 0) => Array.isArray(v) ? (v[1] ?? fallback) : (v ?? fallback);
                     const asUpper = (v, fallback) =>
                         Array.isArray(v) ? (v[1] ?? fallback) : (v ?? fallback);
+
+                    const asSigned = (v, fallback = 0) => {
+                        if (!Array.isArray(v)) return v ?? fallback;
+
+                        const lo = v[0] ?? 0;
+                        const hi = v[1] ?? 0;
+
+                        if (hi !== 0 && lo === 0) return hi;   // positive only
+                        if (lo !== 0 && hi === 0) return lo;   // negative only
+
+                        // both sides non-zero → pick dominant magnitude
+                        return Math.abs(hi) >= Math.abs(lo) ? hi : lo;
+                    };
+
+
                     const augData = res?.payload?.data?.augmentations ?? {};
+
+                    const brightnessSigned = asSigned(augData?.brightness_limit, 0);
+                    const contrastSigned = asSigned(augData?.contrast_limit, 0);
 
                     const noiseUpper = asUpper(augData?.gauss_noise_var_limit, undefined);
                     const noiseOn =
@@ -226,8 +295,8 @@ function Augumentation({ state, username, onApply, onChange, url }) {
                         crop: !!augData?.crop?.p,
                         verticalFlip: !!augData?.vertical_flip_prob,
                         horizontalFlip: !!augData?.horizontal_flip_prob,
-                        brightness: asUpper(augData?.brightness_limit, 0) > 0,
-                        contrast: asUpper(augData?.contrast_limit, 0) > 0,
+                        brightness: brightnessSigned !== 0,
+                        contrast: contrastSigned !== 0,
                         stauration: asUpper(augData?.hue_saturation_limit, 0) > 0,
                         noise: noiseOn,
                         blur: !!augData?.blur_prob,
@@ -235,9 +304,9 @@ function Augumentation({ state, username, onApply, onChange, url }) {
                         rotate_prob: augData?.rotate_prob ?? 0,
                         vertical_flip_prob: augData?.vertical_flip_prob ?? 0,
                         horizontal_flip_prob: augData?.horizontal_flip_prob ?? 0,
-                        brightness_limit: clamp(asUpper(augData?.brightness_limit, 0.3), 0, 1),
+                        brightness_limit: clamp(brightnessSigned, -0.5, 0.5),
                         brightness_prob: clamp(augData?.brightness_prob ?? 0, 0, 1),
-                        contrast_limit: clamp(asUpper(augData?.contrast_limit, 0.3), 0, 1),
+                        contrast_limit: clamp(contrastSigned, -0.5, 0.5),
                         contrast_prob: clamp(augData?.contrast_prob ?? 0, 0, 1),
                         hue_saturation_limit: clamp(asUpper(augData?.hue_saturation_limit, 20), 0, 80),
                         hue_saturation_prob: clamp(augData?.hue_saturation_prob ?? 0, 0, 1),
@@ -284,10 +353,37 @@ function Augumentation({ state, username, onApply, onChange, url }) {
         if (typeof out.rotate_limit === 'number') out.rotate_limit = clamp(out.rotate_limit, -180, 180);
         if (typeof out.rotate_prob === 'number') out.rotate_prob = clamp(out.rotate_prob, 0, 1);
 
-        if (out.brightness_limit) out.brightness_limit = [0, clamp(out.brightness_limit[1] ?? 0, 0, 1)];
+        // if (out.brightness_limit) out.brightness_limit = [0, clamp(out.brightness_limit[1] ?? 0, 0, 1)];
+        // if (typeof out.brightness_limit === "number")
+        //     out.brightness_limit = [clamp(out.brightness_limit, -0.5, 0.5)]
+        if (typeof out.brightness_limit === "number") {
+            const v = clamp(out.brightness_limit, -0.5, 0.5);
+
+            if (v > 0) {
+                out.brightness_limit = [0, v];
+            } else if (v < 0) {
+                out.brightness_limit = [v, 0];
+            } else {
+                out.brightness_limit = [0, 0];
+            }
+        }
+
         if (typeof out.brightness_prob === 'number') out.brightness_prob = clamp(out.brightness_prob, 0, 1);
 
-        if (out.contrast_limit) out.contrast_limit = [0, clamp(out.contrast_limit[1] ?? 0, 0, 1)];
+        // if (out.contrast_limit) out.contrast_limit = [0, clamp(out.contrast_limit[1] ?? 0, 0, 1)];
+
+        if (typeof out.contrast_limit === "number") {
+            const v = clamp(out.contrast_limit, -0.5, 0.5);
+
+            if (v > 0) {
+                out.contrast_limit = [0, v];
+            } else if (v < 0) {
+                out.contrast_limit = [v, 0];
+            } else {
+                out.contrast_limit = [0, 0];
+            }
+        }
+
         if (typeof out.contrast_prob === 'number') out.contrast_prob = clamp(out.contrast_prob, 0, 1);
 
         if (out.hue_saturation_limit) out.hue_saturation_limit = [0, clamp(out.hue_saturation_limit[1] ?? 0, 0, 80)];
@@ -393,7 +489,7 @@ function Augumentation({ state, username, onApply, onChange, url }) {
                 if (response?.payload?.code === 201) {
                     updateIstate({ ...iState, openModal: false })
                     toast.success(response?.payload?.message, commomObj)
-                    window.localStorage.setItem("AgumentedSize", (DatasetSize?.Size) * num_of_images_to_be_generated)
+                    window.localStorage.setItem("AgumentedSize", (labeledImages) * num_of_images_to_be_generated)
                     onChange();
                     onApply()
                 } else {
@@ -431,24 +527,57 @@ function Augumentation({ state, username, onApply, onChange, url }) {
             >
                 {/* Header Section */}
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-500 flex items-center justify-center">
-                            <HiSparkles className="w-6 h-6 text-white" />
+                    <div className="flex w-full items-center justify-between gap-6 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm">
+                        {/* Left: Icon + Title */}
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-500 flex items-center justify-center shadow">
+                                <HiSparkles className="w-6 h-6 text-white" />
+                            </div>
+
+                            <div>
+                                <h2 className="text-xl font-semibold text-slate-800">
+                                    Data Augmentation
+                                </h2>
+                                <p className="text-sm text-slate-500">
+                                    Configure image transformations
+                                </p>
+                            </div>
                         </div>
-                        <div>
-                            <h2 className="text-2xl font-bold text-slate-800">Data Augmentation</h2>
-                            <p className="text-sm text-slate-600">Configure image transformations</p>
+
+                        {/* Right: Stats */}
+                        <div className="flex flex-col items-end min-w-[160px]">
+                            <div className="text-sm text-slate-500 mb-1">
+                                Labeled Images
+                            </div>
+
+                            <div className="text-lg font-semibold text-slate-800">
+                                {labeledImages}
+                                <span className="text-slate-400 font-normal">
+                                    {" / "}{totalImages}
+                                </span>
+                            </div>
+
+                            {/* Progress bar */}
+                            <div className="w-full h-2 mt-2 rounded-full bg-slate-200 overflow-hidden">
+                                <div
+                                    className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300"
+                                    style={{
+                                        width: `${(labeledImages / totalImages) * 100}%`,
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    <motion.button
+
+                    {/* <motion.button
                         whileHover={{ scale: 1.05, rotate: 180 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={resetHandler}
                         className="p-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors"
                     >
                         <HiRefresh className="w-5 h-5" />
-                    </motion.button>
+                    </motion.button> */}
                 </div>
 
                 {/* Number of Images Input */}
@@ -470,13 +599,13 @@ function Augumentation({ state, username, onApply, onChange, url }) {
                             className="w-full px-4 py-3 border-2 border-indigo-200 rounded-xl focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none font-semibold text-indigo-700"
                         />
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-500">
-                            Total: {(DatasetSize?.Size || 0) * (iState.num_of_images_to_be_generated || 1)} images
+                            Total: {(labeledImages || 0) * (iState.num_of_images_to_be_generated || 1)} images
                         </div>
                     </div>
                 </motion.div>
 
                 {/* Augmentations List with Inline Previews */}
-                <div className="space-y-6">
+                <div className="space-y-3">
                     <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                         <div className="w-1 h-6 bg-gradient-to-b from-blue-500 to-indigo-500 rounded-full" />
                         Augmentation Controls
@@ -488,7 +617,7 @@ function Augumentation({ state, username, onApply, onChange, url }) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.05 }}
-                            className="bg-white rounded-xl p-2 border border-slate-200 shadow-sm space-y-4"
+                            className="bg-white rounded-xl p-2 border border-slate-200 shadow-sm space-y-2 "
                         >
                             {/* Toggle */}
                             <ToggleRow

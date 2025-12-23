@@ -10,7 +10,7 @@ import ResizeOptions from "./ResizeOptions";
 import ImagePreview from "./ImagePreview";
 import ActionButtons from "./ActionButtons";
 import ResizeModal from "../ResizeModal";
-import ImportModal from "../../Project/ImportModal";
+import ImportModal from "./ImportModal";
 import { LuFileStack } from "react-icons/lu";
 const initialState = {
     imageUrls: [],
@@ -22,6 +22,7 @@ const initialState = {
     close: null,
     openImport: false,
     closeImport: false,
+    importError:''
 }
 
 function Labelled({ username, state, onApply, onChange, url }) {
@@ -172,14 +173,14 @@ function Labelled({ username, state, onApply, onChange, url }) {
             setIstate({ ...istate, openImport: true })
 
             const response = await dispatch(importData({ payload: formData, signal: abortControllerReff.current.signal, url }))
-
+//  console.log('response', response)
             if (response?.payload?.status === 201) {
                 setIstate({ ...istate, openImport: false })
                 toast.success("Import Successfully", commomObj)
                 const datasize = {
                     Size: response?.payload?.data?.image_count,
-
                 }
+               
 
                 window.localStorage.setItem("DataSize", JSON.stringify(datasize))
                 window.scrollTo({
@@ -193,7 +194,7 @@ function Labelled({ username, state, onApply, onChange, url }) {
                 // Let parent know data changed when user chooses an action (handled on button click)
 
             } else {
-                setIstate({ ...istate, openImport: true, closeImport: true });
+                setIstate({ ...istate, openImport: true, closeImport: true, importError:response.payload?.message||"Somethign went wrong!" });
             }
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -319,12 +320,12 @@ function Labelled({ username, state, onApply, onChange, url }) {
                 <FileUploadZone onDrop={onDrop} />
 
                 {/* Resize Options */}
-                <ResizeOptions
+                {/* <ResizeOptions
                     resizecheck={resizecheck}
                     width={width}
                     inputHandler={inputHandler}
                     handleUpload={handleUpload}
-                />
+                /> */}
 
                 {/* Image Preview & Import */}
                 {!resizecheck && (

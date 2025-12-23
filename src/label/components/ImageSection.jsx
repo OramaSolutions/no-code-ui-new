@@ -41,29 +41,45 @@ const ImageSection = ({
   const filteredImages = useMemo(() => {
     return images.filter((image) => {
       const matchedAnnotation = allAnnotations.find(
-        (ann) => ann.imageIndex === image.id || ann.imageName === image.name
+        (ann) =>
+          ann.imageIndex === image.id ||
+          ann.imageName === image.name
       );
 
+      const isBBox = labelOrSegment === "bbox";
+      const isSegment = labelOrSegment === "segment";
+
+      const dataArray = isBBox
+        ? matchedAnnotation?.annotations
+        : matchedAnnotation?.segments;
+
+      const hasLabels =
+        Array.isArray(dataArray) && dataArray.length > 0;
+
+      const isNotLabeled =
+        !matchedAnnotation ||          // old case
+        dataArray == null ||           // new null case
+        dataArray.length === 0;        // empty array
+
       if (filter === "all") return true;
+
       if (filter === "labeled") {
-        if (matchedAnnotation?.annotations) {
-          return matchedAnnotation.annotations.length > 0;
-        } else if (matchedAnnotation?.segments) {
-          return matchedAnnotation.segments.length > 0;
-        }
-        return false;
+        return hasLabels;
       }
+
+      if (filter === "not-labeled") {
+        return isNotLabeled;
+      }
+
       if (filter === "null") {
-        return (
-          matchedAnnotation &&
-          ((matchedAnnotation.annotations?.length === 0) ||
-            (matchedAnnotation.segments?.length === 0))
-        );
+        return matchedAnnotation && dataArray == null;
       }
-      if (filter === "not-labeled") return !matchedAnnotation;
+
       return true;
     });
-  }, [images, allAnnotations, filter]);
+  }, [images, allAnnotations, filter, labelOrSegment]);
+
+
 
   // Paginated images
   const paginatedImages = useMemo(() => {

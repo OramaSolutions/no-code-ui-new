@@ -84,6 +84,9 @@ function ProjectOverview() {
   const [showStatsDropdown, setShowStatsDropdown] = useState(false);
   const [stats, setStats] = useState(null);
 
+  const STATS_STORAGE_KEY = `project_stats:${projectName}:${version}:${task}`;
+
+
   const fetchAnnotationType = async () => {
     const stats = await getProjectStats(
       baseUrl,
@@ -92,6 +95,22 @@ function ProjectOverview() {
       version,
       task
     );
+
+      const normalizedStats = {
+    annotationType: stats.annotation_type,
+   
+    updatedAt: Date.now(), // important
+    totalImages: stats.total_images,
+    labeledImages: stats.labeled_images,
+    unlabeledImages: stats.unlabeled_images,
+    completionPercentage: stats.completion_percentage,
+  };
+
+  // 🔥 overwrite cache with latest data
+  localStorage.setItem(
+    STATS_STORAGE_KEY,
+    JSON.stringify(normalizedStats)
+  );
 
     return {
       type: stats.annotation_type,
@@ -148,7 +167,7 @@ function ProjectOverview() {
 
         setLabelOrSegment(type);
 
-        console.log("Fetched annotation type:", type);
+        // console.log("Fetched annotation type:", type);
         setStats(stats);
 
         const [loadedClasses, loadedImages, loadedAnnotations] =
@@ -213,7 +232,7 @@ function ProjectOverview() {
             result.datasetLength.toString()
           );
         }
-        console.log("Images loaded from backend.", result.images);
+        // console.log("Images loaded from backend.", result.images);
         return result.images || [];
       }
 
@@ -242,7 +261,7 @@ function ProjectOverview() {
       }
 
 
-      console.log("backendAnnotations", backendAnnotations);
+      // console.log("backendAnnotations", backendAnnotations);
       // await saveAnnotations(backendAnnotations);
 
       return backendAnnotations;
