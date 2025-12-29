@@ -9,7 +9,6 @@ import { useDispatch } from 'react-redux';
 import { userLogin } from '../../api/authApi';
 import { setAuth } from '../../reduxToolkit/Slices/authSlices';
 
-
 import { Link, useNavigate } from 'react-router-dom';
 import HelpSupport from './HelpCenter';
 import LogoInner from "../../assets/images/Logo-Inner.png";
@@ -21,7 +20,6 @@ import { BiLoader } from 'react-icons/bi';
 const initialState = {
     email: "",
     password: "",
-
     errors: {},
     modal: false,
     showPassword: false,
@@ -77,7 +75,6 @@ const Login = () => {
             setShow(prev => ({ ...prev, loading: false }));
         },
     });
-
 
     // Input handler
     const inputHandler = (e) => {

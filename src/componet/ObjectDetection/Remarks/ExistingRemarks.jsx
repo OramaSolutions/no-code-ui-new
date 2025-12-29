@@ -11,7 +11,7 @@ function ExistingRemarks({ existingRemark, uploadedFiles }) {
         >
             <div className="flex items-center gap-2 text-blue-800">
                 <MdInfo className="w-5 h-5" />
-                <h3 className="font-bold">Existing Remarks</h3>
+                <h3 className="font-bold">Existing User Remarks</h3>
             </div>
 
             <div className="bg-white rounded-lg p-4 border border-blue-200">

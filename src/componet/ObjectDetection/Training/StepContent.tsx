@@ -106,8 +106,9 @@ const StepContent: React.FC<StepContentProps> = ({
         return (
           <Remark
             username={userData?.userName}
-            task="defectdetection"
+            task="objectdetection"
             project={state?.name}
+            projectId = {state.projectId}
             version={state?.version}
             onApply={() => handleApply("remark")}
             onChange={() => handleChange("application")}

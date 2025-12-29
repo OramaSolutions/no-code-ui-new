@@ -3,9 +3,9 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import { commomObj } from '../../../utils';
-import { remarkData, getRemarkData } from '../../../reduxToolkit/Slices/projectSlices';
+import { remarkData, getRemarkData, getProjectRemarks } from '../../../reduxToolkit/Slices/projectSlices';
 import { getUrl } from '../../../config/config';
-import { MdNoteAlt } from 'react-icons/md';
+import { MdNoteAlt,MdInfo } from 'react-icons/md';
 import ExistingRemarks from './ExistingRemarks';
 import RemarksForm from './RemarksForm';
 import RemarksActions from './RemarksActions';
@@ -19,16 +19,33 @@ const initialState = {
 
 const url = getUrl('objectdetection');
 
-const Remarks = ({ username, task, project, version, onApply, onChange }) => {
+const Remarks = ({ username, task, project, projectId, version, onApply, onChange }) => {
     const [istate, updateIstate] = useState(initialState);
     const { observation, scopeOfImprovement, numOfTries, loading } = istate;
     const [files, setFiles] = useState([]);
     const [hardwareFile, setHardwareFile] = useState(null);
     const [showNext, setShowNext] = useState(false);
     const [existingRemark, setExistingRemark] = useState(null);
+    const [adminNotes, setAdminNotes] = useState([]);
     const [uploadedFiles, setUploadedFiles] = useState([]);
     const [isEditMode, setIsEditMode] = useState(false);
     const dispatch = useDispatch();
+    // console.log('por id', projectId)
+
+    useEffect(() => {
+        async function fetchAdminRemarks() {
+            try {
+                const res = await dispatch(getProjectRemarks({ projectId }));
+                if (res?.payload?.code === 200) {
+                    setAdminNotes(res.payload.remarks || []);
+                }
+            } catch (err) {
+                console.error("Failed to fetch admin remarks", err);
+            }
+        }
+
+        if (projectId) fetchAdminRemarks();
+    }, [projectId, dispatch]);
 
     useEffect(() => {
         async function fetchRemark() {
@@ -79,7 +96,7 @@ const Remarks = ({ username, task, project, version, onApply, onChange }) => {
             const remarkText = `Observation: ${observation}\nScope of Improvement: ${scopeOfImprovement}\nNumber of Tries: ${numOfTries}`;
             const formData = new FormData();
             formData.append('username', username || '');
-            formData.append('task', task || 'classification');
+            formData.append('task', task || 'objectdetection');
             formData.append('project', project || '');
             formData.append('version', version || '');
             formData.append('remark', remarkText);
@@ -119,7 +136,7 @@ const Remarks = ({ username, task, project, version, onApply, onChange }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="space-y-8 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+            className="space-y-8 max-w-5xl mx-auto p=4"
         >
             {/* Header */}
             <div className="flex items-center gap-3">
@@ -144,10 +161,56 @@ const Remarks = ({ username, task, project, version, onApply, onChange }) => {
                 transition={{ delay: 0.2 }}
                 className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden"
             >
-                <div className="p-8 space-y-6">
+                <div className="p-2 space-y-6">
                     {/* Existing Remarks */}
                     {existingRemark && isEditMode && !showNext && (
                         <ExistingRemarks existingRemark={existingRemark} uploadedFiles={uploadedFiles} />
+                    )}
+                    {adminNotes.length > 0 && (
+                        <div className="mt-6 border-t border-slate-200 pt-6">
+                            <div className="flex mb-4 items-center gap-2 text-blue-800">
+                                {/* <MdInfo className="w-5 h-5" /> */}
+                                <h3 className="font-bold">Admin Remarks</h3>
+                            </div>
+
+                            <div className="space-y-4">
+                                {adminNotes.length > 0 ? (
+                                    <div className="max-h-64 overflow-y-auto space-y-3 pr-2">
+                                        {adminNotes.map((note) => (
+                                            <div
+                                                key={note._id}
+                                                className="rounded-xl border border-indigo-200 bg-indigo-50 p-4"
+                                            >
+                                                <div className="w-full overflow-x-hidden">
+                                                    <div
+                                                        className="
+            prose prose-sm
+            max-w-full
+            break-words
+            overflow-hidden
+            [&_*]:max-w-[calc(100vh-260px)]
+            [&_table]:block
+            [&_table]:overflow-x-auto
+            [&_pre]:whitespace-pre-wrap
+            [&_code]:break-all
+        "
+                                                        dangerouslySetInnerHTML={{ __html: note.notes }}
+                                                    />
+                                                </div>
+
+                                                <div className="mt-2 text-xs text-slate-500">
+                                                    • {new Date(note.createdAt).toLocaleString()}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-4 text-gray-500">
+                                        No admin notes yet
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     )}
 
                     {/* Form or Next Button */}

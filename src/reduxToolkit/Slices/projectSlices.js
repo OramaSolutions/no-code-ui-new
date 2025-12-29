@@ -13,7 +13,7 @@ let path = window.location.href.split("/")?.at(-1)
 // need axios instance
 export const createProject = createAsyncThunk('project/createproject', async (payload, { rejectWithValue }) => {
   try {
-    
+
     const response = await axiosInstance.post(`user/createProject`, payload);
     if (response.status === 200) {
       return response.data;
@@ -32,7 +32,7 @@ export const createProject = createAsyncThunk('project/createproject', async (pa
 // need axios instance
 export const checkProject = createAsyncThunk('project/checkproject', async (payload, { rejectWithValue }) => {
   try {
-    
+
     const response = await axiosInstance.post(`${Url}user/checkProject`, payload);
     if (response.status === 200) {
       return response.data;
@@ -50,7 +50,7 @@ export const checkProject = createAsyncThunk('project/checkproject', async (payl
 // need axios instance
 export const remarkData = createAsyncThunk('project/remarkdata', async ({ payload, url }, { rejectWithValue }) => {
   try {
-   
+
     const response = await axios.post(`${url}remark`, payload);
     if (response.status === 200) {
       return response.data;
@@ -66,9 +66,9 @@ export const remarkData = createAsyncThunk('project/remarkdata', async ({ payloa
 // need axios instance
 export const getRemarkData = createAsyncThunk('project/getRemarkData', async ({ url, username, task, project, version }, { rejectWithValue }) => {
   try {
-   
+
     const response = await axios.get(`${url}remark`, {
-     
+
       params: {
         username,
         task,
@@ -77,6 +77,26 @@ export const getRemarkData = createAsyncThunk('project/getRemarkData', async ({ 
       }
     });
     if (response.status === 200) {
+      return response.data;
+    } else {
+      return rejectWithValue(response.data);
+    }
+  }
+  catch (err) {
+    return rejectWithValue(err.response?.data || err.message);
+  }
+})
+
+export const getProjectRemarks = createAsyncThunk('project/getProjectRemarks', async ({ projectId }, { rejectWithValue }) => {
+  try {
+
+    const response = await axios.get(`${Url}user/getRemark`, {
+      params: { projectId },
+      withCredentials: true, // ✅ REQUIRED for cookies/session
+    });
+    console.log('res get rem', response)
+    if (response.status === 200) {
+
       return response.data;
     } else {
       return rejectWithValue(response.data);
