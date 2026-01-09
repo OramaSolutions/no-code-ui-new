@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { notificationList } from '../reduxToolkit/Slices/notificationSlices';
+import { notificationList, markNotificationRead } from '../reduxToolkit/Slices/notificationSlices';
 import HelpSupport from '../componet/Auth/HelpCenter';
 import LogoutModal from './LogoutModal';
 import logoInner from "../assets/images/Logo-Inner.png";
@@ -23,25 +23,21 @@ const DashboardLayout = ({ children, pageTitle, pageDescription }) => {
     const [openLogoutModal, setOpenLogoutModal] = useState(false);
     const [imageError, setImageError] = useState(false);
 
+    const [showNotifications, setShowNotifications] = useState(false);
+
     const { notificationData } = useSelector((state) => state.notification);
+    console.log('notification data', notificationData)
     const dispatch = useDispatch();
 
-    // const {
-    //     data,
-    //     isLoading,
-    //     isError,
-    //     error,
-    // } = useQuery({
-    //     queryKey: ["dashboardUserDetails"],
-    //     queryFn: fetchUserDetails,
-    // });
+    useEffect(() => {
+        const handler = () => setShowNotifications(false);
+        if (showNotifications) window.addEventListener("click", handler);
+        return () => window.removeEventListener("click", handler);
+    }, [showNotifications]);
 
-    // // Safe localStorage access with error handling
-    // const user = data?.data?.user;
-
-      const user = useSelector(
+    const user = useSelector(
         (state) => state.auth.user
-      ) 
+    )
 
     const menuItems = [
         { icon: sidenavIcon1, label: 'Dashboard', path: '/dashboard' },
@@ -51,15 +47,16 @@ const DashboardLayout = ({ children, pageTitle, pageDescription }) => {
         { icon: sidenavIcon5, label: 'Settings', path: '/settings' },
     ];
 
-    // useEffect(() => {
-    //     dispatch(notificationList());
-    //     const interval = setInterval(() => {
-    //         dispatch(notificationList());
-    //     }, 120000);
-    //     return () => clearInterval(interval);
-    // }, [dispatch]);
+    useEffect(() => {
+        dispatch(notificationList());
+        const interval = setInterval(() => {
+            dispatch(notificationList());
+        }, 120000);
+        return () => clearInterval(interval);
+    }, [dispatch]);
 
-    const unreadCount = notificationData?.filter(n => !n.isRead)?.length || 0;
+    const notifications = notificationData?.notifications || [];
+    const unreadCount = notifications.filter(n => !n.isRead).length;
 
     const handleImageError = () => {
         setImageError(true);
@@ -232,15 +229,53 @@ const DashboardLayout = ({ children, pageTitle, pageDescription }) => {
                         <div className="flex items-center gap-4">
                             {/* Notifications */}
                             <div className="relative">
-                                <button className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors relative">
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShowNotifications(!showNotifications);
+                                    }}
+                                    className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 relative"
+                                >
                                     <HiBell className="w-6 h-6" />
+
                                     {unreadCount > 0 && (
                                         <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
                                             {unreadCount}
                                         </span>
                                     )}
                                 </button>
+
+                                {/* Dropdown */}
+                                <AnimatePresence>
+                                    {showNotifications && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                                            transition={{ duration: 0.2 }}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50"
+                                        >
+                                            <div className="px-4 py-3 border-b font-semibold text-gray-800">
+                                                Notifications
+                                            </div>
+
+                                            <div className="max-h-96 overflow-y-auto">
+                                                {notifications.length === 0 ? (
+                                                    <div className="p-4 text-sm text-gray-500 text-center">
+                                                        No notifications
+                                                    </div>
+                                                ) : (
+                                                    notifications.map((n) => (
+                                                        <NotificationItem key={n._id} dispatch={dispatch} notification={n} />
+                                                    ))
+                                                )}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
+
 
                             {/* Profile Dropdown */}
                             <div className="relative">
@@ -313,3 +348,47 @@ const DashboardLayout = ({ children, pageTitle, pageDescription }) => {
 };
 
 export default DashboardLayout;
+
+
+const typeStyles = {
+    info: "border-blue-500 bg-blue-50",
+    success: "border-green-500 bg-green-50",
+    warning: "border-yellow-500 bg-yellow-50",
+    error: "border-red-500 bg-red-50",
+};
+
+const NotificationItem = ({ dispatch, notification }) => {
+    return (
+        <div
+            className={`px-4 py-3 border-l-4 cursor-pointer hover:bg-gray-50 transition
+                ${typeStyles[notification.type] || "border-gray-300"}
+                ${!notification.isRead ? "font-medium" : "opacity-70"}
+            `}
+        >
+            <div className="flex justify-between items-start gap-2">
+                <div>
+                    <p onClick={() => {
+                        dispatch(markNotificationRead(notification._id));
+                    }} className="text-sm text-gray-900" >
+                        {notification.title}
+                    </p>
+
+                    <div
+                        className="text-xs text-gray-600 mt-1"
+                        dangerouslySetInnerHTML={{ __html: notification.message }}
+                    />
+
+                    {notification.projectName && (
+                        <p className="text-xs text-gray-400 mt-1">
+                            Project: {notification.projectName}
+                        </p>
+                    )}
+                </div>
+
+                {!notification.isRead && (
+                    <span className="w-2 h-2 bg-blue-600 rounded-full mt-1 shrink-0" />
+                )}
+            </div>
+        </div>
+    );
+};

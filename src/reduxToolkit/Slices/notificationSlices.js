@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { Url} from '../../config/config.js';
+import { Url } from '../../config/config.js';
 import axiosInstance from '../../api/axiosInstance.js';
 
 const initialState = {
@@ -12,8 +12,8 @@ const initialState = {
 // need axios instance
 export const notificationList = createAsyncThunk('notification/notificationList', async (payload, { rejectWithValue }) => {
     try {
-        
-        const response = await axios.get(`${Url}user/notificationList?`);
+
+        const response = await axiosInstance.get(`${Url}user/notifications?`);
         if (response.status === 200) {
             return response.data;
         } else {
@@ -24,6 +24,29 @@ export const notificationList = createAsyncThunk('notification/notificationList'
         return rejectWithValue(err.response.data);
     }
 })
+
+export const markNotificationRead = createAsyncThunk(
+    "notification/markAsRead",
+    async (notificationId, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.patch(
+                `${Url}user/notifications/${notificationId}/read`
+            );
+
+            if (response.status === 200) {
+                return {
+                    id: notificationId,
+                    data: response.data,
+                };
+            }
+
+            return rejectWithValue(response.data);
+        } catch (err) {
+            return rejectWithValue(err?.response?.data || "Something went wrong");
+        }
+    }
+);
+
 
 const notificationSlice = createSlice({
     name: 'notification',
@@ -41,6 +64,17 @@ const notificationSlice = createSlice({
             .addCase(notificationList.rejected, (state, action) => {
                 state.loader = false;
             })
+            .addCase(markNotificationRead.fulfilled, (state, action) => {
+                const id = action.payload.id;
+
+                const notif = state.notificationData?.notifications?.find(
+                    n => n._id === id
+                );
+
+                if (notif) {
+                    notif.isRead = true;
+                }
+            });
     },
 });
 

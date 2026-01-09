@@ -20,7 +20,14 @@ const applications = [
     task: 'objectdetection',
     title: "Single Camera AI assembly verification System",
     description: "AI-powered object detection and assembly verification using a single camera vision system. Ensures precise assembly quality and reduces manual inspection effort.",
-    image: "https://via.placeholder.com/400x250.png?text=Camera+Verification",
+    image: "/images/applications/assembly_1.png",
+  },
+  {
+    id: 'sequence_1',
+    task: 'objectdetection',
+    title: "Single Camera AI sequence verification System",
+    description: "AI-powered sequence verification system using a single camera to ensure assembly steps are performed in the correct order. Detects missing, skipped, or out-of-sequence operations in real time, improving process compliance and reducing costly rework.",
+  image: "/images/applications/sequence_1.png",
   },
 ];
 

@@ -22,7 +22,7 @@ const initialState = {
     close: null,
     openImport: false,
     closeImport: false,
-    importError:''
+    importError: ''
 }
 
 function Labelled({ username, state, onApply, onChange, url }) {
@@ -31,6 +31,11 @@ function Labelled({ username, state, onApply, onChange, url }) {
     const [isDirty, setIsDirty] = useState("")
     const [selectedFile, setSelectedFile] = useState(null);
     const [postImportActionsVisible, setPostImportActionsVisible] = useState(false);
+
+    //  used to prevent from changes state after revisits
+    const [pendingStepComplete, setPendingStepComplete] = useState(false);
+
+
     const abortControllerReff = useRef();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -173,14 +178,14 @@ function Labelled({ username, state, onApply, onChange, url }) {
             setIstate({ ...istate, openImport: true })
 
             const response = await dispatch(importData({ payload: formData, signal: abortControllerReff.current.signal, url }))
-//  console.log('response', response)
+            //  console.log('response', response)
             if (response?.payload?.status === 201) {
                 setIstate({ ...istate, openImport: false })
                 toast.success("Import Successfully", commomObj)
                 const datasize = {
                     Size: response?.payload?.data?.image_count,
                 }
-               
+
 
                 window.localStorage.setItem("DataSize", JSON.stringify(datasize))
                 window.scrollTo({
@@ -191,10 +196,11 @@ function Labelled({ username, state, onApply, onChange, url }) {
                 // Show post-import actions (view or label) instead of immediately proceeding
                 setPostImportActionsVisible(true);
                 setSelectedFile(null)
+                setPendingStepComplete(true);
                 // Let parent know data changed when user chooses an action (handled on button click)
 
             } else {
-                setIstate({ ...istate, openImport: true, closeImport: true, importError:response.payload?.message||"Somethign went wrong!" });
+                setIstate({ ...istate, openImport: true, closeImport: true, importError: response.payload?.message || "Something went wrong!" });
             }
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -221,25 +227,28 @@ function Labelled({ username, state, onApply, onChange, url }) {
         }
     };
 
-    const handleLabelDataset = () => {
-        console.log("Navigating to label dataset...", backLink, state);
-        navigate(
-            `/dataset-overview/${backLink}/${state.projectId}/${state.name}/${state.version}`
-        )
-    }
+
 
     const handleViewDataset = () => {
         // inform parent and navigate to dataset overview
-        onChange && onChange();
-        onApply && onApply();
+        // onChange && onChange();
+        // onApply && onApply();
+        if (pendingStepComplete) {
+            onApply?.();            // ✅ now safe
+            setPendingStepComplete(false);
+        }
         setPostImportActionsVisible(false);
         navigate(`/dataset-overview/${backLink}/${state.projectId}/${state.name}/${state.version}`);
     }
 
     const handleStartLabeling = () => {
         // inform parent and navigate to labeling start (first image)
-        onChange && onChange();
-        onApply && onApply();
+        // onChange && onChange();
+        // onApply && onApply();
+        if (pendingStepComplete) {
+            onApply?.();            // ✅ now safe
+            setPendingStepComplete(false);
+        }
         setPostImportActionsVisible(false);
         navigate(`/image-label/${backLink}/${state.projectId}/${state.name}/${state.version}/image/1`);
     }

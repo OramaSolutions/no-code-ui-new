@@ -278,7 +278,7 @@ function Augumentation({ state, username, onApply, onChange, url }) {
             }
         };
         fetchSampleImage();
-    }, [userData, state]);
+    }, [ state]);
 
     const sanitizePayload = (a) => {
         const out = { ...a };
