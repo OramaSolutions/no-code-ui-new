@@ -14,11 +14,10 @@ export const startBuild = (payload) => {
 };
 
 // Get download URL (Node)
-export const getDownloadUrl = (filename, params, token) => {
-  return axios.get(
+export const getDownloadUrl = (filename, params) => {
+  return axiosInstance.get(
     `${NodeUrl}projects/get-download-url/${encodeURIComponent(filename)}`,
     {
-      headers: { Authorization: `Bearer ${token}` },
       params,
     }
   );

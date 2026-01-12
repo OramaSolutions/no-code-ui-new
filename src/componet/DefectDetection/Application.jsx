@@ -1,3 +1,4 @@
+// defect detection application page
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MdHourglassBottom, MdCheck, MdError, MdDownload, MdClose } from 'react-icons/md';
@@ -7,14 +8,22 @@ import { isLoggedIn } from "../../utils";
 import { useNavigate } from "react-router-dom";
 import { Url as NodeUrl } from "../../config/config";
 const POLLING_INTERVAL = 30000; // 30 seconds
-const token = isLoggedIn("userLogin");
+
+import {
+  startBuild,
+  pollBuildStatus,
+  getDownloadUrl
+} from "../../api/applicationsApi";
+
 const applications = [
   {
-    id: 1,
-    title: "Single Camera AI Defect Detection System",
-    description: "AI-powered defect detection using a single camera vision system. Ensures precise assembly quality and reduces manual inspection effort.",
+    id: 'defect_detection_1',
+    task: 'defectdetection',
+    title: "Single Camera AI defect detection System",
+    description: "AI-powered defect detection and defect detection using a single camera vision system. Ensures precise assembly quality and reduces manual inspection effort.",
     image: "/images/defectD.png",
   },
+
 ];
 
 const Application = ({ state, url, username, task, project, version }) => {
@@ -31,34 +40,7 @@ const Application = ({ state, url, username, task, project, version }) => {
   const localStorageKey = `dockerBuild_${username}_${task}_${project}_${version}`;
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/", { replace: true });
-    }
-  }, [token, navigate]);
 
-
-
-  const api = useRef(null);
-
-  useEffect(() => {
-    const instance = axios.create();
-    const reqId = instance.interceptors.request.use((config) => {
-      const freshToken = isLoggedIn("userLogin");
-      if (!freshToken) {
-        navigate("/", { replace: true });
-        // Cancel the request cleanly
-        return Promise.reject(new axios.Cancel("No token; redirected"));
-      }
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${freshToken}`;
-      return config;
-    });
-    api.current = instance;
-    return () => {
-      instance.interceptors.request.eject(reqId);
-    };
-  }, [navigate]);
 
   const persistSession = (data) => {
     const now = Date.now();
@@ -133,16 +115,13 @@ const Application = ({ state, url, username, task, project, version }) => {
     }
 
     try {
-      const res = await api.current.post(
-        `${url}status/${id}`,
-        {
-          username: persisted.username,
-          projectId: persisted.projectId,
-          task: persisted.task,
-          name: persisted.project,
-          version: persisted.version,
-        }
-      );
+      const res = await pollBuildStatus(url, id, {
+        username: persisted.username,
+        projectId: persisted.projectId,
+        task: persisted.task,
+        name: persisted.project,
+        version: persisted.version,
+      });
 
       const { status, result, error: apiError } = res.data || {};
 
@@ -215,11 +194,15 @@ const Application = ({ state, url, username, task, project, version }) => {
     setError(null);
 
     try {
-      console.log('token', token)
-      const response = await api.current.post(
-        `${url}build-image-pri`,
-        { username, projectId, task, project, version }
-      );
+
+      const response = await startBuild({
+        username,
+        projectId,
+        task,
+        projectName: project,
+        version,
+        applicationId: selectedApp,
+      });
 
       const { task_id } = response.data;
       setTaskId(task_id);
@@ -248,17 +231,14 @@ const Application = ({ state, url, username, task, project, version }) => {
     const _status = buildStatus || session?.status;
 
     if (_result?.zip_filename && _status === 'done') {
-      const { data } = await axios.get(
-        `${NodeUrl}projects/get-download-url/${encodeURIComponent(_result.zip_filename)}`,
+      const { data } = await getDownloadUrl(
+        _result.zip_filename,
         {
-          headers: { Authorization: `Bearer ${token}` },
-          params: {
-            username: session?.username || username,
-            task: session?.task || task,
-            project: session?.project || project,
-            version: session?.version || version,
-            projectId: session?.projectId || projectId,
-          },
+          username: session?.username || username,
+          task: session?.task || task,
+          project: session?.project || project,
+          version: session?.version || version,
+          projectId: session?.projectId || projectId,
         }
       );
       const downloadUrl = `${url}${data.url}`;

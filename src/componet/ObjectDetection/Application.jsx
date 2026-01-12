@@ -1,3 +1,4 @@
+// object detection application page
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MdHourglassBottom, MdCheck, MdError, MdDownload, MdClose } from 'react-icons/md';
