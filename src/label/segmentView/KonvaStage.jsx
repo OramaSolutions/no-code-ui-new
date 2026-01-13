@@ -664,7 +664,7 @@ const KonvaStage = ({
                     x={point[0]}
                     y={point[1]}
                     radius={4 / scaleForDots}
-                    fill={selectedPoint?.segmentId === segment.id && selectedPoint.pointIndex === i ? "#00ff00" : "red"}
+                    fill={selectedPoint?.segmentId === segment.id && selectedPoint?.pointIndex === i ? "#00ff00" : "red"}
                     stroke="black"
                     strokeWidth={1 / scaleForDots}
                     listening={!isLocked}
@@ -815,7 +815,7 @@ const KonvaStage = ({
                     listening={false}
                   />
                   {/* Drawing instructions */}
-                  <Text
+                  {/* <Text
                     x={10}
                     y={10}
                     text={`Points: ${currentPoints.length} (Min: 3)\nRight-click to complete\nBackspace to delete last point\nEnter to complete`}
@@ -823,7 +823,7 @@ const KonvaStage = ({
                     fill="#666"
                     padding={5}
                     align="left"
-                  />
+                  /> */}
                 </>
               )}
               {/* Hovered segment overlay */}
