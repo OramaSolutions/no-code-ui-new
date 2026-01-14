@@ -15,9 +15,41 @@ const initialState = {
   openModal: false,
 };
 
+const validateProjectName = (name) => {
+  const trimmed = name.trim();
+  
+  // Check if empty
+  if (!trimmed) {
+    return { valid: false, message: "Project name is required" };
+  }
+  
+  // Check if only numbers
+  if (/^\d+$/.test(trimmed)) {
+    return { valid: false, message: "Project name cannot be only numbers" };
+  }
+  
+  // Check for spaces
+  if (/\s/.test(trimmed)) {
+    return { valid: false, message: "Project name cannot contain spaces" };
+  }
+  
+  // Check for valid characters (alphanumeric, hyphens, underscores only)
+  if (!/^[a-zA-Z0-9_-]+$/.test(trimmed)) {
+    return { valid: false, message: "Project name can only contain letters, numbers, hyphens, and underscores" };
+  }
+  
+  // Check if starts with a letter
+  if (!/^[a-zA-Z]/.test(trimmed)) {
+    return { valid: false, message: "Project name must start with a letter" };
+  }
+  
+  return { valid: true, message: "" };
+};
+
 function CreateProject({ istate, updateIstate }) {
   const [show, setShow] = useState(initialState);
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const { projectName, openVersion, openModal } = show;
   const { open, model } = istate;
   const dispatch = useDispatch();
@@ -26,18 +58,25 @@ function CreateProject({ istate, updateIstate }) {
     updateIstate({ ...istate, open: false, model: "" });
     setShow(initialState);
     setError(false);
+    setErrorMessage("");
   };
 
   const inputHandler = (e) => {
     const { name, value } = e.target;
     setShow({ ...show, [name]: value });
-    if (error) setError(false);
+    if (error) {
+      setError(false);
+      setErrorMessage("");
+    }
   };
 
   const saveHandler = async () => {
     try {
-      if (!projectName.trim()) {
+      const validation = validateProjectName(projectName);
+      
+      if (!validation.valid) {
         setError(true);
+        setErrorMessage(validation.message);
       } else {
         const data = { model, name: projectName };
         const response = await dispatch(checkProject(data));
@@ -129,14 +168,14 @@ function CreateProject({ istate, updateIstate }) {
                       />
                     </div>
                     <AnimatePresence>
-                      {error && !projectName.trim() && (
+                      {error && errorMessage && (
                         <motion.p
                           initial={{ opacity: 0, y: -10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
                           className="text-red-500 text-sm font-medium"
                         >
-                          *Required to fill
+                          {errorMessage}
                         </motion.p>
                       )}
                     </AnimatePresence>
