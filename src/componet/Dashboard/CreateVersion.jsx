@@ -12,8 +12,32 @@ const initialState = {
     versionNumber: "",
 };
 
-function CreateVersion({ show, setShow, model }) {
-    const [istate, setIstate] = useState(initialState);
+const getNextVersion = (projectData) => {
+    if (!projectData || !projectData.versions || projectData.versions.length === 0) {
+        return "v1";
+    }
+    
+    // Extract version numbers from existing versions (v1, v2, etc.)
+    const versionNumbers = projectData.versions
+        .map(v => {
+            // Handle both "v1" and "1" formats
+            const match = String(v).match(/v?(\d+)/);
+            return match ? parseInt(match[1], 10) : 0;
+        })
+        .filter(num => !isNaN(num));
+    
+    if (versionNumbers.length === 0) {
+        return "v1";
+    }
+    
+    const maxVersion = Math.max(...versionNumbers);
+    return `v${maxVersion + 1}`;
+};
+
+function CreateVersion({ show, setShow, model, projectData }) {
+    const [istate, setIstate] = useState(() => ({
+        versionNumber: getNextVersion(projectData),
+    }));
     const [error, setError] = useState(false);
     const { versionNumber } = istate;
     const { openVersion, projectName } = show;
@@ -43,7 +67,12 @@ function CreateVersion({ show, setShow, model }) {
             if (!versionNumber || !versionNumber.trim()) {
                 setError(true);
             } else {
-                const data = { model, name: projectName, versionNumber };
+                // Normalize version format - ensure it starts with 'v'
+                const normalizedVersion = versionNumber.toLowerCase().startsWith('v') 
+                    ? versionNumber.toLowerCase() 
+                    : `v${versionNumber}`;
+
+                const data = { model, name: projectName, versionNumber: normalizedVersion };
                 const response = await dispatch(createProject(data));
 
                 if (response?.payload?.code === 200 || response?.payload?.code === 201) {
@@ -126,6 +155,7 @@ function CreateVersion({ show, setShow, model }) {
                                     <label className="block text-sm font-semibold text-gray-700">
                                         Version Number
                                     </label>
+                                    <p className="text-xs text-gray-500 mb-2">Format: v1, v2, v3...</p>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <MdNumbers className="w-5 h-5 text-gray-400" />
@@ -137,7 +167,7 @@ function CreateVersion({ show, setShow, model }) {
                                             value={versionNumber}
                                             onChange={inputHandler}
                                             onKeyPress={handleKeyPress}
-                                            placeholder="e.g., 1.0.0"
+                                            placeholder="Auto-incremented version (e.g., v1, v2)"
                                             className={`w-full pl-10 pr-4 py-3 border-2 rounded-xl transition-all duration-200 focus:outline-none ${error && !versionNumber.trim()
                                                 ? 'border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/10'
                                                 : 'border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10'

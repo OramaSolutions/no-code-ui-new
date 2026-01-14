@@ -13,6 +13,7 @@ const initialState = {
   projectName: "",
   openVersion: false,
   openModal: false,
+  projectData: null,
 };
 
 const validateProjectName = (name) => {
@@ -85,11 +86,11 @@ function CreateProject({ istate, updateIstate }) {
         
         if (response?.payload?.code === 200) {
           toast.success(response?.payload?.message, commomObj);
-          setShow({ ...show, openVersion: true });
+          setShow({ ...show, openVersion: true, projectData: null, projectName: normalizedName });
           updateIstate({ ...istate, open: false });
         } else if (response?.payload?.code === 402) {
           toast.error(response?.payload?.message, commomObj);
-          setShow({ ...show, openModal: true });
+          setShow({ ...show, openModal: true, projectData: response?.payload?.data, projectName: normalizedName });
           updateIstate({ ...istate, open: false });
         } else {
           toast.error(response?.payload?.message, commomObj);
@@ -220,7 +221,7 @@ function CreateProject({ istate, updateIstate }) {
       )}
 
       {openVersion && (
-        <CreateVersion show={show} setShow={setShow} model={model} />
+        <CreateVersion show={show} setShow={setShow} model={model} projectData={show.projectData} />
       )}
     </>
   );
