@@ -72,13 +72,15 @@ function CreateProject({ istate, updateIstate }) {
 
   const saveHandler = async () => {
     try {
-      const validation = validateProjectName(projectName);
+      // Convert to lowercase before validation and sending
+      const normalizedName = projectName.toLowerCase();
+      const validation = validateProjectName(normalizedName);
       
       if (!validation.valid) {
         setError(true);
         setErrorMessage(validation.message);
       } else {
-        const data = { model, name: projectName };
+        const data = { model, name: normalizedName };
         const response = await dispatch(checkProject(data));
         
         if (response?.payload?.code === 200) {
