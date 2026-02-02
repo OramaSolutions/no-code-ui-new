@@ -40,7 +40,7 @@ function LabelComponent() {
   const backURL = `/${backLink}/${projectId}/${projectName}/${version}`;
 
   // Get baseUrl from backLink  path="dataset-overview/:backLink/:projectId/:projectName/:version"
- const ProjectOverviewLink = `/dataset-overview/${backLink}/${projectId}/${projectName}/${version}`;
+  const ProjectOverviewLink = `/dataset-overview/${backLink}/${projectId}/${projectName}/${version}`;
 
   const baseUrl = getBaseUrlFromBackLink(backLink);
   if (!baseUrl) {
@@ -91,14 +91,7 @@ function LabelComponent() {
     return savedLength ? parseInt(savedLength) : 0;
   });
   const stageRef = useRef(null);
-  const imgRef = useRef(null);
-  const currentImageRef = useRef(null);
 
-  // useEffect(() => {
-  //   console.log('rects changes>>>>', rectangles)
-  // }, [rectangles])
-
-  const abortControllerRef = useRef(new AbortController());
 
   const navigate = useNavigate();
 
@@ -112,31 +105,76 @@ function LabelComponent() {
   const [inferenceLoading, setInferenceLoading] = useState(false);
 
   // ------------------for images ------------------
+  const imgRef = useRef(null);
+  const currentImageRef = useRef(null);
+
+  const imageCacheRef = useRef(new Map()); // index -> imageDetails
+  const inflightRef = useRef(new Map());
 
   const cleanupResources = () => {
-    // Cleanup current image
     if (currentImageRef.current) {
-      if (currentImageRef.current.src.startsWith('blob:')) {
+      if (currentImageRef.current.src?.startsWith('blob:')) {
         URL.revokeObjectURL(currentImageRef.current.src);
       }
       currentImageRef.current.onload = null;
       currentImageRef.current.onerror = null;
       currentImageRef.current = null;
     }
-    // Abort pending requests
-    abortControllerRef.current.abort();
-    abortControllerRef.current = new AbortController();
+  };
+
+  const isValidIndex = (index) =>
+    Number.isInteger(index) &&
+    index >= 0 &&
+    index < datasetLength;
+
+  // new 
+  const getImageDetails = (index) => {
+    // 1️⃣ Cache hit
+    if (imageCacheRef.current.has(index)) {
+      return Promise.resolve(imageCacheRef.current.get(index));
+    }
+
+    // 2️⃣ Already fetching → reuse promise
+    if (inflightRef.current.has(index)) {
+      return inflightRef.current.get(index).promise;
+    }
+
+    // 3️⃣ Start new fetch
+    const controller = new AbortController();
+
+    const promise = fetchImageDetails(
+      baseUrl,
+      projectName,
+      task,
+      version,
+      userData.userName,
+      index,
+      controller.signal
+    )
+      .then((data) => {
+        imageCacheRef.current.set(index, data);
+        inflightRef.current.delete(index);
+        return data;
+      })
+      .catch((err) => {
+        inflightRef.current.delete(index);
+        throw err;
+      });
+
+    inflightRef.current.set(index, { promise, controller });
+
+    return promise;
   };
 
   const loadCurrentImage = async () => {
     if (isNaN(currentIndex)) return;
 
     cleanupResources();
+    setImageLoaded(false);
     setLoadingCurrent(true);
 
     try {
-      const imageDetails = await fetchImageDetails(baseUrl, projectName, task, version, userData.userName, currentIndex);
-      console.log("Image Inference Details:", imageDetails.inference);
+      const imageDetails = await getImageDetails(currentIndex);
       if (!imageDetails?.image) {
         throw new Error("No image data received");
       }
@@ -197,9 +235,30 @@ function LabelComponent() {
         },
         scale: ratio,
       });
+      setImageLoaded(true);
+
+      const nextIndex = currentIndex + 1;
+      if (isValidIndex(nextIndex)) {
+        prefetchImage(nextIndex);
+      }
+
+      const allowed = new Set([
+        currentIndex - 1,
+        currentIndex,
+        currentIndex + 1,
+      ]);
+
+      for (const key of imageCacheRef.current.keys()) {
+        if (!allowed.has(key)) {
+          imageCacheRef.current.delete(key);
+        }
+      }
 
     } catch (error) {
-      console.error("Error loading image:", error);
+      if (error.name !== "CanceledError") {
+        console.error("Error loading image:", error);
+      }
+
       setImageLoaded(false);
     } finally {
       setLoadingCurrent(false);
@@ -207,17 +266,31 @@ function LabelComponent() {
     }
   };
 
+  const prefetchImage = async (index) => {
+    if (!isValidIndex(index)) return;
+    if (imageCacheRef.current.has(index)) return;
+    if (inflightRef.current.has(index)) return;
+
+    getImageDetails(index);
+  };
+
+
   useEffect(() => {
     if (!classesLoaded) return;
+    if (!isValidIndex(currentIndex)) return;
     loadCurrentImage();
-  }, [currentIndex, projectName, classesLoaded]);
+  }, [currentIndex, projectName, classesLoaded, datasetLength]);
 
   useEffect(() => {
     return () => {
+      inflightRef.current.forEach(({ controller }) => {
+        controller.abort();
+      });
+      inflightRef.current.clear();
       cleanupResources();
       setImage(null); // Clear image state
     };
-  }, [currentIndex]);
+  }, []);
 
   // ----------------------end images ------------------
 
@@ -730,7 +803,7 @@ function LabelComponent() {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
                 <span>
-                  Running inference and loading image {currentIndex + 1}...
+                  Loading image {currentIndex + 1}...
                 </span>
               </div>
             </div>
@@ -824,7 +897,7 @@ function LabelComponent() {
           setMaster={setMaster}
           setShowSegments={setShowSegments}
           showSegments={showSegments}
-          
+
         />
 
         {/* classesmodal */}

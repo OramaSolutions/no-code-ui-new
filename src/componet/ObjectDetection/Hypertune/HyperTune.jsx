@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
 import { commomObj } from '../../../utils';
 import { hyperTune, HypetTuneModal, ReturnHypertune } from '../../../reduxToolkit/Slices/projectSlices';
-import TrainModel from '../../Project/TrainingModals/TrainModel';
+
 import { HiAdjustments } from 'react-icons/hi';
 import ModelSelector from './ModelSelector';
 import BasicParameters from './BasicParameters';
@@ -42,11 +42,12 @@ const initialState = {
     hsv_v: 0,
     advanced: false,
     loader: false,
-    openModal: false,
+    
     isDirty: false,
 };
 
 function HyperTune({ onApply, state, username, onChange, url }) {
+
     const dispatch = useDispatch();
     const [istate, updateIstate] = useState(initialState);
     const { hypertuneModel } = useSelector((state) => state.project);
@@ -163,8 +164,9 @@ function HyperTune({ onApply, state, username, onChange, url }) {
             const response = await dispatch(hyperTune({ payload: formData, url }));
             if (response?.payload?.code === 200) {
                 toast.success(response?.payload?.message, commomObj);
-                updateIstate({ ...istate, loader: false, openModal: true });
-                onChange();
+           
+                // onChange();
+                   onApply();
             }
         } catch (error) {
             toast.error(error?.payload?.message, commomObj);
@@ -257,15 +259,7 @@ function HyperTune({ onApply, state, username, onChange, url }) {
                 />
             </motion.div>
 
-            <TrainModel
-                initialData={istate}
-                setState={updateIstate}
-                onApply={onApply}
-                username={username}
-                state={state}
-                task="objectdetection"
-                apiPoint="train_yolov8"
-            />
+           
         </>
     );
 }

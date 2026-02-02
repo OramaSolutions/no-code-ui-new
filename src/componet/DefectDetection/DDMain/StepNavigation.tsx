@@ -1,8 +1,18 @@
 import React from "react";
 import { motion } from "framer-motion";
 import StepButton from "./StepButton";
-import type { StepKey, StepStatusMap } from "../../../types/objectDetection/training";
-
+import type {
+  StepKey,
+  StepStatusMap,
+} from "../../../types/objectDetection/training";
+import {
+  MdCloudUpload,
+  MdTune,
+  MdModelTraining,
+  MdSearch,
+  MdNotes,
+  MdRocketLaunch,
+} from "react-icons/md";
 interface StepNavigationProps {
   currentStep: StepKey;
   stepStatus: StepStatusMap | null;
@@ -11,11 +21,16 @@ interface StepNavigationProps {
 }
 
 const steps = [
-  { key: "labelled" as StepKey, label: "Upload Labelled Data", icon: "📤" },
-  { key: "HyperTune" as StepKey, label: "Tune Hyper Parameters", icon: "⚙️" },
-  { key: "infer" as StepKey, label: "Infer Images", icon: "🔍" },
-  { key: "remark" as StepKey, label: "Remarks", icon: "📝" },
-  { key: "application" as StepKey, label: "Application", icon: "🚀" },
+  {
+    key: "labelled" as StepKey,
+    label: "Upload Labelled Data",
+    icon: MdCloudUpload,
+  },
+  { key: "HyperTune" as StepKey, label: "Training Parameters", icon: MdTune },
+  { key: "Train" as StepKey, label: "Train Model", icon: MdModelTraining },
+  { key: "infer" as StepKey, label: "Infer Images", icon: MdSearch },
+  { key: "remark" as StepKey, label: "Remarks", icon: MdNotes },
+  { key: "application" as StepKey, label: "Application", icon: MdRocketLaunch },
 ];
 
 const container = {
@@ -44,7 +59,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({
       <h2 className="text-xl font-bold text-slate-800 mb-6 bg-gradient-to-r from-indigo-600 to-blue-600 bg-clip-text">
         Training Pipeline
       </h2>
-      
+
       <div className="space-y-3">
         {steps.map((step, index) => (
           <StepButton

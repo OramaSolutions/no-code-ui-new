@@ -90,16 +90,14 @@ function SegmentComponent() {
   });
 
   const [showSegments, setShowSegments] = useState(true);
-  const stageRef = useRef(null);
-  const imgRef = useRef(null);
-  const currentImageRef = useRef(null);
+
   const [inferenceData, setInferenceData] = useState([]);
   const [inferenceLoading, setInferenceLoading] = useState(false);
   const [directInferenceMode, setDirectInferenceMode] = useState(false);
 
   const [directInferenceLoading, setDirectInferenceLoading] = useState(false);
 
-  const abortControllerRef = useRef(new AbortController());
+  const stageRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -119,45 +117,89 @@ function SegmentComponent() {
   const [lockedHoverSegment, setLockedHoverSegment] = useState(null);
   const [inclusionPoints, setInclusionPoints] = useState([]);
   const [exclusionPoints, setExclusionPoints] = useState([]);
-  // useEffect(() => { console.log('segments>>>', segments) }, [segments])
 
-  // Load images and dataset length
+  const [samActive, setSamActive] = useState(false)
+
+  // useEffect(() => { console.log('segments>>>', segments) }, [segments])
+  const imgRef = useRef(null);
+  const currentImageRef = useRef(null);
+
+  const imageCacheRef = useRef(new Map()); // index -> imageDetails
+  const inflightRef = useRef(new Map());
+
+
+
   const cleanupResources = () => {
-    // Cleanup current image
     if (currentImageRef.current) {
-      if (currentImageRef.current.src.startsWith('blob:')) {
+      if (currentImageRef.current.src?.startsWith('blob:')) {
         URL.revokeObjectURL(currentImageRef.current.src);
       }
       currentImageRef.current.onload = null;
       currentImageRef.current.onerror = null;
       currentImageRef.current = null;
     }
-    // Abort pending requests
-    abortControllerRef.current.abort();
-    abortControllerRef.current = new AbortController();
+  };
+
+  const isValidIndex = (index) =>
+    Number.isInteger(index) &&
+    index >= 0 &&
+    index < datasetLength;
+
+  // new
+  const getImageDetails = (index) => {
+    // 1️⃣ Cache hit
+    if (imageCacheRef.current.has(index)) {
+      return Promise.resolve(imageCacheRef.current.get(index));
+    }
+
+    // 2️⃣ Already fetching → reuse promise
+    if (inflightRef.current.has(index)) {
+      return inflightRef.current.get(index).promise;
+    }
+
+    // 3️⃣ Start new fetch
+    const controller = new AbortController();
+
+    const promise = fetchImageDetails(
+      baseUrl,
+      projectName,
+      task,
+      version,
+      userData.userName,
+      index,
+      controller.signal
+    )
+      .then((data) => {
+        imageCacheRef.current.set(index, data);
+        inflightRef.current.delete(index);
+        return data;
+      })
+      .catch((err) => {
+        inflightRef.current.delete(index);
+        throw err;
+      });
+
+    inflightRef.current.set(index, { promise, controller });
+
+    return promise;
   };
 
   const loadCurrentImage = async () => {
     if (isNaN(currentIndex)) return;
+
     cleanupResources();
     setLoadingCurrent(true);
 
     try {
-      const imageDetails = await fetchImageDetails(baseUrl, projectName, task, version, userName, currentIndex);
-      if (!imageDetails?.image) {
-        throw new Error("No image data received");
-      }
-      // Clean up previous image if it exists
-      if (currentImageRef.current) {
-        if (currentImageRef.current.src.startsWith('blob:')) {
-          URL.revokeObjectURL(currentImageRef.current.src);
-        }
-        currentImageRef.current.onload = null;
-        currentImageRef.current.onerror = null;
+      const imageDetails = await getImageDetails(currentIndex);
+
+      if (!imageDetails?.image_url) {
+        throw new Error("No image_url received");
       }
 
       const img = new window.Image();
       currentImageRef.current = img;
+
       const imageLoadPromise = new Promise((resolve, reject) => {
         img.onload = () => {
           if (img.naturalWidth > 0 && img.naturalHeight > 0) {
@@ -166,23 +208,26 @@ function SegmentComponent() {
             reject(new Error("Invalid image dimensions"));
           }
         };
-        img.onerror = () => {
-          reject(new Error("Failed to load image"));
-        };
+        img.onerror = () => reject(new Error("Failed to load image"));
       });
 
-      img.src = `data:image/jpeg;base64,${imageDetails.image}`;
+      // 🔥 CORE CHANGE: load via URL, NOT base64
+      img.src =
+        `${baseUrl}${imageDetails.image_url}` +
+        `?username=${userData.userName}&task=${task}&version=${version}`;
 
-      // Wait for image to load
       await imageLoadPromise;
 
       setImage(img);
+
+      // 🔥 Store URL instead of base64
       setImageData({
         id: imageDetails.id,
         name: imageDetails.filename,
-        data: `data:image/jpeg;base64,${imageDetails.image}`
+        url: img.src,
       });
-      // Calculate dimensions
+
+      // Dimensions (unchanged logic)
       const maxWidth = window.innerWidth - 260;
       const maxHeight = window.innerHeight - 110;
       const ratio = Math.min(
@@ -190,7 +235,7 @@ function SegmentComponent() {
         maxHeight / img.naturalHeight,
         1
       );
-      console.log("Ratio", ratio)
+
       setDimensions({
         original: {
           width: img.naturalWidth,
@@ -202,31 +247,171 @@ function SegmentComponent() {
         },
         scale: ratio,
       });
+
+      // Prefetch next
+      const nextIndex = currentIndex + 1;
+      if (isValidIndex(nextIndex)) {
+        prefetchImage(nextIndex);
+      }
+
+      // Cache eviction (unchanged)
+      const allowed = new Set([
+        currentIndex - 1,
+        currentIndex,
+        currentIndex + 1,
+      ]);
+
+      for (const key of imageCacheRef.current.keys()) {
+        if (!allowed.has(key)) {
+          imageCacheRef.current.delete(key);
+        }
+      }
+
     } catch (error) {
-      console.error("Error loading image:", error);
+      if (error.name !== "CanceledError") {
+        console.error("Error loading image:", error);
+      }
       setImageLoaded(false);
     } finally {
       setLoadingCurrent(false);
-
     }
   };
 
+  const prefetchImage = async (index) => {
+    if (!isValidIndex(index)) return;
+    if (imageCacheRef.current.has(index)) return;
+    if (inflightRef.current.has(index)) return;
+
+    const meta = await getImageDetails(index);
+    const img = new Image();
+    img.src =
+      `${baseUrl}${meta.image_url}` +
+      `?username=${userData.userName}&task=${task}&version=${version}`;
+  };
+
+
+  // const loadCurrentImage = async () => {
+  //   if (isNaN(currentIndex)) return;
+
+
+  //   cleanupResources();
+  //   setLoadingCurrent(true);
+
+  //   try {
+  //     const imageDetails = await getImageDetails(currentIndex);
+
+
+  //     if (!imageDetails?.image) {
+  //       throw new Error("No image data received");
+  //     }
+
+
+  //     const img = new window.Image();
+  //     currentImageRef.current = img;
+  //     const imageLoadPromise = new Promise((resolve, reject) => {
+  //       img.onload = () => {
+  //         if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+  //           resolve(img);
+  //         } else {
+  //           reject(new Error("Invalid image dimensions"));
+  //         }
+  //       };
+  //       img.onerror = () => {
+  //         reject(new Error("Failed to load image"));
+  //       };
+  //     });
+
+  //     img.src = `data:image/jpeg;base64,${imageDetails.image}`;
+
+  //     // Wait for image to load
+  //     await imageLoadPromise;
+
+  //     setImage(img);
+  //     setImageData({
+  //       id: imageDetails.id,
+  //       name: imageDetails.filename,
+  //       data: `data:image/jpeg;base64,${imageDetails.image}`
+  //     });
+  //     // Calculate dimensions
+  //     const maxWidth = window.innerWidth - 260;
+  //     const maxHeight = window.innerHeight - 110;
+  //     const ratio = Math.min(
+  //       maxWidth / img.naturalWidth,
+  //       maxHeight / img.naturalHeight,
+  //       1
+  //     );
+  //     console.log("Ratio", ratio)
+  //     setDimensions({
+  //       original: {
+  //         width: img.naturalWidth,
+  //         height: img.naturalHeight,
+  //       },
+  //       rendered: {
+  //         width: Math.round(img.naturalWidth * ratio),
+  //         height: Math.round(img.naturalHeight * ratio),
+  //       },
+  //       scale: ratio,
+  //     });
+
+  //     const nextIndex = currentIndex + 1;
+  //     if (isValidIndex(nextIndex)) {
+  //       prefetchImage(nextIndex);
+  //     }
+
+  //     const allowed = new Set([
+  //       currentIndex - 1,
+  //       currentIndex,
+  //       currentIndex + 1,
+  //     ]);
+
+  //     for (const key of imageCacheRef.current.keys()) {
+  //       if (!allowed.has(key)) {
+  //         imageCacheRef.current.delete(key);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     if (error.name !== "CanceledError") {
+  //       console.error("Error loading image:", error);
+  //     }
+  //     setImageLoaded(false);
+  //   } finally {
+  //     setLoadingCurrent(false);
+
+  //   }
+  // };
+
+  // const prefetchImage = async (index) => {
+  //   if (!isValidIndex(index)) return;
+  //   if (imageCacheRef.current.has(index)) return;
+  //   if (inflightRef.current.has(index)) return;
+
+  //   getImageDetails(index);
+  // };
+
   useEffect(() => {
+    if (!isValidIndex(currentIndex)) return;
     loadCurrentImage();
-  }, [currentIndex, projectName]);
+  }, [currentIndex, projectName, datasetLength]);
 
   useEffect(() => {
     return () => {
+      inflightRef.current.forEach(({ controller }) => {
+        controller.abort();
+      });
+      inflightRef.current.clear();
       cleanupResources();
       setImage(null); // Clear image state
     };
-  }, [currentIndex]);
+  }, []);
 
   // ----------------------end images ------------------
 
 
 
   // Load classes from database
+
+
+
   const loadClasses = async () => {
     try {
       const backendClasses = await getProjectClasses(baseUrl, projectName, userName, version, task);
@@ -507,35 +692,6 @@ function SegmentComponent() {
     goToIndex(prevIndex);
   };
 
-  // Zoom functionality-----------------------------------------
-  // const handleZoom = (direction) => {
-  //     const stage = stageRef.current;
-  //     const scaleBy = 1.1;
-  //     const oldScale = stage.scaleX();
-  //     const center = {
-  //       x: stage.width() / 2,
-  //       y: stage.height() / 2,
-  //     };
-
-  //     const newScale =
-  //       direction === "in" ? oldScale * scaleBy : oldScale / scaleBy;
-  //     setZoomLevel(newScale);
-
-  //     stage.scale({ x: newScale, y: newScale });
-
-  //     const mousePointTo = {
-  //       x: (center.x - stage.x()) / oldScale,
-  //       y: (center.y - stage.y()) / oldScale,
-  //     };
-
-  //     const newPos = {
-  //       x: center.x - mousePointTo.x * newScale,
-  //       y: center.y - mousePointTo.y * newScale,
-  //     };
-
-  //     stage.position(newPos);
-  //     stage.batchDraw();
-  //   };
 
   // Enhanced zoom functionality with cursor-based zooming
   const handleZoom = (direction, pointer) => {
@@ -634,24 +790,11 @@ function SegmentComponent() {
     }
   };
 
-  const handleMagicInference = async () => {
-
-    if (!projectName || imageData?.id == null) return;
-
-    setInferenceLoading(true);
-    try {
-      const result = await fetchInferenceResults(baseUrl, projectName, imageData.id, userName, version, task);
-      // console.log('Inference result:', result);
-      setInferenceData(Array.isArray(result.inference) ? result.inference : []);
-    } catch (err) {
-      console.log('infer error;', err);
-      alert("Failed to fetch inference results");
-    } finally {
-      setInferenceLoading(false);
-    }
-  };
 
 
+  useEffect(() => {
+    setSamActive(false)
+  }, [currentIndex])
 
   // Direct Inference Handler (now only hover-based)
   const handleDirectInferenceSubmit = async () => {
@@ -671,6 +814,9 @@ function SegmentComponent() {
       setDirectInferenceLoading(true);
       try {
         const result = await fetchDirectInferenceResults(baseUrl, projectName, imageData.id, point, userName, version, task);
+        if (!samActive) {
+          setSamActive(true)
+        }
         const newPoints = result.inference?.[0].points || [];
         const newSegment = {
           id: uuidv4(),
@@ -793,7 +939,7 @@ function SegmentComponent() {
 
 
 
-  if (!imageData?.data) {
+  if (!imageData?.url) {
     return (
       <div className="max-w-md mx-auto p-6 text-center text-gray-500">
         {loadingCurrent ? 'Loading image...' : 'No image to display'}
@@ -866,11 +1012,12 @@ function SegmentComponent() {
           setSegmentModalPosition={setSegmentModalPosition}
           stageRef={stageRef}
           scale={dimensions.scale}
-          onMagic={handleMagicInference}
+
           inferenceLoading={inferenceLoading}
           ProjectOverviewLink={ProjectOverviewLink}
           handleDirectInferenceSubmit={handleDirectInferenceSubmit}
           directInferenceLoading={directInferenceLoading}
+          samActive={samActive}
         />
 
         <div className="flex-1 flex flex-col overflow-hidden h-full">

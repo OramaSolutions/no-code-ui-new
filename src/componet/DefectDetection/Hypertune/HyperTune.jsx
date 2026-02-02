@@ -27,7 +27,7 @@ const initialState = {
     center_crop: "224",
     advanced: false,
     loader: false,
-    openModal: false,
+
     isDirty: false,
 };
 
@@ -44,12 +44,7 @@ function HyperTune({ onApply, state, username, onChange, url }) {
             project: state?.name,
             task: 'defectdetection',
         };
-        dispatch(DefectModal({
-            username: username,
-            version: state?.version,
-            project: state?.name,
-            task: "defectdetection",
-        }));
+        dispatch(DefectModal(payload));
 
         const fetchData = async () => {
             try {
@@ -59,7 +54,7 @@ function HyperTune({ onApply, state, username, onChange, url }) {
                     project_name: state?.name,
                     task: "defectdetection",
                 }));
-                
+
 
                 const data = res?.payload?.config
                 // console.log('res', data)
@@ -147,8 +142,9 @@ function HyperTune({ onApply, state, username, onChange, url }) {
             console.log('DefecthyperTune response:', response);
             if (response?.payload?.status === 200) {
                 toast.success(response?.payload?.message, commomObj);
-                updateIstate({ ...istate, loader: false, openModal: true });
-                onChange();
+                updateIstate({ ...istate, loader: false });
+                // onChange();
+                onApply();
             }
         } catch (error) {
             toast.error(error?.payload?.message, commomObj);
@@ -243,15 +239,6 @@ function HyperTune({ onApply, state, username, onChange, url }) {
                 />
             </motion.div>
 
-            <TrainModel
-                initialData={istate}
-                setState={updateIstate}
-                onApply={onApply}
-                username={username}
-                state={state}
-                task="defectdetection"
-                apiPoint=""
-            />
         </>
     );
 }

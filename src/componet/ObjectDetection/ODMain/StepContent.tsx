@@ -7,6 +7,7 @@ import Augumentation from "../Augmentation/augmentation";
 import AugumentImages from "../AugumentImages";
 import DataSplit from "../DataSplit";
 import HyperTune from "../Hypertune/HyperTune";
+import Train from "../Training/Training";
 import InferImages from "../InferImages/InferImages";
 import Remark from "../Remarks/Remark";
 import Application from "../Application";
@@ -39,6 +40,8 @@ const StepContent: React.FC<StepContentProps> = ({
   state,
   userData,
 }) => {
+
+  console.log('currentStep in StepContent:', currentStep);
   const renderStepComponent = () => {
     switch (currentStep) {
       case "labelled":
@@ -51,7 +54,7 @@ const StepContent: React.FC<StepContentProps> = ({
             url={url}
           />
         );
-     
+
       case "augmented":
         return (
           <Augumentation
@@ -88,6 +91,17 @@ const StepContent: React.FC<StepContentProps> = ({
             state={state}
             username={userData?.userName}
             onApply={() => handleApply("HyperTune")}
+            onChange={() => handleChange("Train")}
+            url={url}
+          />
+        );
+
+      case "Train":
+        return (
+          <Train
+            state={state}
+            username={userData?.userName}
+            onApply={() => handleApply("Train")}
             onChange={() => handleChange("infer")}
             url={url}
           />
@@ -108,7 +122,7 @@ const StepContent: React.FC<StepContentProps> = ({
             username={userData?.userName}
             task="objectdetection"
             project={state?.name}
-            projectId = {state.projectId}
+            projectId={state.projectId}
             version={state?.version}
             onApply={() => handleApply("remark")}
             onChange={() => handleChange("application")}

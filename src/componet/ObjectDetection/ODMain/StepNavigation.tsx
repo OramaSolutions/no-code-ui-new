@@ -1,6 +1,17 @@
 import React from "react";
 import { motion } from "framer-motion";
 import StepButton from "./StepButton";
+import {
+  MdCloudUpload,
+  MdTransform,
+  MdImage,
+  MdPieChart,
+  MdTune,
+  MdModelTraining,
+  MdSearch,
+  MdNotes,
+  MdRocketLaunch,
+} from "react-icons/md";
 import type { StepKey, StepStatusMap } from "../../../types/objectDetection/training";
 
 interface StepNavigationProps {
@@ -11,14 +22,15 @@ interface StepNavigationProps {
 }
 
 const steps = [
-  { key: "labelled" as StepKey, label: "Upload Labelled Data", icon: "📤" },
-  { key: "augmented" as StepKey, label: "Augmentations", icon: "🔄" },
-  { key: "images" as StepKey, label: "Augmented Images", icon: "🖼️" },
-  { key: "dataSplit" as StepKey, label: "Data Split Ratio", icon: "📊" },
-  { key: "HyperTune" as StepKey, label: "Tune Hyper Parameters", icon: "⚙️" },
-  { key: "infer" as StepKey, label: "Infer Images", icon: "🔍" },
-  { key: "remark" as StepKey, label: "Remarks", icon: "📝" },
-  { key: "application" as StepKey, label: "Application", icon: "🚀" },
+  { key: "labelled" as StepKey, label: "Upload Labelled Data", icon: MdCloudUpload },
+  { key: "augmented" as StepKey, label: "Augmentations", icon: MdTransform },
+  { key: "images" as StepKey, label: "Augmented Images", icon: MdImage },
+  { key: "dataSplit" as StepKey, label: "Data Split Ratio", icon: MdPieChart },
+  { key: "HyperTune" as StepKey, label: "Training Parameters", icon: MdTune },
+  { key: "Train" as StepKey, label: "Train Model", icon: MdModelTraining },
+  { key: "infer" as StepKey, label: "Infer Images", icon: MdSearch },
+  { key: "remark" as StepKey, label: "Remarks", icon: MdNotes },
+  { key: "application" as StepKey, label: "Application", icon: MdRocketLaunch },
 ];
 
 const container = {

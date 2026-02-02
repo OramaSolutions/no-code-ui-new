@@ -9,96 +9,90 @@ import { toast } from "react-toastify";
 import { getUrl } from '../../../config/config';
 import axios from 'axios';
 
-const initialstate = {
-    opentrainModal: false,
-    opentraincomplete: false,
-    opendefectTraining: false,
-    isTrainDataLoaded: false,
-    openVisualize: false,
-    defectTrainData: {},
-    minimized: false, // Add minimized state
-    trainingStarted: false,
-};
 
-function TrainModel({ initialData, setState, onApply, username, state, task, apiPoint }) {
-    const [istate, updateIstate] = useState(initialstate);
-    const { opentrainModal, opentraincomplete, opendefectTraining, isTrainDataLoaded, openVisualize, defectTrainData, minimized } = istate;
+function TrainModel({ phase, setPhase, onApply, username, state, task, apiPoint }) {
+
+
+
+    // 2️⃣ UI chrome (ONLY UI)
+    const [minimized, setMinimized] = useState(false);
+
+    // 3️⃣ Defect-specific flow (isolated)
+    const [defectFlow, setDefectFlow] = useState({
+        openTrain: false,
+        openVisualize: false,
+    });
+
+    const isModalOpen = phase !== "idle";
+    const isStarting = phase === "starting";
+    const isRunning = phase === "running";
+    const isComplete = phase === "completed";
+    const canMinimize = phase === "running";
+
+
+
+
     const [output, setOutput] = useState('');
     const [flag, setFlag] = useState(false);
     const [taskId, setTaskId] = useState(null);
-    const [trainingStarted, setTrainingStarted] = useState(false); // Track if training has started
+
     let url = getUrl(task);
 
     const handleOpen = async () => {
         try {
-            setTrainingStarted(true);
-
-            updateIstate(prev => ({ ...prev, opentrainModal: true, trainingStarted: false, }));
-
-            // Close parent modal immediately
+            setPhase("starting");
+            setMinimized(false);
             handleclose();
 
-            const response = await axios.get(
-                `${url}train_yolov8`,
-                {
-                    params: {
-                        username,
-                        task,
-                        project: state?.name,
-                        version: state?.version,
-                    },
-                }
-            );
+            await axios.get(`${url}train_yolov8`, {
+                params: {
+                    username,
+                    task,
+                    project: state?.name,
+                    version: state?.version,
+                },
+            });
 
-            // ✅ Success (axios only enters try for 2xx)
-            updateIstate(prev => ({
-                ...prev,
-                opentrainModal: true,
-                trainingStarted: true,
-            }));
-
+            setPhase("running");
         } catch (err) {
-            console.error("Training start failed:", err);
-
-            // 🔴 Extract backend error safely
-            const errorMessage =
+            toast.error(
                 err?.response?.data?.details ||
                 err?.response?.data?.error ||
-                "Failed to start training";
+                "Failed to start training"
+            );
 
-            toast.error(errorMessage);
+            setPhase("idle");
+            setMinimized(false);
 
-            // 🔴 Reset ALL training-related UI
-            setTrainingStarted(false);
-            updateIstate(initialstate);
-            setState({ ...initialData, openModal: false, minimized: false });
         }
     };
 
-
     const handleclose = () => {
-        console.log('ran handle close in train modal');
-        setState({ ...initialData, openModal: false, minimized: false });
+        setPhase("idle");
+        setMinimized(false);
+
     };
 
     const handleMinimize = () => {
-        setState({ ...initialData, openModal: false, minimized: true });
+        if (!canMinimize) return;
+        setMinimized(true);
+
     };
 
     const handleMaximize = () => {
-        setState({ ...initialData, openModal: true, minimized: false });
-    };
+        setMinimized(false);
 
+    };
     const handleDefect = () => {
-        setTrainingStarted(true);
-        updateIstate({ ...istate, opendefectTraining: true });
+        setPhase("running"); // training-like lifecycle
+        setDefectFlow({ openTrain: true, openVisualize: false });
         handleclose();
     };
 
     return (
         <>
             <AnimatePresence>
-                {initialData.openModal && (
+                {isModalOpen && (
                     <>
                         {/* Backdrop */}
                         <motion.div
@@ -107,7 +101,7 @@ function TrainModel({ initialData, setState, onApply, username, state, task, api
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.2 }}
                             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-                            onClick={trainingStarted ? handleMinimize : handleclose}
+                            onClick={canMinimize ? handleMinimize : handleclose}
                         />
 
                         {/* Modal */}
@@ -122,7 +116,7 @@ function TrainModel({ initialData, setState, onApply, username, state, task, api
                                 {/* Header */}
                                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5 relative">
                                     <div className="flex items-center gap-2 absolute top-4 right-4">
-                                        {trainingStarted && (
+                                        {isRunning && (
                                             <motion.button
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.9 }}
@@ -138,14 +132,14 @@ function TrainModel({ initialData, setState, onApply, username, state, task, api
                                             whileTap={{ scale: 0.9 }}
                                             onClick={handleclose}
                                             className="text-white/80 hover:text-white transition-colors"
-                                            title={trainingStarted ? 'Minimize' : 'Close'}
+                                            title={isRunning ? 'Minimize' : 'Close'}
                                         >
                                             <IoClose className="w-6 h-6" />
                                         </motion.button>
                                     </div>
                                     <h2 className="text-2xl font-bold text-white">Train Model</h2>
                                     <p className="text-blue-100 text-sm mt-1">
-                                        {trainingStarted ? 'Training in progress' : 'Start training your AI model'}
+                                        {isRunning ? 'Training in progress' : 'Start training your AI model'}
                                     </p>
                                 </div>
 
@@ -232,7 +226,7 @@ function TrainModel({ initialData, setState, onApply, username, state, task, api
 
             {/* Minimized Indicator */}
             <AnimatePresence>
-                {trainingStarted && initialData.minimized && (
+                {isRunning && minimized && (
                     <motion.button
                         initial={{ opacity: 0, y: 100 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -254,8 +248,9 @@ function TrainModel({ initialData, setState, onApply, username, state, task, api
             </AnimatePresence>
 
             <DataTransferModal
-                data={istate}
-                setData={updateIstate}
+                phase={phase}
+                onComplete={() => setPhase("completed")}
+                onFail={() => setPhase("failed")}
                 apiresponse={output}
                 setResponse={setOutput}
                 flag={flag}
@@ -266,10 +261,14 @@ function TrainModel({ initialData, setState, onApply, username, state, task, api
                 task={task}
                 url={url}
 
+
             />
 
-            {opendefectTraining && (
+            {defectFlow.openTrain && (
                 <DefectTrainModal
+                    onComplete={() =>
+                        setDefectFlow({ openTrain: false, openVisualize: true })
+                    }
                     data={istate}
                     setData={updateIstate}
                     onApply={onApply}
@@ -280,7 +279,7 @@ function TrainModel({ initialData, setState, onApply, username, state, task, api
                 />
             )}
 
-            {openVisualize && (
+            {defectFlow.openVisualize && (
                 <DefectVisualize
                     data={istate}
                     setData={updateIstate}

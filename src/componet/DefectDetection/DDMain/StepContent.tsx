@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Labelled from "../Labeled/Labeled";
 
 import HyperTune from "../Hypertune/HyperTune";
+import Train from "../Training/Training";
 import InferImages from "../InferImages/InferImages";
 import Remark from "../Remarks/Remark";
 import Application from "../Application";
@@ -53,6 +54,17 @@ const StepContent: React.FC<StepContentProps> = ({
             state={state}
             username={userData?.userName}
             onApply={() => handleApply("HyperTune")}
+            onChange={() => handleChange("infer")}
+            url={url}
+          />
+        );
+
+      case "Train":
+        return (
+          <Train
+            state={state}
+            username={userData?.userName}
+            onApply={() => handleApply("Train")}
             onChange={() => handleChange("infer")}
             url={url}
           />

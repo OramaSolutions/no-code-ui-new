@@ -46,8 +46,6 @@ const Application = ({ state, url, username, task, project, version }) => {
   const localStorageKey = `dockerBuild_${username}_${task}_${project}_${version}`;
   const navigate = useNavigate();
 
-
-
   const persistSession = (data) => {
     const now = Date.now();
     const base = {

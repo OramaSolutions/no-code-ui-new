@@ -1,9 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
 import type { StepKey } from "../../../types/objectDetection/training";
+import { IconType } from "react-icons/lib";
+import { CiCircleCheck } from "react-icons/ci";
 
 interface StepButtonProps {
-  step: { key: StepKey; label: string; icon: string };
+  step: { key: StepKey; label: string; icon: IconType };
   index: number;
   isActive: boolean;
   isCompleted: boolean;
@@ -33,13 +35,14 @@ const StepButton: React.FC<StepButtonProps> = ({
       disabled={!isAccessible}
       className={`
         w-full p-4 rounded-xl text-left transition-all duration-300 relative overflow-hidden
-        ${isActive 
-          ? "bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg" 
-          : isCompleted
-          ? "bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 border-2 border-indigo-300"
-          : isAccessible
-          ? "bg-slate-50 text-slate-700 hover:bg-slate-100 border-2 border-slate-200"
-          : "bg-slate-100 text-slate-400 cursor-not-allowed border-2 border-slate-200"
+        ${
+          isActive
+            ? "bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-lg"
+            : isCompleted
+              ? "bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-700 border-2 border-indigo-300"
+              : isAccessible
+                ? "bg-slate-50 text-slate-700 hover:bg-slate-100 border-2 border-slate-200"
+                : "bg-slate-100 text-slate-400 cursor-not-allowed border-2 border-slate-200"
         }
       `}
     >
@@ -50,7 +53,7 @@ const StepButton: React.FC<StepButtonProps> = ({
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
         />
       )}
-      
+
       <div className="relative z-10 flex items-center gap-3">
         <motion.span
           initial={{ scale: 0 }}
@@ -58,21 +61,26 @@ const StepButton: React.FC<StepButtonProps> = ({
           transition={{ delay: index * 0.1, type: "spring" }}
           className={`
             w-10 h-10 rounded-full flex items-center justify-center text-xl
-            ${isActive 
-              ? "bg-white/20 backdrop-blur-sm" 
-              : isCompleted
-              ? "bg-indigo-200"
-              : "bg-slate-200"
+            ${
+              isActive
+                ? "bg-white/20 backdrop-blur-sm"
+                : isCompleted
+                  ? "bg-indigo-200"
+                  : "bg-slate-200"
             }
           `}
         >
-          {isCompleted ? "✓" : step.icon}
+          {isCompleted ? (
+            <CiCircleCheck className="w-6 h-6 text-blue-600" />
+          ) : (
+            <step.icon className="w-6 h-6" />
+          )}
         </motion.span>
-        
+
         <div className="flex-1">
           <span className="font-medium">{step.label}</span>
         </div>
-        
+
         {isActive && (
           <motion.div
             initial={{ rotate: 0 }}

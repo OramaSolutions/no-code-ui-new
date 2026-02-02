@@ -99,17 +99,17 @@ const RightBar = ({
       </button>
 
       {/* Mask/Points Toggle - Only in Direct Inference Mode */}
-      {directInferenceMode && (
-        <button
-          onClick={() => setShowMask((prev) => !prev)}
-          className={`p-1.5 rounded-md transition-all duration-150 ${showMask
-            ? "bg-blue-600 text-white"
-            : "bg-gray-800 text-gray-300 hover:bg-gray-700"}`}
-          title={showMask ? 'Show Points' : 'Show Mask'}
-        >
-          {showMask ? <FaImage className="text-xs" /> : <FaDrawPolygon className="text-xs" />}
-        </button>
-      )}
+
+      <button
+        onClick={() => setShowMask((prev) => !prev)}
+        className={`p-1.5 rounded-md transition-all duration-150 ${showMask
+          ? "bg-blue-600 text-white"
+          : "bg-gray-800 text-gray-300 hover:bg-gray-700"}`}
+        title={showMask ? 'Show Points' : 'Show Mask'}
+      >
+        {showMask ? <FaImage className="text-xs" /> : <FaDrawPolygon className="text-xs" />}
+      </button>
+
 
       {/* Drawing Tools Section */}
       <div className="flex flex-col items-center space-y-2 w-full">

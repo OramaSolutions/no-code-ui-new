@@ -11,7 +11,10 @@ import ImagePreview from "./ImagePreview";
 import ActionButtons from "./ActionButtons";
 import ResizeModal from "../ResizeModal";
 import ImportModal from "./ImportModal";
+import { useQuery } from "@tanstack/react-query";
+import { fetchThumbnail } from "../../../api/returnApis";
 import { LuFileStack } from "react-icons/lu";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 const initialState = {
     imageUrls: [],
     imageFolder: null,
@@ -34,6 +37,8 @@ function Labelled({ username, state, onApply, onChange, url }) {
 
     //  used to prevent from changes state after revisits
     const [pendingStepComplete, setPendingStepComplete] = useState(false);
+    const [imageSource, setImageSource] = useState("none");
+    // "server" | "local" | "none"
 
 
     const abortControllerReff = useRef();
@@ -41,43 +46,46 @@ function Labelled({ username, state, onApply, onChange, url }) {
     const navigate = useNavigate();
     const backLink = "object-detection-training";
 
+    const {
+        data,
+        isLoading: thumbnailsLoading,
+    } = useQuery({
+        queryKey: ["thumbnails", username, state?.name, state?.version],
+        queryFn: () =>
+            fetchThumbnail({
+                url,
+                username,
+                task:'objectdetection',
+                project: state?.name,
+                version: state?.version,
+                thumbnailName: "dataset_thumbnails",
+            }),
+        enabled: !!username && !!state?.name && !!state?.version,
+        retry: false,
+        refetchOnWindowFocus: false,
+        staleTime: 5 * 60 * 1000,
+    });
+
+
     useEffect(() => {
-        const fetchThumbnails = async () => {
-            console.log('Fetching dataset thumbnails...');
-            try {
-                const response = await fetch(
-                    `${url}get_thumbnails?username=${username}&task=objectdetection&project=${state?.name}&version=${state?.version}&thumbnail_name=dataset_thumbnails`,
-                    { method: 'GET' }
-                );
+        if (!data?.thumbnails?.length) return;
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+        console.log("data.thumbnails", data);
 
-                const data = await response.json();
-                console.log("Thumbnails API response:", data);
+        window.localStorage.setItem(
+            "DataSize",
+            JSON.stringify({ Size: data.count })
+        );
 
-                if (data?.thumbnails && data.thumbnails.length > 0 && data.count) {
-                    // Save count in localStorage
-                    window.localStorage.setItem("DataSize", JSON.stringify({ Size: data.count }));
+        setIstate(prev => ({
+            ...prev,
+            imageUrls: data.thumbnails,
+        }));
 
-                    setIstate(prev => ({
-                        ...prev,
-                        imageUrls: data.thumbnails
-                    }));
-                    setPostImportActionsVisible(true)
-                    console.log(`Found ${data.count} thumbnails`);
-                } else {
-                    console.log("No thumbnails found.");
-                }
+        setImageSource("server");
+        setPostImportActionsVisible(true);
+    }, [data]);
 
-            } catch (err) {
-                console.error("Error fetching thumbnails:", err);
-            }
-        };
-
-        fetchThumbnails();
-    }, [url, username, state?.name, state?.version]);
 
 
     const onDrop = useCallback((acceptedFiles) => {
@@ -104,6 +112,8 @@ function Labelled({ username, state, onApply, onChange, url }) {
         worker.onmessage = (event) => {
             const { imageUrls, imageFolder } = event.data;
             setIstate(prev => ({ ...prev, imageFolder, imageUrls, loading: false }));
+            setImageSource("local");
+            setPostImportActionsVisible(false);
             worker.terminate();
         };
 
@@ -157,8 +167,6 @@ function Labelled({ username, state, onApply, onChange, url }) {
                 Size: imageUrls.length,
 
             }
-
-            // window.localStorage.setItem("DataSize", JSON.stringify(datasize))
 
             onApply()
             return;
@@ -230,9 +238,7 @@ function Labelled({ username, state, onApply, onChange, url }) {
 
 
     const handleViewDataset = () => {
-        // inform parent and navigate to dataset overview
-        // onChange && onChange();
-        // onApply && onApply();
+
         if (pendingStepComplete) {
             onApply?.();            // ✅ now safe
             setPendingStepComplete(false);
@@ -242,9 +248,7 @@ function Labelled({ username, state, onApply, onChange, url }) {
     }
 
     const handleStartLabeling = () => {
-        // inform parent and navigate to labeling start (first image)
-        // onChange && onChange();
-        // onApply && onApply();
+
         if (pendingStepComplete) {
             onApply?.();            // ✅ now safe
             setPendingStepComplete(false);
@@ -255,11 +259,21 @@ function Labelled({ username, state, onApply, onChange, url }) {
 
     return (
         <>
+            {thumbnailsLoading && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+                    <div className="flex flex-col items-center gap-3 text-white">
+                        <span className="text-3xl animate-spin"><AiOutlineLoading3Quarters className="text-blue-600 w-6" /></span>
+                        <p className="text-sm tracking-wide">
+                            Loading dataset thumbnails…
+                        </p>
+                    </div>
+                </div>
+            )}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="space-y-8"
+                className={`space-y-8 ${thumbnailsLoading ? "opacity-50 pointer-events-none" : ""}`}
             >
                 {/* Header Section */}
                 <div className="flex items-center gap-3">
@@ -300,13 +314,7 @@ function Labelled({ username, state, onApply, onChange, url }) {
                             >
                                 Start Labeling
                             </button>
-                            <button
-                                onClick={() => setPostImportActionsVisible(false)}
-                                className="px-3 py-2 bg-transparent text-slate-500 rounded hover:bg-slate-100"
-                                aria-label="Dismiss"
-                            >
-                                ✕
-                            </button>
+                            
                         </div>
                     </div>
                 ) : null}
@@ -339,8 +347,14 @@ function Labelled({ username, state, onApply, onChange, url }) {
                 {/* Image Preview & Import */}
                 {!resizecheck && (
                     <>
-                        <ImagePreview imageUrls={imageUrls} loading={loading} />
-                        <ActionButtons onImport={importUpload} />
+                        <ImagePreview
+                            imageUrls={imageUrls}
+                            loading={loading || thumbnailsLoading}
+                        />
+
+                        {imageSource === "local" && (
+                            <ActionButtons onImport={importUpload} />
+                        )}
                     </>
                 )}
 

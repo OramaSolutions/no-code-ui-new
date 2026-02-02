@@ -34,6 +34,7 @@ const stepsOrder: StepOrder = [
   "images",
   "dataSplit",
   "HyperTune",
+  "Train",
   "infer",
   "remark",
   "application",
@@ -46,7 +47,7 @@ function ProjectTraining(): JSX.Element {
   const [iState, updateIstate] = useState<StepKey | null>(null);
 
   const userData = useSelector(
-    (state: AppRootState) => state.auth.user
+    (state: AppRootState) => state.auth.user,
   ) as User | null;
 
   const hasChangedSteps = useSelector<
@@ -60,6 +61,7 @@ function ProjectTraining(): JSX.Element {
     images: false,
     dataSplit: false,
     HyperTune: false,
+    Train: false,
     infer: false,
     remark: false,
     application: false,

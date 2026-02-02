@@ -34,7 +34,7 @@ export type StepKey =
 export type StepOrder = readonly StepKey[];
 
 // Status values for a step
-export type StepStatusValue = 'not_started' | 'in_progress' | 'completed';
+export type StepStatusValue = 'pending' | 'in_progress' | 'completed';
 
 // Map of step -> status container
 export type StepStatusMap = {

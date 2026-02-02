@@ -5,7 +5,8 @@ import { useDispatch } from "react-redux";
 import { ResizeFolder, importData } from "../../../reduxToolkit/Slices/projectSlices";
 import { commomObj } from '../../../utils';
 import FileUploadZone from "./FileUploadZone";
-
+import { useQuery } from "@tanstack/react-query";
+import { fetchThumbnail } from "../../../api/returnApis";
 import ImagePreview from "./ImagePreview";
 import ActionButtons from "./ActionButtons";
 
@@ -31,39 +32,41 @@ function Labelled({ username, state, onApply, onChange, url }) {
     const abortControllerReff = useRef();
     const dispatch = useDispatch();
 
+    const {
+        data,
+        isLoading: thumbnailsLoading,
+    } = useQuery({
+        queryKey: ["thumbnails", username, state?.name, state?.version],
+        queryFn: () =>
+            fetchThumbnail({
+                url,
+                username,
+                task: 'defectdetection',
+                project: state?.name,
+                version: state?.version,
+                thumbnailName: "dataset_thumbnails",
+            }),
+        enabled: !!username && !!state?.name && !!state?.version,
+        retry: false,
+        refetchOnWindowFocus: false,
+        staleTime: 5 * 60 * 1000,
+    });
+
+
     useEffect(() => {
-        const fetchThumbnails = async () => {
-            console.log('Fetching dataset thumbnails...');
-            try {
-                console.log('fetching thumbnails from server...');
-                const response = await fetch(`${url}get_import_dataset?username=${username}&task=defectdetection&project_name=${state?.name}&version=${state?.version}`, {
-                    method: 'GET',
-                });
-                console.log(response, "responseeee")
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+        if (!data?.thumbnails?.length) return;
 
-                const filename = response.headers.get('x-filename') || 'default_filename.zip';
-                const reader = response.body.getReader();
-                const chunks = [];
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-                    chunks.push(value);
-                }
-                const zipBlob = new Blob(chunks, { type: 'application/zip' });
-                const dummyData = new File([zipBlob], filename, { type: 'application/zip' });
-                setIsDirty(filename)
-                setSelectedFile(dummyData);
-                processZipFileInWorker(dummyData);
-            } catch (err) {
-                console.log(err, "errrrrr")
-            }
-        };
+        console.log("data.thumbnails", data);
 
-        fetchThumbnails();
-    }, [url, username, state?.name, state?.version]);
+
+
+        setIstate(prev => ({
+            ...prev,
+            imageUrls: data.thumbnails,
+        }));
+
+
+    }, [data]);
 
 
     const onDrop = useCallback((acceptedFiles) => {

@@ -84,7 +84,7 @@ function ProjectOverview() {
   const [showStatsDropdown, setShowStatsDropdown] = useState(false);
   const [stats, setStats] = useState(null);
 
-  const STATS_STORAGE_KEY = `project_stats:${projectName}:${version}:${task}`;
+
 
 
   const fetchAnnotationType = async () => {
@@ -96,21 +96,21 @@ function ProjectOverview() {
       task
     );
 
-      const normalizedStats = {
-    annotationType: stats.annotation_type,
-   
-    updatedAt: Date.now(), // important
-    totalImages: stats.total_images,
-    labeledImages: stats.labeled_images,
-    unlabeledImages: stats.unlabeled_images,
-    completionPercentage: stats.completion_percentage,
-  };
+    const normalizedStats = {
+      annotationType: stats.annotation_type,
 
-  // 🔥 overwrite cache with latest data
-  localStorage.setItem(
-    STATS_STORAGE_KEY,
-    JSON.stringify(normalizedStats)
-  );
+      updatedAt: Date.now(), // important
+      totalImages: stats.total_images,
+      labeledImages: stats.labeled_images,
+      unlabeledImages: stats.unlabeled_images,
+      completionPercentage: stats.completion_percentage,
+    };
+    const STATS_STORAGE_KEY = `project_stats:${projectName}:${version}:${task}`;
+   
+    localStorage.setItem(
+      STATS_STORAGE_KEY,
+      JSON.stringify(normalizedStats)
+    );
 
     return {
       type: stats.annotation_type,

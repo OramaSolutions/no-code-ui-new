@@ -1,39 +1,40 @@
 // types.ts
-import store from '../../reduxToolkit/store';
+import store from "../../reduxToolkit/store";
 // Router location.state for this page
 export interface ODProjectLocationState {
   name: string;
   version: number | string;
-  projectId:string;
+  projectId: string;
 }
 
 // LocalStorage "userLogin" structure used by this feature
 export interface ODUserLogin {
   activeUser?: {
     userName?: string;
-	
+
     // add other known fields if used elsewhere, e.g., id, email
   };
-  token?:string;
+  token?: string;
   // add other global fields if needed
 }
 
 // Canonical step keys used across the flow
 export type StepKey =
-  | 'labelled'
-  | 'augmented'
-  | 'images'
-  | 'dataSplit'
-  | 'HyperTune'
-  | 'infer'
-  | 'remark'
-  | 'application';
+  | "labelled"
+  | "augmented"
+  | "images"
+  | "dataSplit"
+  | "HyperTune"
+  | "Train"
+  | "infer"
+  | "remark"
+  | "application";
 
 // Steps order as a readonly tuple (helps with indexOf and literal inference)
 export type StepOrder = readonly StepKey[];
 
 // Status values for a step
-export type StepStatusValue = 'not_started' | 'in_progress' | 'completed';
+export type StepStatusValue = "pending" | "in_progress" | "completed";
 
 // Map of step -> status container
 export type StepStatusMap = {

@@ -3,9 +3,9 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import axios from "axios";
-import { getUrl } from "../../config/config";
+import axiosInstance from "../../api/axiosInstance";
+
 import type {
-  
   StepKey,
   StepOrder,
   StepStatusValue,
@@ -13,8 +13,10 @@ import type {
   UseStepPersistenceReturn,
 } from "../../types/objectDetection/training";
 import type { User, AppRootState } from "../../types/user";
+import { getUrl } from "../../config/config";
+import { Url } from "../../config/config";
 
-const url: string = getUrl("objectdetection");
+const url = getUrl("objectdetection");
 
 // Canonical step order
 const stepsOrder: StepOrder = [
@@ -23,6 +25,7 @@ const stepsOrder: StepOrder = [
   "images",
   "dataSplit",
   "HyperTune",
+  "Train",
   "infer",
   "remark",
   "application",
@@ -33,50 +36,51 @@ const isStepKey = (v: unknown): v is StepKey =>
   typeof v === "string" && (stepsOrder as readonly string[]).includes(v);
 
 const isStepStatusValue = (v: unknown): v is StepStatusValue =>
-  v === "not_started" || v === "in_progress" || v === "completed";
+  v === "pending" || v === "in_progress" || v === "completed";
 
 type UseStepPersistenceArgs = {
   projectName: string;
   version: string;
-  task: "objectdetection" | "classification" | "defectdetection";
+  task: "objectdetection" ;
   projectId: string;
 };
 
-export const useStepPersistence = (
-  {
+export const useStepPersistence = ({
   projectName,
   version,
   task,
-  projectId
-}: UseStepPersistenceArgs
-): UseStepPersistenceReturn => {
+  projectId,
+}: UseStepPersistenceArgs): UseStepPersistenceReturn => {
   const [stepStatus, setStepStatus] = useState<StepStatusMap>();
   const [currentStep, setCurrentStep] = useState<StepKey | null>("labelled");
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Get user data from Redux with proper typing
   const userData = useSelector(
-    (state: AppRootState) => state.auth.user
+    (state: AppRootState) => state.auth.user,
   ) as User | null;
-  const token = userData?.jwtToken ?? "";
 
+  // fetch status
   const fetchProjectStatus = useCallback(async (): Promise<void> => {
+    setIsLoading(true);
+    const statusPromise = axiosInstance.get(`${Url}projects/status`, {
+      params: { projectId },
+    });
+
+    const statsPromise = axios.get(`${url}projects/${projectName}/stats`, {
+      params: {
+        username: userData?.userName,
+        version,
+        task,
+      },
+    });
+
     try {
-      setIsLoading(true);
+      // 🔥 Priority 1: STATUS (await first)
+      const statusResponse = await statusPromise;
 
-      const response = await axios.get(`${url}status`, {
-        params: {
-          username: userData?.userName,
-          projectId: projectId,
-          task: task,
-          project_name: projectName,
-          version: version,
-        },
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.status === 200) {
-        const { current_step, step_status } = response.data as {
+      if (statusResponse.status === 200) {
+        const { current_step, step_status } = statusResponse.data as {
           current_step?: unknown;
           step_status?: Record<
             string,
@@ -87,36 +91,60 @@ export const useStepPersistence = (
         // Narrow current step
         setCurrentStep(isStepKey(current_step) ? current_step : "labelled");
 
-        // Narrow step status map
+        // Narrow step status
         const narrowed: StepStatusMap = {};
         if (step_status && typeof step_status === "object") {
           for (const k of Object.keys(step_status)) {
             if (!isStepKey(k)) continue;
             const s = step_status[k]?.status;
-            narrowed[k] = { status: isStepStatusValue(s) ? s : "not_started" };
+            narrowed[k] = {
+              status: isStepStatusValue(s) ? s : "pending",
+            };
           }
         }
         setStepStatus(narrowed);
       }
     } catch (error) {
-      // Optionally log
+      // ❗ Status failure is important → log
       console.error("Failed to fetch project status:", error);
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // 🔥 stop loader here
     }
-  }, [
-    projectName,
-    projectId,
-    version,
-    token,
-    userData?.userName,
-  ]);
+
+    // 🔹 Priority 2: STATS (silent, non-blocking)
+    statsPromise
+      .then((statsResponse) => {
+        if (statsResponse.status !== 200) return;
+
+        const stats = statsResponse.data;
+        if (!stats) return;
+
+        const normalizedStats = {
+          annotationType: stats.annotation_type,
+          updatedAt: Date.now(),
+          totalImages: stats.total_images,
+          labeledImages: stats.labeled_images,
+          unlabeledImages: stats.unlabeled_images,
+          completionPercentage: stats.completion_percentage,
+        };
+
+        const STATS_STORAGE_KEY = `project_stats:${projectName}:${version}:${task}`;
+
+        localStorage.setItem(
+          STATS_STORAGE_KEY,
+          JSON.stringify(normalizedStats),
+        );
+      })
+      .catch(() => {
+        // ❗ Completely silent failure (by design)
+      });
+  }, [projectId, projectName, version, task, userData?.userName]);
 
   const updateStepStatus = useCallback(
     async (
       stepName: StepKey,
       status: StepStatusValue,
-      data: Record<string, unknown> = {}
+      data: Record<string, unknown> = {},
     ): Promise<void> => {
       // Optimistic local update
       setStepStatus((prev) => {
@@ -129,20 +157,14 @@ export const useStepPersistence = (
       });
 
       try {
-        await axios.post(
-          `${url}update_step_status`,
-          {
-            username: userData?.userName,
-            projectId: projectId,
-            project_name: projectName,
-            task: task,
-            version: version,
-            step: stepName,
-            status,
-            data,
-          },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await axiosInstance.post(`${Url}projects/update_step_status`, {
+          projectId,
+          task,
+          version,
+          step: stepName,
+          status,
+          data,
+        });
         // Keep currentStep aligned when switching to in_progress
         if (status === "in_progress") setCurrentStep(stepName);
         if (status === "completed") {
@@ -154,14 +176,7 @@ export const useStepPersistence = (
         fetchProjectStatus();
       }
     },
-    [
-      fetchProjectStatus,
-      projectName,
-      projectId,
-      version,
-      token,
-      userData?.userName,
-    ]
+    [projectId, task, version, fetchProjectStatus],
   );
 
   const isStepAccessible = useCallback(
@@ -171,7 +186,7 @@ export const useStepPersistence = (
       const previousStep = stepsOrder[stepIndex - 1];
       return stepStatus?.[previousStep]?.status === "completed";
     },
-    [stepStatus]
+    [stepStatus],
   );
 
   useEffect(() => {

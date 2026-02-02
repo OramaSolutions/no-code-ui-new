@@ -645,22 +645,68 @@ export const saveProjectSegmentAnnotations = async (baseUrl, allSegments, projec
   }
 };
 
-export const fetchImageDetails = async (baseUrl, projectName, task, version, username, imageId) => {
-  const api = createApiInstance(baseUrl);
-  try {
-    const response = await api.get(`/projects/${projectName}/images/${imageId}`, {
-      params: { username, version, task },
-    });
+// export const fetchImageDetails = async (baseUrl, projectName, task, version, username, imageId, signal) => {
+//   const api = createApiInstance(baseUrl);
+//   try {
+//     const response = await api.get(
+//       `/projects/${projectName}/images/${imageId}`,
+//       {
+//         params: { username, version, task },
+//         signal,
+//       }
+//     );
 
-    console.log('Image details fetched:', response.data);
+//     console.log('Image details fetched:', response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error fetching image:', error);
+//     throw error;
+//   }
+// };
+
+export const fetchImageDetails = async (
+  baseUrl,
+  projectName,
+  task,
+  version,
+  username,
+  imageId,
+  signal
+) => {
+  const api = createApiInstance(baseUrl);
+
+  try {
+    const response = await api.get(
+      `/projects/${projectName}/images/${imageId}/meta`,
+      {
+        params: { username, version, task },
+        signal,
+      }
+    );
+
+    // response.data.image_url will be used by <img src="">
     return response.data;
   } catch (error) {
-    console.error('Error fetching image:', error);
+    console.error("Error fetching image metadata:", error);
     throw error;
   }
 };
 
+export const checkSamReady = async (baseUrl,
+  projectName,
+  task,
+  version,
+  username,
+  imageId,) => {
 
+  const api = createApiInstance(baseUrl);
+  const res = await api.get(
+    `/projects/${projectName}/images/${imageId}/sam_status`,
+    { params: { username, task, version } }
+  );
+
+  return res.data.ready === true;
+};
 
 export const getProjectThumbnails = async (
   baseUrl,

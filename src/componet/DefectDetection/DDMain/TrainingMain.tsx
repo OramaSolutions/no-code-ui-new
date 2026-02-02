@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import DashboardLayout from "../../../commonComponent/DashboardLayout";
@@ -17,7 +17,6 @@ import { useStepPersistence } from "../useStepPersistence";
 import Loader from "../../../commonComponent/Loader";
 import type {
   ODProjectLocationState,
-
   StepKey,
   StepOrder,
   RootState,
@@ -28,12 +27,10 @@ import type { User, AppRootState } from "../../../types/user";
 
 const url: string = getUrl("defectdetection");
 
-
-
 const stepsOrder: StepOrder = [
   "labelled",
-
   "HyperTune",
+  "Train",
   "infer",
   "remark",
   "application",
@@ -41,11 +38,12 @@ const stepsOrder: StepOrder = [
 
 function ProjectTraining(): JSX.Element {
   const dispatch = useDispatch();
+  const { projectName, version, projectId } = useParams();
   const [iState, updateIstate] = useState<StepKey | null>(null);
 
-
-
-  const userData = useSelector((state: AppRootState) => state.auth.user) as User | null;
+  const userData = useSelector(
+    (state: AppRootState) => state.auth.user,
+  ) as User | null;
 
   const hasChangedSteps = useSelector<
     RootState,
@@ -55,12 +53,21 @@ function ProjectTraining(): JSX.Element {
   const [completedSteps, setCompletedSteps] = useState({
     labelled: false,
     HyperTune: false,
+    Train:false,
     infer: false,
     remark: false,
     application: false,
   });
+  
+    if (!projectName || !version || !projectId) {
+    throw new Error("Invalid route params");
+  }
 
-  const { state } = useLocation() as { state: ODProjectLocationState | null };
+  const state: ODProjectLocationState = {
+    name: projectName,
+    version,
+    projectId,
+  };
 
   const {
     stepStatus,
@@ -69,7 +76,12 @@ function ProjectTraining(): JSX.Element {
     fetchProjectStatus,
     updateStepStatus,
     isStepAccessible,
-  }: UseStepPersistenceReturn = useStepPersistence(state);
+  }: UseStepPersistenceReturn = useStepPersistence({
+    // projectName,
+    version,
+    task: "defectdetection",
+    projectId,
+  });
 
   useEffect(() => {
     void fetchProjectStatus();

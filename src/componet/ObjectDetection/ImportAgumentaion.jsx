@@ -38,14 +38,7 @@ function ImportAgumentaion({ onOpen, onClose, istate, setIstate, handleCancel })
                                 <>
                                     {/* Header with Gradient */}
                                     <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-5 relative">
-                                        <motion.button
-                                            whileHover={{ scale: 1.1, rotate: 90 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            onClick={handleclose}
-                                            className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
-                                        >
-                                            <IoClose className="w-6 h-6" />
-                                        </motion.button>
+                                      
                                         <h2 className="text-2xl font-bold text-white">Augmentation</h2>
                                         {/* <p className="text-blue-100 text-sm mt-1">In progress</p> */}
                                     </div>

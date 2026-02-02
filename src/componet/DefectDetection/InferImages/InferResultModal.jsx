@@ -69,7 +69,7 @@ function InferResultModal({ onOpen, output, setOutput, state, username, selected
                             className="bg-white rounded-2xl shadow-2xl w-full max-w-6xl h-[90vh] max-h-[90vh] pointer-events-auto flex flex-col"
                         >
                             {/* Header */}
-                            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2 relative flex-shrink-0">
+                            <div className="bg-gradient-to-r rounded-t-2xl from-blue-600 to-indigo-600 p-2 relative flex-shrink-0">
                                 <motion.button
                                     whileHover={{ scale: 1.1, rotate: 90 }}
                                     whileTap={{ scale: 0.9 }}
