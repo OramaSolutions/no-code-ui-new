@@ -173,22 +173,21 @@ function LabelComponent() {
     setImageLoaded(false);
     setLoadingCurrent(true);
 
+    setImage(null);
+    setImageData({
+
+    });
+
     try {
       const imageDetails = await getImageDetails(currentIndex);
-      if (!imageDetails?.image) {
-        throw new Error("No image data received");
+      if (!imageDetails?.image_url) {
+        throw new Error("No image_url received");
       }
-      // Clean up previous image if it exists
-      if (currentImageRef.current) {
-        if (currentImageRef.current.src.startsWith('blob:')) {
-          URL.revokeObjectURL(currentImageRef.current.src);
-        }
-        currentImageRef.current.onload = null;
-        currentImageRef.current.onerror = null;
-      }
+
 
       const img = new window.Image();
       currentImageRef.current = img;
+
       const imageLoadPromise = new Promise((resolve, reject) => {
         img.onload = () => {
           if (img.naturalWidth > 0 && img.naturalHeight > 0) {
@@ -201,8 +200,10 @@ function LabelComponent() {
           reject(new Error("Failed to load image"));
         };
       });
-
-      img.src = `data:image/jpeg;base64,${imageDetails.image}`;
+      // 🔥 CORE CHANGE: load via URL, NOT base64
+      img.src =
+        `${baseUrl}${imageDetails.image_url}` +
+        `?username=${userData.userName}&task=${task}&version=${version}`;
 
 
       // Wait for image to load
@@ -212,7 +213,7 @@ function LabelComponent() {
       setImageData({
         id: imageDetails.id,
         name: imageDetails.filename,
-        data: `data:image/jpeg;base64,${imageDetails.image}`
+        url: img.src,
       });
       // setInferenceData(Array.isArray(imageDetails.inference) ? imageDetails.inference : []);
       // Calculate dimensions
@@ -749,20 +750,10 @@ function LabelComponent() {
     }
   };
 
-  if (!imageLoaded || !image) {
+  if (!imageData?.url) {
     return (
-      <div className="max-w-md mx-auto p-6 text-center h-screen w-scree">
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
-          <div className="bg-white p-4 rounded-lg shadow-lg flex items-center">
-            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span>
-              Loading image {currentIndex + 1}...
-            </span>
-          </div>
-        </div>
+      <div className="max-w-md mx-auto p-6 text-center text-gray-500">
+        {loadingCurrent ? 'Loading image...' : 'No image to display'}
       </div>
     );
   }

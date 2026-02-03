@@ -189,6 +189,13 @@ function SegmentComponent() {
 
     cleanupResources();
     setLoadingCurrent(true);
+      setImage(null);
+
+      // 🔥 Store URL instead of base64
+      setImageData({
+       
+      });
+
 
     try {
       const imageDetails = await getImageDetails(currentIndex);
@@ -290,103 +297,6 @@ function SegmentComponent() {
   };
 
 
-  // const loadCurrentImage = async () => {
-  //   if (isNaN(currentIndex)) return;
-
-
-  //   cleanupResources();
-  //   setLoadingCurrent(true);
-
-  //   try {
-  //     const imageDetails = await getImageDetails(currentIndex);
-
-
-  //     if (!imageDetails?.image) {
-  //       throw new Error("No image data received");
-  //     }
-
-
-  //     const img = new window.Image();
-  //     currentImageRef.current = img;
-  //     const imageLoadPromise = new Promise((resolve, reject) => {
-  //       img.onload = () => {
-  //         if (img.naturalWidth > 0 && img.naturalHeight > 0) {
-  //           resolve(img);
-  //         } else {
-  //           reject(new Error("Invalid image dimensions"));
-  //         }
-  //       };
-  //       img.onerror = () => {
-  //         reject(new Error("Failed to load image"));
-  //       };
-  //     });
-
-  //     img.src = `data:image/jpeg;base64,${imageDetails.image}`;
-
-  //     // Wait for image to load
-  //     await imageLoadPromise;
-
-  //     setImage(img);
-  //     setImageData({
-  //       id: imageDetails.id,
-  //       name: imageDetails.filename,
-  //       data: `data:image/jpeg;base64,${imageDetails.image}`
-  //     });
-  //     // Calculate dimensions
-  //     const maxWidth = window.innerWidth - 260;
-  //     const maxHeight = window.innerHeight - 110;
-  //     const ratio = Math.min(
-  //       maxWidth / img.naturalWidth,
-  //       maxHeight / img.naturalHeight,
-  //       1
-  //     );
-  //     console.log("Ratio", ratio)
-  //     setDimensions({
-  //       original: {
-  //         width: img.naturalWidth,
-  //         height: img.naturalHeight,
-  //       },
-  //       rendered: {
-  //         width: Math.round(img.naturalWidth * ratio),
-  //         height: Math.round(img.naturalHeight * ratio),
-  //       },
-  //       scale: ratio,
-  //     });
-
-  //     const nextIndex = currentIndex + 1;
-  //     if (isValidIndex(nextIndex)) {
-  //       prefetchImage(nextIndex);
-  //     }
-
-  //     const allowed = new Set([
-  //       currentIndex - 1,
-  //       currentIndex,
-  //       currentIndex + 1,
-  //     ]);
-
-  //     for (const key of imageCacheRef.current.keys()) {
-  //       if (!allowed.has(key)) {
-  //         imageCacheRef.current.delete(key);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     if (error.name !== "CanceledError") {
-  //       console.error("Error loading image:", error);
-  //     }
-  //     setImageLoaded(false);
-  //   } finally {
-  //     setLoadingCurrent(false);
-
-  //   }
-  // };
-
-  // const prefetchImage = async (index) => {
-  //   if (!isValidIndex(index)) return;
-  //   if (imageCacheRef.current.has(index)) return;
-  //   if (inflightRef.current.has(index)) return;
-
-  //   getImageDetails(index);
-  // };
 
   useEffect(() => {
     if (!isValidIndex(currentIndex)) return;
