@@ -750,13 +750,13 @@ function LabelComponent() {
     }
   };
 
-  if (!imageData?.url) {
-    return (
-      <div className="max-w-md mx-auto p-6 text-center text-gray-500">
-        {loadingCurrent ? 'Loading image...' : 'No image to display'}
-      </div>
-    );
-  }
+  // if (!imageData?.url) {
+  //   return (
+  //     <div className="max-w-md mx-auto p-6 text-center text-gray-500">
+  //       {loadingCurrent ? 'Loading image...' : 'No image to display'}
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="relative z-10">
@@ -786,7 +786,7 @@ function LabelComponent() {
         <div className="flex-1 flex flex-col overflow-hidden h-full">
           {/* img part */}
           {/* Loading overlay - appears on top of existing content */}
-          {loadingCurrent && (
+          {!imageData?.url && (
             <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
               <div className="bg-white p-4 rounded-lg shadow-lg flex items-center">
                 <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -794,7 +794,7 @@ function LabelComponent() {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
                 <span>
-                  Loading image {currentIndex + 1}...
+                  {loadingCurrent ? `Loading image ${currentIndex + 1}...` : 'No image to display'}
                 </span>
               </div>
             </div>
