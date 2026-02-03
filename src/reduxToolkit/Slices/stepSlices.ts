@@ -35,6 +35,7 @@ const initialHasChanged: StepsSliceState['hasChangedSteps'] = {
   images: false,
   dataSplit: false,
   HyperTune: false,
+  Train: false,
   infer: false,
   remark: false,
   application: false,

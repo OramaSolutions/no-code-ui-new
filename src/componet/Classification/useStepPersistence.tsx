@@ -31,7 +31,7 @@ const isStepKey = (v: unknown): v is StepKey =>
   typeof v === "string" && (stepsOrder as readonly string[]).includes(v);
 
 const isStepStatusValue = (v: unknown): v is StepStatusValue =>
-  v === "not_started" || v === "in_progress" || v === "completed";
+  v === "pending" || v === "in_progress" || v === "completed";
 
 export const useStepPersistence = (
   projectState: ODProjectLocationState | null
@@ -78,7 +78,7 @@ export const useStepPersistence = (
           for (const k of Object.keys(step_status)) {
             if (!isStepKey(k)) continue;
             const s = step_status[k]?.status;
-            narrowed[k] = { status: isStepStatusValue(s) ? s : "not_started" };
+            narrowed[k] = { status: isStepStatusValue(s) ? s : "pending" };
           }
         }
         setStepStatus(narrowed);

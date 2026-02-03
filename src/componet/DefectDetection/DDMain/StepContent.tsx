@@ -65,8 +65,6 @@ const StepContent: React.FC<StepContentProps> = ({
             state={state}
             username={userData?.userName}
             onApply={() => handleApply("Train")}
-            onChange={() => handleChange("infer")}
-            url={url}
           />
         );
       case "infer":
