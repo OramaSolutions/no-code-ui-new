@@ -34,10 +34,10 @@ const ProjectManagement = lazy(() =>
   import("./componet/ProjectManagement/ProjectManagement")
 );
 const DefectDetectionTraining = lazy(() =>
-  import("./componet/DefectDetection/Training/TrainingMain")
+  import("./componet/DefectDetection/DDMain/TrainingMain.js")
 );
 const ObjectDetectionTraining = lazy(() =>
-  import("./componet/ObjectDetection/Training/TrainingMain")
+  import("./componet/ObjectDetection/ODMain/TrainingMain.js")
 );
 const ClassificationTraining = lazy(() =>
   import("./componet/Classification/Training/TrainingMain")
